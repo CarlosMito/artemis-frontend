@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'api_service.dart';
@@ -13,7 +15,7 @@ class _CreationPageState extends State<CreationPage> {
   String prompt = "";
 
   void _callApi() async {
-    print(await ApiService().postPrompt("a vision of paradise. unreal engine"));
+    log(await ApiService().postPrompt("a vision of paradise. unreal engine"));
     // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   }
 
