@@ -1,16 +1,3 @@
-# artemis
+# Artemis
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A aplicação Artemis foi desenvolvida para o Projeto de Conclusão de Curso do curso de Ciência da Computação na Universidade Federal de São João del-Rei (UFSJ). Ela tem como objetivo auxiliar os artistas no processo de criação disponibilizando ferramentas que expandam as possibilidades criativas e produtivas dos mesmos, permitindo que novas ideias e conceitos sejam explorados de forma rápida e eficiente.
