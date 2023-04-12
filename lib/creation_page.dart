@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'api_service.dart';
+
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
 
@@ -9,6 +11,11 @@ class CreationPage extends StatefulWidget {
 
 class _CreationPageState extends State<CreationPage> {
   String prompt = "";
+
+  void _callApi() async {
+    print(await ApiService().postPrompt("a vision of paradise. unreal engine"));
+    // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class _CreationPageState extends State<CreationPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              print(prompt);
+              _callApi();
             },
             child: const Text("Enviar"),
           )
