@@ -13,10 +13,39 @@ class CreationPage extends StatefulWidget {
 
 class _CreationPageState extends State<CreationPage> {
   String prompt = "";
+  String? imageUrl;
+  String? id;
 
-  void _callApi() async {
-    log(await ApiService().postPrompt("a vision of paradise. unreal engine"));
+  void _postRequest() async {
+    if (prompt.isNotEmpty) {
+      Map<String, dynamic>? res = await ApiService().postPrompt(prompt);
+      id = res?["id"];
+
+      // var results = res?["results"];
+      // id = results?[0]["id"];
+
+      print(res.toString());
+      log(id ?? "Não foi possível gerar a imagem");
+    }
     // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  }
+
+  void _getRequest() async {
+    if (id != null) {
+      Map<String, dynamic>? res = await ApiService().getStatus(id!);
+
+      if (res != null) {
+        log(res["status"]);
+
+        if (res["status"] == "succeeded") {
+          log(res["output"][0]);
+          imageUrl = res["output"][0];
+          setState(() {});
+        }
+
+        return;
+      }
+    }
   }
 
   @override
@@ -26,6 +55,11 @@ class _CreationPageState extends State<CreationPage> {
         width: double.infinity,
         height: double.infinity,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.network(
+            imageUrl ?? "https://docs.flutter.dev/assets/images/dash/dash-fainting.gif",
+            fit: BoxFit.contain,
+            width: 500,
+          ),
           TextField(
             onChanged: (String text) {
               prompt = text;
@@ -35,11 +69,22 @@ class _CreationPageState extends State<CreationPage> {
               border: OutlineInputBorder(),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _callApi();
-            },
-            child: const Text("Enviar"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _postRequest();
+                },
+                child: const Text("Enviar"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _getRequest();
+                },
+                child: const Text("Verificar"),
+              )
+            ],
           )
         ]),
       ),
