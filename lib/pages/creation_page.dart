@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:artemis/models/image_dimension.dart';
+import 'package:artemis/models/scheduler.dart';
 import 'package:flutter/material.dart';
 
-import 'api_service.dart';
+import '../api_service.dart';
 
 class CreationPage extends StatefulWidget {
   const CreationPage({super.key});
@@ -24,7 +26,7 @@ class _CreationPageState extends State<CreationPage> {
       // var results = res?["results"];
       // id = results?[0]["id"];
 
-      print(res.toString());
+      // print(res.toString());
       log(id ?? "Não foi possível gerar a imagem");
     }
     // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
@@ -55,34 +57,52 @@ class _CreationPageState extends State<CreationPage> {
         width: double.infinity,
         height: double.infinity,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image.network(
-            imageUrl ?? "https://docs.flutter.dev/assets/images/dash/dash-fainting.gif",
-            fit: BoxFit.contain,
-            width: 500,
-          ),
-          TextField(
-            onChanged: (String text) {
-              prompt = text;
-            },
-            decoration: const InputDecoration(
-              labelText: "Prompt",
-              border: OutlineInputBorder(),
-            ),
-          ),
+          // Image.network(
+          //   imageUrl ?? "https://docs.flutter.dev/assets/images/dash/dash-fainting.gif",
+          //   fit: BoxFit.contain,
+          //   width: 500,
+          // ),
+          // TextField(
+          //   onChanged: (String text) {
+          //     prompt = text;
+          //   },
+          //   decoration: const InputDecoration(
+          //     labelText: "Prompt",
+          //     border: OutlineInputBorder(),
+          //   ),
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // ElevatedButton(
+              //   onPressed: () {
+              //     // _postRequest();
+              //   },
+              //   child: const Text("Enviar"),
+              // ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     // _getRequest();
+              //   },
+              //   child: const Text("Verificar"),
+              // ),
               ElevatedButton(
                 onPressed: () {
-                  _postRequest();
+                  for (Scheduler s in Scheduler.values) {
+                    log(s.name);
+                    log(s.toReplicateAPI());
+                  }
                 },
-                child: const Text("Enviar"),
+                child: const Text("Scheduler"),
               ),
               ElevatedButton(
                 onPressed: () {
-                  _getRequest();
+                  for (ImageDimension id in ImageDimension.values) {
+                    log(id.name);
+                    log(id.toReplicateAPI());
+                  }
                 },
-                child: const Text("Verificar"),
+                child: const Text("Image Dimension"),
               )
             ],
           )

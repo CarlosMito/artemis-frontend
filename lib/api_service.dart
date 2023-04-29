@@ -23,7 +23,6 @@ class ApiService {
 
     log(jsonEncode(body));
     log(url.toString());
-    print(jsonEncode(body));
 
     try {
       Response res = await http.post(url, headers: headers, body: stringBody);
@@ -32,7 +31,7 @@ class ApiService {
       if (res.statusCode == 201) {
         return jsonDecode(res.body);
       } else if (res.statusCode == 200) {
-        print(jsonDecode(res.body));
+        // print(jsonDecode(res.body));
       }
     } catch (e) {
       log("Erro [POST]: $e");
