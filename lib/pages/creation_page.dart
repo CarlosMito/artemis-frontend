@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:artemis/models/image_dimension.dart';
 import 'package:artemis/models/scheduler.dart';
+import 'package:artemis/widgets/custom_radio_button.dart';
+import 'package:artemis/widgets/input_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../api_service.dart';
 
@@ -18,10 +21,11 @@ class _CreationPageState extends State<CreationPage> {
   String _negativePrompt = "";
   String? _imageUrl;
   String? _id;
+  String? _seed;
 
-  List<RadioModel> _imageDimensions = [];
-
-  // ImageDimension _imageDimensions = ImageDimension.dim512;
+  final List<RadioModel> _imageDimensions = [];
+  final List<RadioModel> _schedulers = [];
+  final List<RadioModel> _numOutputs = [];
 
   void _postRequest() async {
     if (_prompt.isNotEmpty) {
@@ -55,38 +59,25 @@ class _CreationPageState extends State<CreationPage> {
     }
   }
 
-  List<Widget> createRadioItems(List<RadioModel> radioModels, [double? width, double? height]) {
-    var radioItems = <Widget>[];
-
-    for (int i = 0; i < radioModels.length; i++) {
-      radioItems.add(Container(
-        margin: const EdgeInsets.all(5.0),
-        child: GestureDetector(
-          onTap: () {
-            setState(() {
-              for (var element in _imageDimensions) {
-                element.isSelected = false;
-              }
-              _imageDimensions[i].isSelected = true;
-            });
-          },
-          child: RadioItem(
-            radioModel: radioModels[i],
-            width: width,
-            height: height,
-          ),
-        ),
-      ));
-    }
-
-    return radioItems;
-  }
-
   @override
   void initState() {
     super.initState();
-    _imageDimensions.add(RadioModel(false, ImageDimension.dim512.name, ImageDimension.dim512));
-    _imageDimensions.add(RadioModel(false, ImageDimension.dim768.name, ImageDimension.dim768));
+
+    for (var element in ImageDimension.values) {
+      _imageDimensions.add(RadioModel(false, element, element.toReplicateAPI()));
+    }
+
+    for (var element in Scheduler.values) {
+      _schedulers.add(RadioModel(false, element, element.toReplicateAPI()));
+    }
+
+    for (int i = 1; i < 5; i++) {
+      _numOutputs.add(RadioModel(false, i, i.toString()));
+    }
+
+    _imageDimensions[0].isSelected = true;
+    _schedulers[0].isSelected = true;
+    _numOutputs[0].isSelected = true;
   }
 
   @override
@@ -142,78 +133,68 @@ class _CreationPageState extends State<CreationPage> {
               // ),
               ElevatedButton(
                 onPressed: () {
-                  for (Scheduler s in Scheduler.values) {
-                    log(s.name);
-                    log(s.toReplicateAPI());
-                  }
-                },
-                child: const Text("Scheduler"),
-              ),
-              ElevatedButton(
-                onPressed: () {
+                  // for (RadioModel element in _schedulers) {
+                  //   if (element.isSelected) {
+                  //     log(element.value.toString());
+                  //   }
+                  // }
                   for (RadioModel element in _imageDimensions) {
                     if (element.isSelected) {
-                      ImageDimension value = element.value as ImageDimension;
-                      log(value.toString());
+                      log(element.value.toString());
                     }
                   }
+                  for (RadioModel element in _numOutputs) {
+                    if (element.isSelected) {
+                      log(element.value.toString());
+                    }
+                  }
+
+                  log(_seed ?? "");
                 },
-                child: const Text("Image Dimension"),
+                child: const Text("Pegar valores"),
               )
             ],
           ),
-          Row(children: createRadioItems(_imageDimensions))
+          Row(
+            children: [
+              // InputCard(
+              //   title: "Agendador",
+              //   width: 220.0,
+              //   child: CustomRadioButton(radioModels: _schedulers),
+              // ),
+              InputCard(
+                title: "Tamanho",
+                width: 220.0,
+                child: CustomRadioButton(radioModels: _imageDimensions),
+              ),
+              InputCard(
+                title: "Quantidade",
+                width: 220.0,
+                child: CustomRadioButton(radioModels: _numOutputs),
+              ),
+              InputCard(
+                title: "Semente",
+                width: 220.0,
+                child: SizedBox(
+                  height: 35.0,
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onChanged: (String text) {
+                      _seed = text;
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                      hintText: "0",
+                      isDense: true,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ]),
-      ),
-    );
-  }
-}
-
-class RadioModel {
-  Object value;
-  bool isSelected;
-  final String text;
-
-  RadioModel(this.isSelected, this.text, this.value);
-}
-
-class RadioItem extends StatelessWidget {
-  // final String text;
-  // final bool isSelected;
-  final RadioModel radioModel;
-  final double? height;
-  final double? width;
-
-  const RadioItem({super.key, required this.radioModel, this.height, this.width});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      padding: const EdgeInsets.all(8),
-      decoration: radioModel.isSelected
-          ? BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: const Color.fromARGB(255, 13, 13, 16),
-              border: Border.all(
-                color: Colors.white,
-                strokeAlign: -6.0,
-              ),
-            )
-          : BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.transparent,
-              border: Border.all(
-                color: const Color.fromARGB(255, 13, 13, 16),
-              ),
-            ),
-      alignment: Alignment.center,
-      child: Text(
-        radioModel.text,
-        style: TextStyle(
-          color: radioModel.isSelected ? Colors.white : Colors.black,
-        ),
       ),
     );
   }
