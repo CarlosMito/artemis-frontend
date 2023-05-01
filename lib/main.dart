@@ -1,4 +1,5 @@
 import 'package:artemis/pages/creation_page.dart';
+import 'package:artemis/utils/custom_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -15,6 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: CustomScrollBehavior(),
       theme: ThemeData(
         // This is the theme of your application.
         //
