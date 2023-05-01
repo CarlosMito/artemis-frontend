@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CustomRadioButton extends StatefulWidget {
+class RadioTextButton extends StatefulWidget {
   final List<RadioModel> radioModels;
 
-  const CustomRadioButton({super.key, required this.radioModels});
+  const RadioTextButton({super.key, required this.radioModels});
 
   @override
-  State<CustomRadioButton> createState() => _CustomRadioButtonState();
+  State<RadioTextButton> createState() => _RadioTextButtonState();
 }
 
-class _CustomRadioButtonState extends State<CustomRadioButton> {
+class _RadioTextButtonState extends State<RadioTextButton> {
   List<Widget> createRadioItems([double? width]) {
     var radioItems = <Widget>[];
 

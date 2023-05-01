@@ -1,11 +1,17 @@
 import 'dart:developer';
 
-import 'package:artemis/models/image_dimension.dart';
-import 'package:artemis/models/scheduler.dart';
-import 'package:artemis/widgets/custom_image_radio_button.dart';
-import 'package:artemis/widgets/custom_radio_button.dart';
-import 'package:artemis/widgets/input_card.dart';
-import 'package:artemis/widgets/input_optional_card.dart';
+import 'package:artemis/enums/image_dimension.dart';
+import 'package:artemis/enums/image_saturation.dart';
+import 'package:artemis/enums/image_style.dart';
+import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/models/input_api.dart';
+import 'package:artemis/models/output_api.dart';
+import 'package:artemis/enums/scheduler.dart';
+import 'package:artemis/widgets/radio_image_button.dart';
+import 'package:artemis/widgets/radio_text_button.dart';
+import 'package:artemis/widgets/display_text_option.dart';
+import 'package:artemis/widgets/input_text_card.dart';
+import 'package:artemis/widgets/input_image_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -26,18 +32,68 @@ class _CreationPageState extends State<CreationPage> {
   String? _id;
   String? _seed;
 
-  final List<List<String>> _imagesPlaceholder = [
-    ["https://cdna.artstation.com/p/assets/images/images/055/955/238/20221110132828/smaller_square/rossdraws-makima-web-final.jpg?1668108508"],
-    [
-      "https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/5db7bc40-3147-42ca-797c-a8fe1100ac00/width=450/376255.jpeg",
-      "https://64.media.tumblr.com/3098f52d522c10d35e50db9a29793585/c73f7e638a9a5a32-69/s1280x1920/7ab6808c581019fb81ec657d4c654791881a3c73.jpg",
-      "https://pbs.twimg.com/media/EnSgAbxUYAARbee.jpg",
-    ],
-    [
-      "https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/0615e367-6e5f-4db9-78da-bb9bd68a0700/width=450/376252.jpeg",
-      "https://cdna.artstation.com/p/assets/covers/images/044/328/314/smaller_square/rossdraws-rossdraws-tombra3.jpg?1639680124"
-    ]
+  final List<OutputAPI> _generations = [
+    OutputAPI(
+      input: InputAPI(
+        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+      ),
+    ),
+    OutputAPI(
+      input: InputAPI(
+        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
+        guidanceScale: 1,
+        imageDimensions: ImageDimension.dim768,
+        scheduler: Scheduler.klms,
+        numOutputs: 2,
+        seed: 100,
+      ),
+    ),
+    OutputAPI(
+      input: InputAPI(
+        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
+            "'Content here, content here', making it look like readable English.",
+        negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
+            "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
+            "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+        guidanceScale: 9,
+        imageDimensions: ImageDimension.dim768,
+        scheduler: Scheduler.kEuler,
+        numInferenceSteps: 100,
+        numOutputs: 3,
+        seed: 384690124,
+        style: ImageStyle.digitalArt,
+        color: Colors.amber,
+        saturation: ImageSaturation.high,
+        value: ImageValue.low,
+      ),
+    ),
+    OutputAPI(
+      input: InputAPI(
+        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+        numOutputs: 4,
+      ),
+    ),
   ];
+
+  final Map<Object, String> _imagePlaceholders = {
+    0: "https://cdna.artstation.com/p/assets/images/images/055/955/238/20221110132828/smaller_square/rossdraws-makima-web-final.jpg?1668108508",
+    1: "https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/5db7bc40-3147-42ca-797c-a8fe1100ac00/width=450/376255.jpeg",
+    2: "https://64.media.tumblr.com/3098f52d522c10d35e50db9a29793585/c73f7e638a9a5a32-69/s1280x1920/7ab6808c581019fb81ec657d4c654791881a3c73.jpg",
+    3: "https://pbs.twimg.com/media/EnSgAbxUYAARbee.jpg",
+    4: "https://imagecache.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/0615e367-6e5f-4db9-78da-bb9bd68a0700/width=450/376252.jpeg",
+    5: "https://cdna.artstation.com/p/assets/covers/images/044/328/314/smaller_square/rossdraws-rossdraws-tombra3.jpg?1639680124",
+    ImageStyle.anime: "https://animemotivation.com/wp-content/uploads/2022/05/klee-genshin-impact-anime-fanart.png",
+    ImageStyle.oilPainting: "https://as1.ftcdn.net/v2/jpg/03/28/53/82/1000_F_328538275_TWuK5PAmHktvg0P0MBdS5tpzQ4EScX9w.jpg",
+    ImageStyle.digitalArt: "https://i.pinimg.com/originals/61/c3/b1/61c3b11e7770bd68ac268d95dc6ee790.jpg",
+    ImageStyle.model3d: "https://cdn.daz3d.com/file/dazcdn/media/home_page/new/process/skin.jpg",
+    ImageStyle.photography: "https://i1.adis.ws/i/canon/pro-fine-art-photography-tips-1_a956e5554f9143789db8e529c097e410",
+    ImageSaturation.high: "https://image.lexica.art/md2/163ed32a-18fa-475d-a46d-2920da6d11ef",
+    ImageSaturation.low: "https://drawpaintacademy.com/wp-content/uploads/2018/06/Dan-Scott-Secrets-on-the-Lake-Overcast-Day-2016-1200W-Web.jpg",
+    ImageValue.high: "https://wallpaperaccess.com/full/2741468.jpg",
+    ImageValue.low: "https://img.artpal.com/23433/1-15-3-28-5-14-35m.jpg",
+  };
 
   final List<RadioModel> _imageDimensions = [];
   final List<RadioModel> _schedulers = [];
@@ -45,7 +101,7 @@ class _CreationPageState extends State<CreationPage> {
   final List<ImageRadioModel> _colors = [];
   final List<ImageRadioModel> _styles = [];
   final List<ImageRadioModel> _saturations = [];
-  final List<ImageRadioModel> _brightness = [];
+  final List<ImageRadioModel> _values = [];
 
   void _postRequest() async {
     if (_prompt.isNotEmpty) {
@@ -96,79 +152,85 @@ class _CreationPageState extends State<CreationPage> {
     }
 
     var auxiliar = {
-      Colors.black: "Preto",
-      Colors.white: "Branco",
-      Colors.red: "Vermelho",
-      Colors.amber: "Âmbar",
-      Colors.green: "Verde",
-      Colors.blueAccent: "Azul",
-      Colors.purple: "Roxo",
-      Colors.indigo: "Indigo",
-      Colors.teal: "Cerceta",
-      Colors.orange: "Laranja",
-      Colors.pink: "Rosa",
-      Colors.cyan: "Ciano",
-    };
-
-    var styles = {
-      "https://animemotivation.com/wp-content/uploads/2022/05/klee-genshin-impact-anime-fanart.png": "Anime",
-      "https://as1.ftcdn.net/v2/jpg/03/28/53/82/1000_F_328538275_TWuK5PAmHktvg0P0MBdS5tpzQ4EScX9w.jpg": "Pintura a Óleo",
-      "https://i.pinimg.com/originals/61/c3/b1/61c3b11e7770bd68ac268d95dc6ee790.jpg": "Arte Digital",
-      "https://cdn.daz3d.com/file/dazcdn/media/home_page/new/process/skin.jpg": "Modelo 3D",
-      "https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2021/03/people-posing-photography-1001.jpg?fit=1500%2C1000&ssl=1":
-          "Fotografia"
-    };
-
-    var saturations = {
-      "https://image.lexica.art/md2/163ed32a-18fa-475d-a46d-2920da6d11ef": "Cores Vibrantes",
-      "https://drawpaintacademy.com/wp-content/uploads/2018/06/Dan-Scott-Secrets-on-the-Lake-Overcast-Day-2016-1200W-Web.jpg": "Cores Pastéis",
-    };
-
-    var brightness = {
-      "https://wallpaperaccess.com/full/2741468.jpg": "Tema Claro",
-      "https://img.artpal.com/23433/1-15-3-28-5-14-35m.jpg": "Tema Escuro",
+      "Preto": Colors.black,
+      "Branco": Colors.white,
+      "Vermelho": Colors.red,
+      "Âmbar": Colors.amber,
+      "Verde": Colors.green,
+      "Azul": Colors.blueAccent,
+      "Roxo": Colors.purple,
+      "Indigo": Colors.indigo,
+      "Cerceta": Colors.teal,
+      "Laranja": Colors.orange,
+      "Rosa": Colors.pink,
+      "Ciano": Colors.cyan,
     };
 
     _styles.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
     _colors.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
     _saturations.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
-    _brightness.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
+    _values.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
 
     for (final mapEntry in auxiliar.entries) {
       _colors.add(ImageRadioModel(
         false,
-        label: mapEntry.value,
-        color: mapEntry.key,
+        label: mapEntry.key,
+        color: mapEntry.value,
       ));
     }
 
-    for (final mapEntry in styles.entries) {
+    for (var style in ImageStyle.values) {
       _styles.add(ImageRadioModel(
         false,
-        label: mapEntry.value,
-        imageUrl: mapEntry.key,
+        label: style.toDisplay(),
+        imageUrl: _imagePlaceholders[style],
       ));
     }
 
-    for (final mapEntry in saturations.entries) {
+    for (var saturation in ImageSaturation.values) {
       _saturations.add(ImageRadioModel(
         false,
-        label: mapEntry.value,
-        imageUrl: mapEntry.key,
+        label: saturation.toDisplay(),
+        imageUrl: _imagePlaceholders[saturation],
       ));
     }
 
-    for (final mapEntry in brightness.entries) {
-      _brightness.add(ImageRadioModel(
+    for (var value in ImageValue.values) {
+      _values.add(ImageRadioModel(
         false,
-        label: mapEntry.value,
-        imageUrl: mapEntry.key,
+        label: value.toDisplay(),
+        imageUrl: _imagePlaceholders[value],
       ));
     }
 
     _imageDimensions[0].isSelected = true;
     _schedulers[0].isSelected = true;
     _numOutputs[0].isSelected = true;
+
+    //================
+    // Init Outputs
+    //================
+    _generations[0].outputs = [
+      _imagePlaceholders[0]!,
+    ];
+
+    _generations[1].outputs = [
+      _imagePlaceholders[1]!,
+      _imagePlaceholders[2]!,
+    ];
+
+    _generations[2].outputs = [
+      _imagePlaceholders[3]!,
+      _imagePlaceholders[4]!,
+      _imagePlaceholders[5]!,
+    ];
+
+    _generations[3].outputs = [
+      _imagePlaceholders[2]!,
+      _imagePlaceholders[1]!,
+      _imagePlaceholders[4]!,
+      _imagePlaceholders[0]!,
+    ];
   }
 
   @override
@@ -211,15 +273,75 @@ class _CreationPageState extends State<CreationPage> {
             }
           }
 
-          for (ImageRadioModel element in _brightness) {
+          for (ImageRadioModel element in _values) {
             if (element.isSelected) {
               log(element.label.toString());
             }
           }
 
-          log(_seed ?? "");
+          log(_seed ?? "[vazio]");
+
+          OutputAPI generation = _generations[2];
+
+          showDialog(
+            context: context,
+            builder: (BuildContext ctx) {
+              // context.size;
+              return AlertDialog(
+                content: AspectRatio(
+                  aspectRatio: 2,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(generation.outputs[0], fit: BoxFit.cover),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            const Text("Prompt"),
+                            Flexible(child: Text(generation.input.prompt)),
+                            Flexible(child: Text(generation.input.negativePrompt ?? "")),
+                            Row(
+                              children: [
+                                DisplayTextOption(
+                                  title: "Tamanho",
+                                  value: generation.input.imageDimensions.toReplicateAPI(),
+                                ),
+                                DisplayTextOption(
+                                  title: "Semente",
+                                  value: generation.input.seed.toString(),
+                                ),
+                                DisplayTextOption(
+                                  title: "Número de Inferências",
+                                  value: generation.input.numInferenceSteps.toString(),
+                                ),
+                                DisplayTextOption(
+                                  title: "Escala de Orientação",
+                                  value: generation.input.guidanceScale.toString(),
+                                ),
+                                DisplayTextOption(
+                                  title: "Agendador",
+                                  value: generation.input.scheduler.toReplicateAPI(),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         },
-        label: const Text('Gerar'),
+        label: const Text("Gerar"),
         icon: const Icon(Icons.send),
         backgroundColor: Colors.pink,
       ),
@@ -337,19 +459,19 @@ class _CreationPageState extends State<CreationPage> {
                         //   width: 220.0,
                         //   child: CustomRadioButton(radioModels: _schedulers),
                         // ),
-                        InputCard(
+                        InputTextCard(
                           title: "Tamanho",
                           width: 220,
-                          child: CustomRadioButton(radioModels: _imageDimensions),
+                          child: RadioTextButton(radioModels: _imageDimensions),
                         ),
                         const SizedBox(width: 35.0),
-                        InputCard(
+                        InputTextCard(
                           title: "Quantidade",
                           width: 220,
-                          child: CustomRadioButton(radioModels: _numOutputs),
+                          child: RadioTextButton(radioModels: _numOutputs),
                         ),
                         const SizedBox(width: 35.0),
-                        InputCard(
+                        InputTextCard(
                           title: "Semente",
                           width: 220,
                           child: SizedBox(
@@ -373,9 +495,9 @@ class _CreationPageState extends State<CreationPage> {
                     ),
                   ),
                   const SizedBox(height: 60),
-                  InputOptionalCard(
+                  InputImageCard(
                     title: "Estilos",
-                    child: CustomImageRadioButton(
+                    child: RadioImageButton(
                       radioModels: _styles,
                     ),
                   ),
@@ -383,27 +505,27 @@ class _CreationPageState extends State<CreationPage> {
                   Wrap(
                     alignment: WrapAlignment.center,
                     children: [
-                      InputOptionalCard(
+                      InputImageCard(
                         title: "Saturação",
                         width: 530,
-                        child: CustomImageRadioButton(
+                        child: RadioImageButton(
                           radioModels: _saturations,
                         ),
                       ),
                       const SizedBox(width: 30),
-                      InputOptionalCard(
+                      InputImageCard(
                         title: "Iluminação",
                         width: 530,
-                        child: CustomImageRadioButton(
-                          radioModels: _brightness,
+                        child: RadioImageButton(
+                          radioModels: _values,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 60),
-                  InputOptionalCard(
+                  InputImageCard(
                     title: "Cores",
-                    child: CustomImageRadioButton(
+                    child: RadioImageButton(
                       radioModels: _colors,
                     ),
                   ),
@@ -452,15 +574,15 @@ class _CreationPageState extends State<CreationPage> {
                   const SizedBox(height: 10.0),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: _imagesPlaceholder.length,
+                      itemCount: _generations.length,
                       separatorBuilder: (BuildContext context, int i) {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var images = _imagesPlaceholder[i];
+                        var generation = _generations[i];
                         List<Widget> children = [];
 
-                        for (var image in images) {
+                        for (var image in generation.outputs) {
                           children.add(Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5.0),
@@ -474,7 +596,6 @@ class _CreationPageState extends State<CreationPage> {
                             ),
                           ));
                         }
-
                         return Container(
                           padding: const EdgeInsets.all(2.0),
                           decoration: BoxDecoration(

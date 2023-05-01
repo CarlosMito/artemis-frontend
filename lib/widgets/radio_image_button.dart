@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CustomImageRadioButton extends StatefulWidget {
+class RadioImageButton extends StatefulWidget {
   final List<ImageRadioModel> radioModels;
 
-  const CustomImageRadioButton({super.key, required this.radioModels});
+  const RadioImageButton({super.key, required this.radioModels});
 
   @override
-  State<CustomImageRadioButton> createState() => _CustomImageRadioButtonState();
+  State<RadioImageButton> createState() => _RadioImageButtonState();
 }
 
-class _CustomImageRadioButtonState extends State<CustomImageRadioButton> {
+class _RadioImageButtonState extends State<RadioImageButton> {
   @override
   Widget build(BuildContext context) {
     var exceptions = [null, Colors.white, Colors.transparent];

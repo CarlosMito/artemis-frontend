@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-class InputOptionalCard extends StatelessWidget {
+class InputImageCard extends StatelessWidget {
   final String title;
   final Widget child;
   final double? width;
 
-  const InputOptionalCard({super.key, required this.title, required this.child, this.width});
+  const InputImageCard({super.key, required this.title, required this.child, this.width});
 
   @override
   Widget build(BuildContext context) {

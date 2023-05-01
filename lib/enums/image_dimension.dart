@@ -1,3 +1,4 @@
+
 enum ImageDimension { dim512, dim768 }
 
 extension ParseToString on ImageDimension {

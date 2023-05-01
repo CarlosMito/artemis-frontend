@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class InputCard extends StatefulWidget {
+class InputTextCard extends StatefulWidget {
   final Widget child;
   final String title;
   final double width;
 
-  const InputCard({super.key, required this.title, required this.width, required this.child});
+  const InputTextCard({super.key, required this.title, required this.width, required this.child});
 
   @override
-  State<InputCard> createState() => _InputCardState();
+  State<InputTextCard> createState() => _InputTextCardState();
 }
 
-class _InputCardState extends State<InputCard> {
+class _InputTextCardState extends State<InputTextCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
