@@ -11,7 +11,7 @@ import '../enums/image_dimension.dart';
 class InputAPI {
   String prompt;
   String? negativePrompt;
-  late ImageDimension imageDimensions;
+  late ImageDimensions imageDimensions;
   late int numOutputs;
   late int numInferenceSteps;
   late double guidanceScale;
@@ -41,7 +41,7 @@ class InputAPI {
     this.numOutputs = numOutputs ?? 1;
     this.guidanceScale = guidanceScale ?? 7.5;
     this.scheduler = scheduler ?? Scheduler.dpmSolverMultistep;
-    this.imageDimensions = imageDimensions ?? ImageDimension.dim512;
+    this.imageDimensions = imageDimensions ?? ImageDimensions.dim512;
     this.numInferenceSteps = numInferenceSteps ?? 50;
     this.seed = seed ?? Random().nextInt(4294967296);
   }

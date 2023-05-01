@@ -52,7 +52,6 @@ class _RadioImageButtonState extends State<RadioImageButton> {
               ),
             ),
           );
-          ;
         },
       ),
     );

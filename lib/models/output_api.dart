@@ -2,9 +2,11 @@ import 'input_api.dart';
 
 class OutputAPI {
   final InputAPI input;
-  late List<String> outputs;
+  late List<String> images;
 
-  OutputAPI({required this.input, outputs}) {
-    this.outputs = outputs ?? [];
+  // TODO: Change to images
+
+  OutputAPI({required this.input, iamges}) {
+    this.images = iamges ?? [];
   }
 }

@@ -1,7 +1,6 @@
+enum ImageDimensions { dim512, dim768 }
 
-enum ImageDimension { dim512, dim768 }
-
-extension ParseToString on ImageDimension {
+extension ParseToString on ImageDimensions {
   String toReplicateAPI() {
     String size = name.substring(3);
     return "${size}x$size";
