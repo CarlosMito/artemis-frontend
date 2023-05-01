@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:artemis/models/image_dimension.dart';
 import 'package:artemis/models/scheduler.dart';
+import 'package:artemis/widgets/custom_image_radio_button.dart';
 import 'package:artemis/widgets/custom_radio_button.dart';
 import 'package:artemis/widgets/input_card.dart';
+import 'package:artemis/widgets/input_optional_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +42,7 @@ class _CreationPageState extends State<CreationPage> {
   final List<RadioModel> _imageDimensions = [];
   final List<RadioModel> _schedulers = [];
   final List<RadioModel> _numOutputs = [];
-  final List<RadioModel> _colors = [];
+  final List<ImageRadioModel> _colors = [];
 
   void _postRequest() async {
     if (_prompt.isNotEmpty) {
@@ -90,18 +92,28 @@ class _CreationPageState extends State<CreationPage> {
       _numOutputs.add(RadioModel(false, i, i.toString()));
     }
 
-    var auxiliar = [
-      Colors.black,
-      Colors.red,
-      Colors.amber,
-      Colors.green,
-      Colors.blueAccent,
-      Colors.purple,
-      Colors.yellow,
-    ];
+    var auxiliar = {
+      Colors.black: "Preto",
+      Colors.white: "Branco",
+      Colors.red: "Vermelho",
+      Colors.amber: "Âmbar",
+      Colors.green: "Verde",
+      Colors.blueAccent: "Azul",
+      Colors.purple: "Roxo",
+      Colors.indigo: "Indigo",
+      Colors.teal: "Cerceta",
+      Colors.orange: "Laranja",
+      Colors.pink: "Rosa",
+      Colors.cyan: "Ciano",
+    };
 
-    for (var color in auxiliar) {
-      _colors.add(RadioModel(false, color, color.toString()));
+    for (final mapEntry in auxiliar.entries) {
+      // final key = ;
+      _colors.add(ImageRadioModel(
+        false,
+        label: mapEntry.value,
+        color: mapEntry.key,
+      ));
     }
 
     _imageDimensions[0].isSelected = true;
@@ -242,34 +254,46 @@ class _CreationPageState extends State<CreationPage> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 150.0,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Container(
-                            width: 500.0,
-                            height: 100.0,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                            width: 500.0,
-                            height: 100.0,
-                            color: Colors.red,
-                          ),
-                          Container(
-                            width: 500.0,
-                            height: 100.0,
-                            color: Colors.orange,
-                          ),
-                          Container(
-                            width: 500.0,
-                            height: 100.0,
-                            color: Colors.amber,
-                          )
-                        ],
+                    InputOptionalCard(
+                      title: "Cores",
+                      child: CustomImageRadioButton(
+                        radioModels: _colors,
                       ),
                     )
+                    // SizedBox(
+                    //   height: 150.0,
+                    //   child: ListView(
+                    //     scrollDirection: Axis.horizontal,
+                    //     children: [
+                    //       InputOptionalCard(
+                    //         title: "Cores",
+                    //         child: CustomImageRadioButton(
+                    //           radioModels: _colors,
+                    //         ),
+                    //       )
+                    //       // Container(
+                    //       //   width: 500.0,
+                    //       //   height: 100.0,
+                    //       //   color: Colors.blue,
+                    //       // ),
+                    //       // Container(
+                    //       //   width: 500.0,
+                    //       //   height: 100.0,
+                    //       //   color: Colors.red,
+                    //       // ),
+                    //       // Container(
+                    //       //   width: 500.0,
+                    //       //   height: 100.0,
+                    //       //   color: Colors.orange,
+                    //       // ),
+                    //       // Container(
+                    //       //   width: 500.0,
+                    //       //   height: 100.0,
+                    //       //   color: Colors.amber,
+                    //       // )
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
               ),
