@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/scheduler.dart';
@@ -13,9 +15,11 @@ import '../models/input_api.dart';
 import '../utils/maps.dart';
 
 class ImageVisualizer extends StatefulWidget {
-  final OutputAPI output;
+  final List<OutputAPI> outputs;
+  final int setIndex;
+  final int imageIndex;
 
-  const ImageVisualizer({super.key, required this.output});
+  const ImageVisualizer({super.key, required this.outputs, required this.setIndex, required this.imageIndex});
 
   @override
   State<ImageVisualizer> createState() => _ImageVisualizerState();
@@ -23,11 +27,15 @@ class ImageVisualizer extends StatefulWidget {
 
 class _ImageVisualizerState extends State<ImageVisualizer> {
   late InputAPI _input;
+  late int _setIndex;
+  late int _imageIndex;
 
   @override
   void initState() {
     super.initState();
-    _input = widget.output.input;
+    _setIndex = widget.setIndex;
+    _imageIndex = widget.imageIndex;
+    _input = widget.outputs[_setIndex].input;
   }
 
   List<DisplayImageOption> buildDisplayImageOptions() {
@@ -58,7 +66,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                         decoration: BoxDecoration(
                           color: const Color(0xff7c94b6),
                           image: DecorationImage(
-                            image: NetworkImage(widget.output.images[0]),
+                            image: NetworkImage(widget.outputs[_setIndex].images[_imageIndex]),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -73,11 +81,43 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                 ),
                 const SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    IconButton(
+                      onPressed: () {
+                        if (_imageIndex > 0) {
+                          setState(() {
+                            _imageIndex -= 1;
+                          });
+                        } else if (_setIndex > 0) {
+                          setState(() {
+                            _setIndex -= 1;
+                            _imageIndex = widget.outputs[_setIndex].images.length - 1;
+                            _input = widget.outputs[_setIndex].input;
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.keyboard_arrow_left),
+                    ),
                     IconButton(onPressed: () {}, icon: const Icon(Icons.download)),
                     IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
                     IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
+                    IconButton(
+                        onPressed: () {
+                          if (_imageIndex < widget.outputs[_setIndex].images.length - 1) {
+                            setState(() {
+                              _imageIndex += 1;
+                            });
+                          } else if (_setIndex < widget.outputs.length - 1) {
+                            setState(() {
+                              _imageIndex = 0;
+                              _setIndex += 1;
+                              _input = widget.outputs[_setIndex].input;
+                            });
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.keyboard_arrow_right,
+                        )),
                   ],
                 ),
               ],
@@ -88,20 +128,14 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                   ListView(
                     padding: const EdgeInsets.all(28),
                     children: [
-                      const FractionallySizedBox(
-                        widthFactor: 0.7,
-                        child: DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10)),
-                      ),
+                      const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10), widthFactor: 0.7),
                       const Center(
                         child: Text(
                           "Visualização",
                           style: TextStyle(fontFamily: "Lexend", fontSize: 26, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const FractionallySizedBox(
-                        widthFactor: 0.7,
-                        child: DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10)),
-                      ),
+                      const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10), widthFactor: 0.7),
                       const SizedBox(height: 26),
                       Container(
                         margin: const EdgeInsets.only(left: 12),
@@ -170,10 +204,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                             ],
                           ),
                         ),
-                      const FractionallySizedBox(
-                        widthFactor: 0.5,
-                        child: DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40)),
-                      ),
+                      const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40), widthFactor: 0.5),
                       Wrap(
                         alignment: WrapAlignment.center,
                         spacing: 20,
@@ -206,10 +237,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                           ),
                         ],
                       ),
-                      const FractionallySizedBox(
-                        widthFactor: 0.5,
-                        child: DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40)),
-                      ),
+                      const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40), widthFactor: 0.5),
                       Wrap(
                         spacing: 10,
                         alignment: WrapAlignment.center,

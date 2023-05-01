@@ -3,15 +3,24 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class DiamondSeparator extends StatelessWidget {
-  final String? title;
   final double? width;
   final double? spacing;
   final double? innerIconSize;
   final double? outerIconSize;
+  final double? widthFactor;
   final Widget? content;
   final EdgeInsetsGeometry? margin;
 
-  const DiamondSeparator({super.key, this.title, this.width, this.spacing, this.innerIconSize, this.outerIconSize, this.content, this.margin});
+  const DiamondSeparator({
+    super.key,
+    this.width,
+    this.spacing,
+    this.innerIconSize,
+    this.outerIconSize,
+    this.content,
+    this.margin,
+    this.widthFactor,
+  });
 
   List<Widget> buildHalf(bool reverse) {
     List<Widget> half = [
@@ -49,11 +58,14 @@ class DiamondSeparator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      child: Row(children: [
-        ...buildHalf(false),
-        content ?? Container(),
-        ...buildHalf(true),
-      ]),
+      child: FractionallySizedBox(
+        widthFactor: widthFactor,
+        child: Row(children: [
+          ...buildHalf(false),
+          content ?? Container(),
+          ...buildHalf(true),
+        ]),
+      ),
     );
   }
 }

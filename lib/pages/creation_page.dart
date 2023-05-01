@@ -253,13 +253,6 @@ class _CreationPageState extends State<CreationPage> {
           }
 
           log(_seed ?? "[vazio]");
-
-          showDialog(
-            context: context,
-            builder: (BuildContext ctx) {
-              return ImageVisualizer(output: _generations[0]);
-            },
-          );
         },
         label: const Text("Gerar"),
         icon: const Icon(Icons.send),
@@ -316,58 +309,10 @@ class _CreationPageState extends State<CreationPage> {
                         fillColor: Color.fromARGB(255, 13, 13, 16),
                         filled: true),
                   ),
-                  const SizedBox(height: 60),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(width: 80),
-                      Transform.rotate(
-                        angle: math.pi / 4,
-                        child: Container(
-                          height: 5,
-                          width: 5,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Transform.rotate(
-                        angle: math.pi / 4,
-                        child: Container(
-                          height: 7,
-                          width: 7,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Transform.rotate(
-                        angle: math.pi / 4,
-                        child: Container(
-                          height: 7,
-                          width: 7,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Transform.rotate(
-                        angle: math.pi / 4,
-                        child: Container(
-                          height: 5,
-                          width: 5,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 80),
-                    ],
+                  const DiamondSeparator(
+                    margin: EdgeInsets.symmetric(vertical: 60),
+                    widthFactor: 0.8,
                   ),
-                  const SizedBox(height: 60),
                   Transform.scale(
                     scale: 1.175,
                     child: Wrap(
@@ -498,23 +443,38 @@ class _CreationPageState extends State<CreationPage> {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var generation = _generations[i];
+                        var output = _generations[i];
                         List<Widget> children = [];
 
-                        for (var image in generation.images) {
-                          children.add(Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.network(
-                                image,
-                                fit: BoxFit.cover,
+                        for (int j = 0; j < output.images.length; j++) {
+                          children.add(GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext ctx) {
+                                  return ImageVisualizer(
+                                    outputs: _generations,
+                                    setIndex: i,
+                                    imageIndex: j,
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Image.network(
+                                  output.images[j],
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ));
                         }
+
                         return Container(
                           padding: const EdgeInsets.all(2.0),
                           decoration: BoxDecoration(

@@ -1,3 +1,4 @@
+import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -14,71 +15,20 @@ class InputImageCard extends StatelessWidget {
       width: width,
       child: Column(
         children: [
-          Container(
-              height: 50,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Transform.rotate(
-                    angle: math.pi / 4,
-                    child: Container(
-                      height: 5,
-                      width: 5,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Transform.rotate(
-                    angle: math.pi / 4,
-                    child: Container(
-                      height: 7,
-                      width: 7,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    width: width == null ? 120 : 50,
-                    height: 1,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 18),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontFamily: "Lexend",
-                      fontSize: 26,
-                    ),
-                  ),
-                  const SizedBox(width: 18),
-                  Container(
-                    width: width == null ? 120 : 50,
-                    height: 1,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 8),
-                  Transform.rotate(
-                    angle: math.pi / 4,
-                    child: Container(
-                      height: 7,
-                      width: 7,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Transform.rotate(
-                    angle: math.pi / 4,
-                    child: Container(
-                      height: 5,
-                      width: 5,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              )),
-          const SizedBox(height: 14),
+          DiamondSeparator(
+            margin: const EdgeInsets.only(bottom: 16),
+            widthFactor: 0.6,
+            content: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 18),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: "Lexend",
+                  fontSize: 26,
+                ),
+              ),
+            ),
+          ),
           child
         ],
       ),
