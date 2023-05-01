@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 
-// class InputOptionalCard extends StatefulWidget {
-//   const InputOptionalCard({super.key});
-
-//   @override
-//   State<InputOptionalCard> createState() => _InputOptionalCardState();
-// }
-
-// class _InputOptionalCardState extends State<InputOptionalCard> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
-
 class InputOptionalCard extends StatelessWidget {
   final String title;
   final Widget child;

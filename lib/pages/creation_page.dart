@@ -43,6 +43,7 @@ class _CreationPageState extends State<CreationPage> {
   final List<RadioModel> _schedulers = [];
   final List<RadioModel> _numOutputs = [];
   final List<ImageRadioModel> _colors = [];
+  final List<ImageRadioModel> _styles = [];
 
   void _postRequest() async {
     if (_prompt.isNotEmpty) {
@@ -107,8 +108,19 @@ class _CreationPageState extends State<CreationPage> {
       Colors.cyan: "Ciano",
     };
 
+    var styles = {
+      "https://animemotivation.com/wp-content/uploads/2022/05/klee-genshin-impact-anime-fanart.png": "Anime",
+      "https://as1.ftcdn.net/v2/jpg/03/28/53/82/1000_F_328538275_TWuK5PAmHktvg0P0MBdS5tpzQ4EScX9w.jpg": "Pintura a Óleo",
+      "https://i.pinimg.com/originals/61/c3/b1/61c3b11e7770bd68ac268d95dc6ee790.jpg": "Arte Digital",
+      "https://cdn.daz3d.com/file/dazcdn/media/home_page/new/process/skin.jpg": "Modelo 3D",
+      "https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2021/03/people-posing-photography-1001.jpg?fit=1500%2C1000&ssl=1":
+          "Fotografia"
+    };
+
+    _styles.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
+    _colors.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
+
     for (final mapEntry in auxiliar.entries) {
-      // final key = ;
       _colors.add(ImageRadioModel(
         false,
         label: mapEntry.value,
@@ -116,10 +128,18 @@ class _CreationPageState extends State<CreationPage> {
       ));
     }
 
+    for (final mapEntry in styles.entries) {
+      _styles.add(ImageRadioModel(
+        false,
+        label: mapEntry.value,
+        imageUrl: mapEntry.key,
+      ));
+    }
+
     _imageDimensions[0].isSelected = true;
     _schedulers[0].isSelected = true;
     _numOutputs[0].isSelected = true;
-    _colors[0].isSelected = true;
+    // _colors[0].isSelected = true;
   }
 
   @override
@@ -255,11 +275,17 @@ class _CreationPageState extends State<CreationPage> {
                       ],
                     ),
                     InputOptionalCard(
+                      title: "Estilos",
+                      child: CustomImageRadioButton(
+                        radioModels: _styles,
+                      ),
+                    ),
+                    InputOptionalCard(
                       title: "Cores",
                       child: CustomImageRadioButton(
                         radioModels: _colors,
                       ),
-                    )
+                    ),
                     // SizedBox(
                     //   height: 150.0,
                     //   child: ListView(

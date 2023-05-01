@@ -12,12 +12,14 @@ class CustomImageRadioButton extends StatefulWidget {
 class _CustomImageRadioButtonState extends State<CustomImageRadioButton> {
   @override
   Widget build(BuildContext context) {
+    var exceptions = [null, Colors.white, Colors.transparent];
+
     return SizedBox(
-      height: 160.0,
+      height: 160,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: widget.radioModels.length,
-        separatorBuilder: (BuildContext context, int i) => const SizedBox(width: 10.0),
+        separatorBuilder: (BuildContext context, int i) => const SizedBox(width: 10),
         itemBuilder: (BuildContext context, int i) {
           return GestureDetector(
             onTap: () {
@@ -34,16 +36,14 @@ class _CustomImageRadioButtonState extends State<CustomImageRadioButton> {
                   ImageRadioItem(
                     radioModel: widget.radioModels[i],
                   ),
-                  const SizedBox(height: 10.0),
+                  const SizedBox(height: 10),
                   Text(
                     widget.radioModels[i].label,
                     style: TextStyle(
                       fontFamily: "Lexend",
                       fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
                       color: widget.radioModels[i].isSelected
-                          ? ((widget.radioModels[i].color == null || widget.radioModels[i].color == Colors.white)
-                              ? Colors.black
-                              : widget.radioModels[i].color)
+                          ? ((exceptions.contains(widget.radioModels[i].color)) ? Colors.black : widget.radioModels[i].color)
                           : Colors.black,
                     ),
                   ),
@@ -73,26 +73,47 @@ class ImageRadioItem extends StatelessWidget {
   const ImageRadioItem({super.key, required this.radioModel});
 
   Widget buildColorRadioItem() {
-    if (radioModel.color != Colors.white) {
+    if (radioModel.color == Colors.white) {
       return Container(
-        height: 130.0,
-        width: 130.0,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
           color: radioModel.color,
+          borderRadius: BorderRadius.circular(10),
+          border: radioModel.isSelected
+              ? Border.all(
+                  color: Colors.grey[800]!,
+                  strokeAlign: -6,
+                  width: 2,
+                )
+              : null,
+        ),
+        child: radioModel.isSelected
+            ? (Icon(
+                Icons.check,
+                color: Colors.grey[600]!,
+                size: 32,
+              ))
+            : null,
+      );
+    }
+
+    if (radioModel.color == Colors.transparent) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: const Color.fromARGB(255, 196, 196, 196),
           border: radioModel.isSelected
               ? Border.all(
                   color: Colors.white,
-                  strokeAlign: -6.0,
-                  width: 2.0,
+                  strokeAlign: -6,
+                  width: 2,
                 )
               : null,
         ),
         child: radioModel.isSelected
             ? (const Icon(
-                Icons.check,
+                Icons.question_mark_outlined,
                 color: Colors.white,
-                size: 32.0,
+                size: 32,
               ))
             : null,
       );
@@ -100,65 +121,82 @@ class ImageRadioItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.grey[800]!),
-      ),
-      child: Container(
-        height: 130.0,
-        width: 130.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: radioModel.color,
-          border: radioModel.isSelected
-              ? Border.all(
-                  color: Colors.grey[800]!,
-                  strokeAlign: -6.0,
-                  width: 2.0,
-                )
-              : null,
-        ),
-        child: radioModel.isSelected
-            ? (Icon(
-                Icons.check,
-                color: Colors.grey[800]!,
-                size: 32.0,
-              ))
+        borderRadius: BorderRadius.circular(10),
+        color: radioModel.color,
+        border: radioModel.isSelected
+            ? Border.all(
+                color: Colors.white,
+                strokeAlign: -6,
+                width: 2,
+              )
             : null,
       ),
+      child: radioModel.isSelected
+          ? (const Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 32,
+            ))
+          : null,
+    );
+  }
+
+  Widget buildImageRadioItem() {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            radioModel.imageUrl!,
+            fit: BoxFit.cover,
+            width: 130,
+            height: 130,
+          ),
+        ),
+        Container(
+          width: 130, //infinity?
+          height: 130,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: radioModel.isSelected
+                ? Border.all(
+                    color: Colors.white,
+                    strokeAlign: -6,
+                    width: 2,
+                  )
+                : null,
+          ),
+          child: radioModel.isSelected
+              ? (const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 32,
+                ))
+              : null,
+        )
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return buildColorRadioItem();
-    // Container(
-    //   padding: EdgeInsets.all(radioModel.isSelected ? 5.5 : 8),
-    //   decoration: radioModel.isSelected
-    //       ? BoxDecoration(
-    //           borderRadius: BorderRadius.circular(4),
-    //           color: const Color.fromARGB(255, 13, 13, 16),
-    //           border: Border.all(
-    //             color: Colors.white,
-    //             strokeAlign: -6.0,
-    //           ),
-    //         )
-    //       : BoxDecoration(
-    //           borderRadius: BorderRadius.circular(4),
-    //           color: Colors.transparent,
-    //           border: Border.all(
-    //             color: const Color.fromARGB(255, 13, 13, 16),
-    //           ),
-    //         ),
-    //   alignment: Alignment.center,
-    //   child: Container(
-    //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-    //     child: Text(
-    //       radioModel.label,
-    //       style: TextStyle(
-    //         color: radioModel.isSelected ? Colors.white : Colors.black,
-    //       ),
-    //     ),
-    //   ),
-    // );
+    return Container(
+      height: 130,
+      width: 130,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey[600]!),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: Offset(3, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: radioModel.imageUrl == null ? buildColorRadioItem() : buildImageRadioItem(),
+    );
   }
 }
