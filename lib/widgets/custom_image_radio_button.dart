@@ -15,7 +15,7 @@ class _CustomImageRadioButtonState extends State<CustomImageRadioButton> {
     var exceptions = [null, Colors.white, Colors.transparent];
 
     return SizedBox(
-      height: 160,
+      height: 200,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: widget.radioModels.length,
@@ -42,6 +42,7 @@ class _CustomImageRadioButtonState extends State<CustomImageRadioButton> {
                     style: TextStyle(
                       fontFamily: "Lexend",
                       fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
+                      fontSize: 18,
                       color: widget.radioModels[i].isSelected
                           ? ((exceptions.contains(widget.radioModels[i].color)) ? Colors.black : widget.radioModels[i].color)
                           : Colors.black,
@@ -109,13 +110,11 @@ class ImageRadioItem extends StatelessWidget {
                 )
               : null,
         ),
-        child: radioModel.isSelected
-            ? (const Icon(
-                Icons.question_mark_outlined,
-                color: Colors.white,
-                size: 32,
-              ))
-            : null,
+        child: const Icon(
+          Icons.question_mark_outlined,
+          color: Colors.white,
+          size: 32,
+        ),
       );
     }
 
@@ -149,13 +148,13 @@ class ImageRadioItem extends StatelessWidget {
           child: Image.network(
             radioModel.imageUrl!,
             fit: BoxFit.cover,
-            width: 130,
-            height: 130,
+            width: double.infinity,
+            height: double.infinity,
           ),
         ),
         Container(
-          width: 130, //infinity?
-          height: 130,
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: radioModel.isSelected
@@ -181,8 +180,8 @@ class ImageRadioItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      width: 130,
+      height: 160,
+      width: 160,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

@@ -7,8 +7,8 @@ import 'package:artemis/widgets/custom_radio_button.dart';
 import 'package:artemis/widgets/input_card.dart';
 import 'package:artemis/widgets/input_optional_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'dart:math' as math;
 
 import '../api_service.dart';
 
@@ -44,6 +44,8 @@ class _CreationPageState extends State<CreationPage> {
   final List<RadioModel> _numOutputs = [];
   final List<ImageRadioModel> _colors = [];
   final List<ImageRadioModel> _styles = [];
+  final List<ImageRadioModel> _saturations = [];
+  final List<ImageRadioModel> _brightness = [];
 
   void _postRequest() async {
     if (_prompt.isNotEmpty) {
@@ -117,8 +119,20 @@ class _CreationPageState extends State<CreationPage> {
           "Fotografia"
     };
 
+    var saturations = {
+      "https://image.lexica.art/md2/163ed32a-18fa-475d-a46d-2920da6d11ef": "Cores Vibrantes",
+      "https://drawpaintacademy.com/wp-content/uploads/2018/06/Dan-Scott-Secrets-on-the-Lake-Overcast-Day-2016-1200W-Web.jpg": "Cores Pastéis",
+    };
+
+    var brightness = {
+      "https://wallpaperaccess.com/full/2741468.jpg": "Tema Claro",
+      "https://img.artpal.com/23433/1-15-3-28-5-14-35m.jpg": "Tema Escuro",
+    };
+
     _styles.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
     _colors.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
+    _saturations.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
+    _brightness.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
 
     for (final mapEntry in auxiliar.entries) {
       _colors.add(ImageRadioModel(
@@ -136,104 +150,187 @@ class _CreationPageState extends State<CreationPage> {
       ));
     }
 
+    for (final mapEntry in saturations.entries) {
+      _saturations.add(ImageRadioModel(
+        false,
+        label: mapEntry.value,
+        imageUrl: mapEntry.key,
+      ));
+    }
+
+    for (final mapEntry in brightness.entries) {
+      _brightness.add(ImageRadioModel(
+        false,
+        label: mapEntry.value,
+        imageUrl: mapEntry.key,
+      ));
+    }
+
     _imageDimensions[0].isSelected = true;
     _schedulers[0].isSelected = true;
     _numOutputs[0].isSelected = true;
-    // _colors[0].isSelected = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SizedBox(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Artemis'),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          for (RadioModel element in _imageDimensions) {
+            if (element.isSelected) {
+              log(element.value.toString());
+            }
+          }
+
+          for (RadioModel element in _numOutputs) {
+            if (element.isSelected) {
+              log(element.value.toString());
+            }
+          }
+
+          for (ImageRadioModel element in _styles) {
+            if (element.isSelected) {
+              log(element.label.toString());
+            }
+          }
+
+          for (ImageRadioModel element in _colors) {
+            if (element.isSelected) {
+              log(element.label.toString());
+            }
+          }
+
+          for (ImageRadioModel element in _saturations) {
+            if (element.isSelected) {
+              log(element.label.toString());
+            }
+          }
+
+          for (ImageRadioModel element in _brightness) {
+            if (element.isSelected) {
+              log(element.label.toString());
+            }
+          }
+
+          log(_seed ?? "");
+        },
+        label: const Text('Gerar'),
+        icon: const Icon(Icons.send),
+        backgroundColor: Colors.pink,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Row(
           children: [
             Expanded(
-              flex: 88,
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Image.network(
-                    //   _imageUrl ?? "https://docs.flutter.dev/assets/images/dash/dash-fainting.gif",
-                    //   fit: BoxFit.contain,
-                    //   width: 500,
-                    // ),
-                    const Text(
-                      "Prompts",
+              child: ListView(
+                padding: const EdgeInsets.all(40.0),
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(50),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Texto à Imagem",
                       style: TextStyle(
                         fontFamily: "Lexend",
-                        fontSize: 24.0,
+                        fontSize: 46,
                       ),
                     ),
-                    const SizedBox(height: 14.0),
-                    TextField(
-                      onChanged: (String text) {
-                        _prompt = text;
-                      },
-                      decoration: const InputDecoration(
-                        // labelText: "Prompt",
+                  ),
+                  const Text(
+                    "Prompt",
+                    style: TextStyle(
+                      fontFamily: "Lexend",
+                      fontSize: 24.0,
+                    ),
+                  ),
+                  const SizedBox(height: 14.0),
+                  TextField(
+                    onChanged: (String text) {
+                      _prompt = text;
+                    },
+                    decoration: const InputDecoration(
+                      // labelText: "Prompt",
+                      border: OutlineInputBorder(),
+                      hintText: "Descreva o que você quer gerar",
+                    ),
+                  ),
+                  const SizedBox(height: 6.0),
+                  TextField(
+                    onChanged: (String text) {
+                      _negativePrompt = text;
+                    },
+                    style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: "Descreva o que você quer gerar",
+                        hintText: "Descreva o que você não quer ver na imagem",
+                        hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
+                        fillColor: Color.fromARGB(255, 13, 13, 16),
+                        filled: true),
+                  ),
+                  const SizedBox(height: 60),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 80),
+                      Transform.rotate(
+                        angle: math.pi / 4,
+                        child: Container(
+                          height: 5,
+                          width: 5,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 6.0),
-                    TextField(
-                      onChanged: (String text) {
-                        _negativePrompt = text;
-                      },
-                      style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Descreva o que você não quer ver na imagem",
-                          hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
-                          fillColor: Color.fromARGB(255, 13, 13, 16),
-                          filled: true),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     // _postRequest();
-                        //   },
-                        //   child: const Text("Enviar"),
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     // _getRequest();
-                        //   },
-                        //   child: const Text("Verificar"),
-                        // ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // for (RadioModel element in _schedulers) {
-                            //   if (element.isSelected) {
-                            //     log(element.value.toString());
-                            //   }
-                            // }
-                            for (RadioModel element in _imageDimensions) {
-                              if (element.isSelected) {
-                                log(element.value.toString());
-                              }
-                            }
-                            for (RadioModel element in _numOutputs) {
-                              if (element.isSelected) {
-                                log(element.value.toString());
-                              }
-                            }
-
-                            log(_seed ?? "");
-                          },
-                          child: const Text("Pegar valores"),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      const SizedBox(width: 6),
+                      Transform.rotate(
+                        angle: math.pi / 4,
+                        child: Container(
+                          height: 7,
+                          width: 7,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Transform.rotate(
+                        angle: math.pi / 4,
+                        child: Container(
+                          height: 7,
+                          width: 7,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Transform.rotate(
+                        angle: math.pi / 4,
+                        child: Container(
+                          height: 5,
+                          width: 5,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(width: 80),
+                    ],
+                  ),
+                  const SizedBox(height: 60),
+                  Transform.scale(
+                    scale: 1.175,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
                       children: [
                         // InputCard(
                         //   title: "Agendador",
@@ -242,19 +339,19 @@ class _CreationPageState extends State<CreationPage> {
                         // ),
                         InputCard(
                           title: "Tamanho",
-                          width: 220.0,
+                          width: 220,
                           child: CustomRadioButton(radioModels: _imageDimensions),
                         ),
                         const SizedBox(width: 35.0),
                         InputCard(
                           title: "Quantidade",
-                          width: 220.0,
+                          width: 220,
                           child: CustomRadioButton(radioModels: _numOutputs),
                         ),
                         const SizedBox(width: 35.0),
                         InputCard(
                           title: "Semente",
-                          width: 220.0,
+                          width: 220,
                           child: SizedBox(
                             height: 35.0,
                             child: TextField(
@@ -274,132 +371,122 @@ class _CreationPageState extends State<CreationPage> {
                         ),
                       ],
                     ),
-                    InputOptionalCard(
-                      title: "Estilos",
-                      child: CustomImageRadioButton(
-                        radioModels: _styles,
-                      ),
+                  ),
+                  const SizedBox(height: 60),
+                  InputOptionalCard(
+                    title: "Estilos",
+                    child: CustomImageRadioButton(
+                      radioModels: _styles,
                     ),
-                    InputOptionalCard(
-                      title: "Cores",
-                      child: CustomImageRadioButton(
-                        radioModels: _colors,
+                  ),
+                  const SizedBox(height: 60),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      InputOptionalCard(
+                        title: "Saturação",
+                        width: 530,
+                        child: CustomImageRadioButton(
+                          radioModels: _saturations,
+                        ),
                       ),
+                      const SizedBox(width: 30),
+                      InputOptionalCard(
+                        title: "Iluminação",
+                        width: 530,
+                        child: CustomImageRadioButton(
+                          radioModels: _brightness,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 60),
+                  InputOptionalCard(
+                    title: "Cores",
+                    child: CustomImageRadioButton(
+                      radioModels: _colors,
                     ),
-                    // SizedBox(
-                    //   height: 150.0,
-                    //   child: ListView(
-                    //     scrollDirection: Axis.horizontal,
-                    //     children: [
-                    //       InputOptionalCard(
-                    //         title: "Cores",
-                    //         child: CustomImageRadioButton(
-                    //           radioModels: _colors,
-                    //         ),
-                    //       )
-                    //       // Container(
-                    //       //   width: 500.0,
-                    //       //   height: 100.0,
-                    //       //   color: Colors.blue,
-                    //       // ),
-                    //       // Container(
-                    //       //   width: 500.0,
-                    //       //   height: 100.0,
-                    //       //   color: Colors.red,
-                    //       // ),
-                    //       // Container(
-                    //       //   width: 500.0,
-                    //       //   height: 100.0,
-                    //       //   color: Colors.orange,
-                    //       // ),
-                    //       // Container(
-                    //       //   width: 500.0,
-                    //       //   height: 100.0,
-                    //       //   color: Colors.amber,
-                    //       // )
-                    //     ],
-                    //   ),
-                    // )
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 80),
+                ],
               ),
             ),
             // ====================
             // Gerações
             // ====================
-            Expanded(
-              flex: 12,
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                color: const Color.fromARGB(255, 13, 13, 16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Gerações",
-                          style: TextStyle(
+            Container(
+              width: 180,
+              padding: const EdgeInsets.all(20.0),
+              color: const Color.fromARGB(255, 13, 13, 16),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Gerações",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Lexend",
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          border: Border.all(color: Colors.white),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            log("Download!");
+                          },
+                          icon: const Icon(
+                            Icons.download,
                             color: Colors.white,
-                            fontFamily: "Lexend",
-                            fontSize: 16.0,
+                            size: 18.0,
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: Colors.white),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              log("Download!");
-                            },
-                            icon: const Icon(
-                              Icons.download,
-                              color: Colors.white,
-                              size: 18.0,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10.0),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: _imagesPlaceholder.length,
-                        separatorBuilder: (BuildContext context, int i) {
-                          return const SizedBox(height: 16.0);
-                        },
-                        itemBuilder: (BuildContext context, int i) {
-                          var images = _imagesPlaceholder[i];
-                          List<Widget> children = [];
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: _imagesPlaceholder.length,
+                      separatorBuilder: (BuildContext context, int i) {
+                        return const SizedBox(height: 16.0);
+                      },
+                      itemBuilder: (BuildContext context, int i) {
+                        var images = _imagesPlaceholder[i];
+                        List<Widget> children = [];
 
-                          for (var image in images) {
-                            children.add(Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Image.network(
-                                image,
-                                fit: BoxFit.fill,
-                                // width: 50.0,
-                              ),
-                            ));
-                          }
-
-                          return Container(
-                            padding: const EdgeInsets.all(2.0),
+                        for (var image in images) {
+                          children.add(Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(color: Colors.white),
                             ),
-                            child: Column(children: children),
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.network(
+                                image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ));
+                        }
+
+                        return Container(
+                          padding: const EdgeInsets.all(2.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(color: Colors.white),
+                          ),
+                          child: Column(children: children),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
