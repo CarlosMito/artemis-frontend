@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/scheduler.dart';
@@ -240,6 +238,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                       const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40), widthFactor: 0.5),
                       Wrap(
                         spacing: 10,
+                        runSpacing: 10,
                         alignment: WrapAlignment.center,
                         children: buildDisplayImageOptions(),
                       )

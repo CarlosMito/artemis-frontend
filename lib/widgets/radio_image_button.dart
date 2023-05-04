@@ -19,7 +19,7 @@ class _RadioImageButtonState extends State<RadioImageButton> {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: widget.radioModels.length,
-        separatorBuilder: (BuildContext context, int i) => const SizedBox(width: 10),
+        separatorBuilder: (BuildContext context, int i) => const SizedBox(width: 14),
         itemBuilder: (BuildContext context, int i) {
           return GestureDetector(
             onTap: () {
@@ -30,26 +30,24 @@ class _RadioImageButtonState extends State<RadioImageButton> {
                 widget.radioModels[i].isSelected = true;
               });
             },
-            child: SizedBox(
-              child: Column(
-                children: [
-                  ImageRadioItem(
-                    radioModel: widget.radioModels[i],
+            child: Column(
+              children: [
+                ImageRadioItem(
+                  radioModel: widget.radioModels[i],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  widget.radioModels[i].label,
+                  style: TextStyle(
+                    fontFamily: "Lexend",
+                    fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
+                    fontSize: 18,
+                    color: widget.radioModels[i].isSelected
+                        ? ((exceptions.contains(widget.radioModels[i].color)) ? Colors.black : widget.radioModels[i].color)
+                        : Colors.black,
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    widget.radioModels[i].label,
-                    style: TextStyle(
-                      fontFamily: "Lexend",
-                      fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
-                      fontSize: 18,
-                      color: widget.radioModels[i].isSelected
-                          ? ((exceptions.contains(widget.radioModels[i].color)) ? Colors.black : widget.radioModels[i].color)
-                          : Colors.black,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
@@ -185,12 +183,12 @@ class ImageRadioItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey[600]!),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.grey,
+            color: Colors.grey[400]!,
             spreadRadius: 1,
             blurRadius: 2,
-            offset: Offset(3, 3), // changes position of shadow
+            offset: const Offset(3, 3), // changes position of shadow
           ),
         ],
       ),

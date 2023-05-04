@@ -1,6 +1,5 @@
 import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class InputImageCard extends StatelessWidget {
   final String title;

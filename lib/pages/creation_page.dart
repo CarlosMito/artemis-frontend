@@ -4,20 +4,17 @@ import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/input_api.dart';
 import 'package:artemis/models/output_api.dart';
-import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
-import 'package:artemis/widgets/display_image_option.dart';
 import 'package:artemis/widgets/image_visualizer.dart';
+import 'package:artemis/widgets/input_image_card.dart';
+import 'package:artemis/widgets/input_text_card.dart';
 import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
-import 'package:artemis/widgets/display_text_option.dart';
-import 'package:artemis/widgets/input_text_card.dart';
-import 'package:artemis/widgets/input_image_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
 
 import '../api_service.dart';
 import '../utils/maps.dart';
@@ -206,202 +203,206 @@ class _CreationPageState extends State<CreationPage> {
     ];
   }
 
+  void generateImage() {
+    for (RadioModel element in _imageDimensions) {
+      if (element.isSelected) {
+        log(element.value.toString());
+      }
+    }
+
+    for (RadioModel element in _numOutputs) {
+      if (element.isSelected) {
+        log(element.value.toString());
+      }
+    }
+
+    for (ImageRadioModel element in _styles) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    for (ImageRadioModel element in _colors) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    for (ImageRadioModel element in _saturations) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    for (ImageRadioModel element in _values) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    log(_seed ?? "[vazio]");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Artemis'),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.black,
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          for (RadioModel element in _imageDimensions) {
-            if (element.isSelected) {
-              log(element.value.toString());
-            }
-          }
-
-          for (RadioModel element in _numOutputs) {
-            if (element.isSelected) {
-              log(element.value.toString());
-            }
-          }
-
-          for (ImageRadioModel element in _styles) {
-            if (element.isSelected) {
-              log(element.label.toString());
-            }
-          }
-
-          for (ImageRadioModel element in _colors) {
-            if (element.isSelected) {
-              log(element.label.toString());
-            }
-          }
-
-          for (ImageRadioModel element in _saturations) {
-            if (element.isSelected) {
-              log(element.label.toString());
-            }
-          }
-
-          for (ImageRadioModel element in _values) {
-            if (element.isSelected) {
-              log(element.label.toString());
-            }
-          }
-
-          log(_seed ?? "[vazio]");
-        },
-        label: const Text("Gerar"),
-        icon: const Icon(Icons.send),
-        backgroundColor: Colors.pink,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Row(
-          children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(40.0),
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(50),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "Texto à Imagem",
-                      style: TextStyle(
-                        fontFamily: "Lexend",
-                        fontSize: 46,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    "Prompts",
+    return Row(
+      children: [
+        Expanded(
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Artemis"),
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.black,
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: generateImage,
+              icon: const Icon(Icons.send),
+              label: const Text("Gerar Imagem"),
+              backgroundColor: Colors.pink,
+            ),
+            body: ListView(
+              padding: const EdgeInsets.all(50),
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(60),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "Texto à Imagem",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "Lexend",
-                      fontSize: 24.0,
+                      fontSize: 46,
                     ),
                   ),
-                  const SizedBox(height: 14.0),
-                  TextField(
-                    onChanged: (String text) {
-                      _prompt = text;
-                    },
-                    decoration: const InputDecoration(
+                ),
+                const Text(
+                  "Prompts",
+                  style: TextStyle(
+                    fontFamily: "Lexend",
+                    fontSize: 24.0,
+                  ),
+                ),
+                const SizedBox(height: 14.0),
+                TextField(
+                  onChanged: (String text) {
+                    _prompt = text;
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Descreva o que você quer gerar",
+                  ),
+                ),
+                const SizedBox(height: 6.0),
+                TextField(
+                  onChanged: (String text) {
+                    _negativePrompt = text;
+                  },
+                  style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Descreva o que você quer gerar",
-                    ),
-                  ),
-                  const SizedBox(height: 6.0),
-                  TextField(
-                    onChanged: (String text) {
-                      _negativePrompt = text;
-                    },
-                    style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Descreva o que você não quer ver na imagem",
-                        hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
-                        fillColor: Color.fromARGB(255, 13, 13, 16),
-                        filled: true),
-                  ),
-                  const DiamondSeparator(
-                    margin: EdgeInsets.symmetric(vertical: 60),
-                    widthFactor: 0.8,
-                  ),
-                  Transform.scale(
-                    scale: 1.175,
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      children: [
-                        // InputCard(
-                        //   title: "Agendador",
-                        //   width: 220.0,
-                        //   child: CustomRadioButton(radioModels: _schedulers),
-                        // ),
-                        InputTextCard(
-                          title: "Tamanho",
-                          width: 220,
-                          child: RadioTextButton(radioModels: _imageDimensions),
-                        ),
-                        const SizedBox(width: 35.0),
-                        InputTextCard(
-                          title: "Quantidade",
-                          width: 220,
-                          child: RadioTextButton(radioModels: _numOutputs),
-                        ),
-                        const SizedBox(width: 35.0),
-                        InputTextCard(
-                          title: "Semente",
-                          width: 220,
-                          child: SizedBox(
-                            height: 35.0,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              onChanged: (String text) {
-                                _seed = text;
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                                hintText: "0",
-                                isDense: true,
-                              ),
+                      hintText: "Descreva o que você não quer ver na imagem",
+                      hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
+                      fillColor: Color.fromARGB(255, 13, 13, 16),
+                      filled: true),
+                ),
+                const DiamondSeparator(
+                  margin: EdgeInsets.symmetric(vertical: 60),
+                  widthFactor: 0.8,
+                ),
+                Transform.scale(
+                  scale: 1.175,
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 35,
+                    runSpacing: 35,
+                    children: [
+                      // InputCard(
+                      //   title: "Agendador",
+                      //   width: 220.0,
+                      //   child: CustomRadioButton(radioModels: _schedulers),
+                      // ),
+                      InputTextCard(
+                        title: "Tamanho",
+                        width: 220,
+                        child: RadioTextButton(radioModels: _imageDimensions),
+                      ),
+                      InputTextCard(
+                        title: "Quantidade",
+                        width: 220,
+                        child: RadioTextButton(radioModels: _numOutputs),
+                      ),
+                      InputTextCard(
+                        title: "Semente",
+                        width: 220,
+                        child: SizedBox(
+                          height: 35.0,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            onChanged: (String text) {
+                              _seed = text;
+                            },
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                              hintText: "0",
+                              isDense: true,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  InputImageCard(
-                    title: "Estilos",
-                    child: RadioImageButton(
-                      radioModels: _styles,
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    children: [
-                      InputImageCard(
-                        title: "Saturação",
-                        width: 530,
-                        child: RadioImageButton(
-                          radioModels: _saturations,
-                        ),
-                      ),
-                      const SizedBox(width: 30),
-                      InputImageCard(
-                        title: "Iluminação",
-                        width: 530,
-                        child: RadioImageButton(
-                          radioModels: _values,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 60),
-                  InputImageCard(
-                    title: "Cores",
-                    child: RadioImageButton(
-                      radioModels: _colors,
-                    ),
+                ),
+                const SizedBox(height: 60),
+                InputImageCard(
+                  title: "Estilos",
+                  child: RadioImageButton(
+                    radioModels: _styles,
                   ),
-                  const SizedBox(height: 80),
-                ],
-              ),
+                ),
+                const SizedBox(height: 60),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  runAlignment: WrapAlignment.spaceEvenly,
+                  runSpacing: 20,
+                  spacing: 30,
+                  children: [
+                    InputImageCard(
+                      title: "Saturação",
+                      width: 530,
+                      child: RadioImageButton(
+                        radioModels: _saturations,
+                      ),
+                    ),
+                    InputImageCard(
+                      title: "Iluminação",
+                      width: 530,
+                      child: RadioImageButton(
+                        radioModels: _values,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 60),
+                InputImageCard(
+                  title: "Cores",
+                  child: RadioImageButton(
+                    radioModels: _colors,
+                  ),
+                ),
+                const SizedBox(height: 80),
+              ],
             ),
-            // ====================
-            // Gerações
-            // ====================
-            Container(
-              width: 180,
+          ),
+        ),
+        // ====================
+        // Gerações
+        // ====================
+        Material(
+          child: SizedBox(
+            width: 180,
+            child: Container(
               padding: const EdgeInsets.all(20.0),
               color: const Color.fromARGB(255, 13, 13, 16),
               child: Column(
@@ -489,9 +490,9 @@ class _CreationPageState extends State<CreationPage> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

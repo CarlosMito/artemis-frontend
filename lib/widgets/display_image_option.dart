@@ -20,7 +20,7 @@ class DisplayImageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (color == null && imageUrl == null) return Container();
+    if (color == null && imageUrl == null) return const SizedBox.shrink();
 
     return Column(
       children: [

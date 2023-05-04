@@ -4,9 +4,7 @@ class OutputAPI {
   final InputAPI input;
   late List<String> images;
 
-  // TODO: Change to images
-
-  OutputAPI({required this.input, iamges}) {
-    this.images = iamges ?? [];
+  OutputAPI({required this.input, images}) {
+    this.images = images ?? [];
   }
 }
