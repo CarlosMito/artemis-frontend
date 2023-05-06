@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "Lexend",
       ),
-      home: const LandingPage(),
+      home: const CreationPage(),
     );
   }
 }
