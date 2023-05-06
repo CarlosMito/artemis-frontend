@@ -1,4 +1,5 @@
 import 'package:artemis/pages/creation_page.dart';
+import 'package:artemis/pages/landing_page.dart';
 import 'package:artemis/utils/custom_scroll_behavior.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -29,8 +30,9 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        fontFamily: "Lexend",
       ),
-      home: const CreationPage(),
+      home: const LandingPage(),
     );
   }
 }
