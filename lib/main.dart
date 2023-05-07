@@ -1,4 +1,5 @@
 import 'package:artemis/pages/creation_page.dart';
+import 'package:artemis/pages/explore_page.dart';
 import 'package:artemis/pages/landing_page.dart';
 import 'package:artemis/utils/custom_scroll_behavior.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "Lexend",
       ),
-      home: const CreationPage(),
+      home: const ExplorePage(),
     );
   }
 }

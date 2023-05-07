@@ -246,161 +246,167 @@ class _CreationPageState extends State<CreationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Scaffold(
-            appBar: const ArtemisAppBar(),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: generateImage,
-              icon: const Icon(Icons.send),
-              label: const Text("Gerar Imagem"),
-              backgroundColor: Colors.pink,
-            ),
-            body: ListView(
-              padding: const EdgeInsets.all(50),
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(60),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Texto à Imagem",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: "Lexend",
-                      fontSize: 46,
+    return Scaffold(
+      appBar: const ArtemisAppBar(),
+      body: Row(
+        children: [
+          Expanded(
+            child: Scaffold(
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: generateImage,
+                icon: const Icon(Icons.send),
+                label: const Text("Gerar Imagem"),
+                backgroundColor: const Color.fromARGB(255, 10, 150, 200),
+              ),
+              body: ListView(
+                padding: const EdgeInsets.all(50),
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(60),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Texto à Imagem",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Lexend",
+                        fontSize: 46,
+                      ),
                     ),
                   ),
-                ),
-                const Text(
-                  "Prompts",
-                  style: TextStyle(
-                    fontFamily: "Lexend",
-                    fontSize: 24.0,
+                  const Text(
+                    "Prompts",
+                    style: TextStyle(
+                      fontFamily: "Lexend",
+                      fontSize: 24.0,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 14.0),
-                TextField(
-                  onChanged: (String text) {
-                    _prompt = text;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Descreva o que você quer gerar",
-                  ),
-                ),
-                const SizedBox(height: 6.0),
-                TextField(
-                  onChanged: (String text) {
-                    _negativePrompt = text;
-                  },
-                  style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
-                  decoration: const InputDecoration(
+                  const SizedBox(height: 14.0),
+                  TextField(
+                    onChanged: (String text) {
+                      _prompt = text;
+                    },
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: "Descreva o que você não quer ver na imagem",
-                      hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
-                      fillColor: Color.fromARGB(255, 13, 13, 16),
-                      filled: true),
-                ),
-                const DiamondSeparator(
-                  margin: EdgeInsets.symmetric(vertical: 60),
-                  widthFactor: 0.8,
-                ),
-                Transform.scale(
-                  scale: 1.175,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 35,
-                    runSpacing: 35,
-                    children: [
-                      // InputCard(
-                      //   title: "Agendador",
-                      //   width: 220.0,
-                      //   child: CustomRadioButton(radioModels: _schedulers),
-                      // ),
-                      InputTextCard(
-                        title: "Tamanho",
-                        width: 220,
-                        child: RadioTextButton(radioModels: _imageDimensions),
-                      ),
-                      InputTextCard(
-                        title: "Quantidade",
-                        width: 220,
-                        child: RadioTextButton(radioModels: _numOutputs),
-                      ),
-                      InputTextCard(
-                        title: "Semente",
-                        width: 220,
-                        child: SizedBox(
-                          height: 35.0,
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            onChanged: (String text) {
-                              _seed = text;
-                            },
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                              hintText: "0",
-                              isDense: true,
+                      hintText: "Descreva o que você quer gerar",
+                    ),
+                  ),
+                  const SizedBox(height: 6.0),
+                  TextField(
+                    onChanged: (String text) {
+                      _negativePrompt = text;
+                    },
+                    style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Descreva o que você não quer ver na imagem",
+                        hintStyle: TextStyle(color: Color.fromARGB(255, 180, 180, 180)),
+                        fillColor: Color.fromARGB(255, 13, 13, 16),
+                        filled: true),
+                  ),
+                  const DiamondSeparator(
+                    margin: EdgeInsets.symmetric(vertical: 60),
+                    widthFactor: 0.8,
+                  ),
+                  Transform.scale(
+                    scale: 1.175,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 35,
+                      runSpacing: 35,
+                      children: [
+                        // InputCard(
+                        //   title: "Agendador",
+                        //   width: 220.0,
+                        //   child: CustomRadioButton(radioModels: _schedulers),
+                        // ),
+                        InputTextCard(
+                          title: "Tamanho",
+                          width: 220,
+                          child: RadioTextButton(radioModels: _imageDimensions),
+                        ),
+                        InputTextCard(
+                          title: "Quantidade",
+                          width: 220,
+                          child: RadioTextButton(radioModels: _numOutputs),
+                        ),
+                        InputTextCard(
+                          title: "Semente",
+                          width: 220,
+                          child: SizedBox(
+                            height: 35.0,
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              onChanged: (String text) {
+                                _seed = text;
+                              },
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                                hintText: "0",
+                                isDense: true,
+                              ),
                             ),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  InputImageCard(
+                    title: "Estilo",
+                    child: RadioImageButton(
+                      radioModels: _styles,
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    runAlignment: WrapAlignment.spaceEvenly,
+                    runSpacing: 20,
+                    spacing: 30,
+                    children: [
+                      InputImageCard(
+                        title: "Saturação",
+                        width: 530,
+                        child: RadioImageButton(
+                          radioModels: _saturations,
+                        ),
+                      ),
+                      InputImageCard(
+                        title: "Iluminação",
+                        width: 530,
+                        child: RadioImageButton(
+                          radioModels: _values,
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 60),
-                InputImageCard(
-                  title: "Estilo",
-                  child: RadioImageButton(
-                    radioModels: _styles,
-                  ),
-                ),
-                const SizedBox(height: 60),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  runAlignment: WrapAlignment.spaceEvenly,
-                  runSpacing: 20,
-                  spacing: 30,
-                  children: [
-                    InputImageCard(
-                      title: "Saturação",
-                      width: 530,
-                      child: RadioImageButton(
-                        radioModels: _saturations,
-                      ),
+                  const SizedBox(height: 60),
+                  InputImageCard(
+                    title: "Cor Principal",
+                    child: RadioImageButton(
+                      radioModels: _colors,
                     ),
-                    InputImageCard(
-                      title: "Iluminação",
-                      width: 530,
-                      child: RadioImageButton(
-                        radioModels: _values,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 60),
-                InputImageCard(
-                  title: "Cor Principal",
-                  child: RadioImageButton(
-                    radioModels: _colors,
                   ),
-                ),
-                const SizedBox(height: 80),
-              ],
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
-        ),
-        // ====================
-        // Gerações
-        // ====================
-        Material(
-          child: SizedBox(
+
+          // ====================
+          // Gerações
+          // ====================
+          SizedBox(
             width: 180,
             child: Container(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(
+                top: 10.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 20.0,
+              ),
               color: const Color.fromARGB(255, 13, 13, 16),
               child: Column(
                 children: [
@@ -477,7 +483,6 @@ class _CreationPageState extends State<CreationPage> {
                             ),
                           );
                         }
-
                         return Container(
                           padding: const EdgeInsets.all(2.0),
                           decoration: BoxDecoration(
@@ -493,8 +498,8 @@ class _CreationPageState extends State<CreationPage> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -40,7 +40,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
             ),
           ),
           const Spacer(),
-          if (MediaQuery.of(context).size.width > 1000)
+          if (MediaQuery.of(context).size.width > 800)
             DefaultTextStyle(
               style: TextStyle(
                 fontSize: 14,
