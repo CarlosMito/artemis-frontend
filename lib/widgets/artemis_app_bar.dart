@@ -1,8 +1,11 @@
 import 'package:artemis/widgets/login_dialog.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const ArtemisAppBar({Key? key})
+  final String? focus;
+
+  const ArtemisAppBar({Key? key, this.focus})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -37,26 +40,32 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
             ),
           ),
           const Spacer(),
-          DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontFamily: "Lexend",
+          if (MediaQuery.of(context).size.width > 1000)
+            DefaultTextStyle(
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[300],
+                fontFamily: "Lexend",
+              ),
+              child: Wrap(
+                clipBehavior: Clip.antiAlias,
+                spacing: 20,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text("Texto à Imagem"),
+                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                  Text("Explorar"),
+                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                  Text("Contatos"),
+                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                  Text("Sobre"),
+                ],
+              ),
             ),
-            child: Wrap(
-              spacing: 50,
-              children: const [
-                Text("Explorar"),
-                Text("Texto à Imagem"),
-                Text("Contatos"),
-                Text("Sobre"),
-              ],
-            ),
-          ),
           const Spacer(),
           DefaultTextStyle(
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.white,
               fontFamily: "Lexend",
             ),
