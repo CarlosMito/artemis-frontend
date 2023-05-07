@@ -176,23 +176,26 @@ class ImageRadioItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      width: 160,
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey[600]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey[400]!,
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: const Offset(3, 3), // changes position of shadow
-          ),
-        ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: Container(
+        height: 160,
+        width: 160,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[600]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[400]!,
+              spreadRadius: 1,
+              blurRadius: 2,
+              offset: const Offset(3, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: radioModel.imageUrl == null ? buildColorRadioItem() : buildImageRadioItem(),
       ),
-      child: radioModel.imageUrl == null ? buildColorRadioItem() : buildImageRadioItem(),
     );
   }
 }

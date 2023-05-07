@@ -59,31 +59,34 @@ class RadioItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(radioModel.isSelected ? 5.5 : 8),
-      decoration: radioModel.isSelected
-          ? BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: const Color.fromARGB(255, 13, 13, 16),
-              border: Border.all(
-                color: Colors.white,
-                strokeAlign: -6.0,
-              ),
-            )
-          : BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.transparent,
-              border: Border.all(
-                color: const Color.fromARGB(255, 13, 13, 16),
-              ),
-            ),
-      alignment: Alignment.center,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-        child: Text(
-          radioModel.text,
-          style: TextStyle(
-            color: radioModel.isSelected ? Colors.white : Colors.black,
+        padding: EdgeInsets.all(radioModel.isSelected ? 5.5 : 8),
+        decoration: radioModel.isSelected
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: const Color.fromARGB(255, 13, 13, 16),
+                border: Border.all(
+                  color: Colors.white,
+                  strokeAlign: -6.0,
+                ),
+              )
+            : BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.transparent,
+                border: Border.all(
+                  color: const Color.fromARGB(255, 13, 13, 16),
+                ),
+              ),
+        alignment: Alignment.center,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Text(
+            radioModel.text,
+            style: TextStyle(
+              color: radioModel.isSelected ? Colors.white : Colors.black,
+            ),
           ),
         ),
       ),

@@ -265,17 +265,20 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                     ),
                     Positioned(
                       right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const CircleAvatar(
-                          radius: 14,
-                          backgroundColor: Colors.black,
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 14,
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const CircleAvatar(
+                            radius: 14,
+                            backgroundColor: Colors.black,
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 14,
+                            ),
                           ),
                         ),
                       ),

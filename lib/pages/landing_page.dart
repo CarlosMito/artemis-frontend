@@ -16,15 +16,9 @@ class _LandingPageState extends State<LandingPage> {
         child: ElevatedButton(
           onPressed: () {
             showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
-                      content: Builder(
-                        builder: (context) {
-                          return const LoginDialog();
-                        },
-                      ),
-                    ));
+              context: context,
+              builder: (_) => const LoginDialog(),
+            );
           },
           child: const Text("Login"),
         ),

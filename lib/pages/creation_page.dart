@@ -13,6 +13,7 @@ import 'package:artemis/widgets/input_image_card.dart';
 import 'package:artemis/widgets/input_text_card.dart';
 import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
+import 'package:artemis/widgets/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -249,11 +250,7 @@ class _CreationPageState extends State<CreationPage> {
       children: [
         Expanded(
           child: Scaffold(
-            appBar: AppBar(
-              title: const Text("Artemis"),
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.black,
-            ),
+            appBar: const ArtemisAppBar(),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: generateImage,
               icon: const Icon(Icons.send),
@@ -356,7 +353,7 @@ class _CreationPageState extends State<CreationPage> {
                 ),
                 const SizedBox(height: 60),
                 InputImageCard(
-                  title: "Estilos",
+                  title: "Estilo",
                   child: RadioImageButton(
                     radioModels: _styles,
                   ),
@@ -386,7 +383,7 @@ class _CreationPageState extends State<CreationPage> {
                 ),
                 const SizedBox(height: 60),
                 InputImageCard(
-                  title: "Cores",
+                  title: "Cor Principal",
                   child: RadioImageButton(
                     radioModels: _colors,
                   ),
@@ -448,32 +445,37 @@ class _CreationPageState extends State<CreationPage> {
                         List<Widget> children = [];
 
                         for (int j = 0; j < output.images.length; j++) {
-                          children.add(GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext ctx) {
-                                  return ImageVisualizer(
-                                    outputs: _generations,
-                                    setIndex: i,
-                                    imageIndex: j,
+                          children.add(
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext ctx) {
+                                      return ImageVisualizer(
+                                        outputs: _generations,
+                                        setIndex: i,
+                                        imageIndex: j,
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: Image.network(
-                                  output.images[j],
-                                  fit: BoxFit.cover,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Image.network(
+                                      output.images[j],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ));
+                          );
                         }
 
                         return Container(

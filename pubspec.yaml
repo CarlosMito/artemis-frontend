@@ -72,6 +72,7 @@ flutter:
   assets:
     - .env
     - assets/images/icons/artemis-icon.png
+    - assets/images/icons/artemis-icon-white.png
     - assets/images/icons/google-icon.png
   #   - images/a_dot_ham.jpeg
 
