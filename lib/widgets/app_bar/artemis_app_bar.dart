@@ -1,3 +1,4 @@
+import 'package:artemis/widgets/app_bar/artemis_app_button.dart';
 import 'package:artemis/widgets/login_dialog.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -41,26 +42,19 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
           ),
           const Spacer(),
           if (MediaQuery.of(context).size.width > 800)
-            DefaultTextStyle(
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[300],
-                fontFamily: "Lexend",
-              ),
-              child: Wrap(
-                clipBehavior: Clip.antiAlias,
-                spacing: 20,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  const Text("Texto à Imagem"),
-                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                  const Text("Explorar"),
-                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                  const Text("Contatos"),
-                  Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                  const Text("Sobre"),
-                ],
-              ),
+            Wrap(
+              clipBehavior: Clip.antiAlias,
+              spacing: 20,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const ArtemisAppButton(text: "Texto à Imagem", route: "/text2image"),
+                Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                const ArtemisAppButton(text: "Explorar", route: "/explore"),
+                Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                const ArtemisAppButton(text: "Contate-me", route: "/contact-me"),
+                Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
+                const ArtemisAppButton(text: "Sobre", route: "/about"),
+              ],
             ),
           const Spacer(),
           DefaultTextStyle(

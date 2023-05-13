@@ -13,7 +13,7 @@ import 'package:artemis/widgets/input_image_card.dart';
 import 'package:artemis/widgets/input_text_card.dart';
 import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
-import 'package:artemis/widgets/artemis_app_bar.dart';
+import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

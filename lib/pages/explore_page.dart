@@ -1,5 +1,5 @@
 import 'package:artemis/utils/maps.dart';
-import 'package:artemis/widgets/artemis_app_bar.dart';
+import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 
 // https://github.com/flutter/flutter/blob/b8a2456737c9645e5f3d7210fba6267f7408486f/dev/integration_tests/flutter_gallery/lib/demo/material/grid_list_demo.dart
