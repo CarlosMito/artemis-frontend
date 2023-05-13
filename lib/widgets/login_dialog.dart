@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class LoginDialog extends StatefulWidget {
@@ -103,7 +105,10 @@ class _LoginDialogState extends State<LoginDialog> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        log(_email);
+                        log(_password);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 13, 183, 220),
                         padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),

@@ -17,21 +17,18 @@ import 'package:artemis/widgets/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../api_service.dart';
 import '../utils/maps.dart';
 
-class CreationPage extends StatefulWidget {
-  const CreationPage({super.key});
+class Text2ImagePage extends StatefulWidget {
+  const Text2ImagePage({super.key});
 
   @override
-  State<CreationPage> createState() => _CreationPageState();
+  State<Text2ImagePage> createState() => _Text2ImagePageState();
 }
 
-class _CreationPageState extends State<CreationPage> {
+class _Text2ImagePageState extends State<Text2ImagePage> {
   String _prompt = "";
   String _negativePrompt = "";
-  String? _imageUrl;
-  String? _id;
   String? _seed;
 
   final List<OutputAPI> _generations = [
@@ -89,37 +86,38 @@ class _CreationPageState extends State<CreationPage> {
   final List<ImageRadioModel> _saturations = [];
   final List<ImageRadioModel> _values = [];
 
-  void _postRequest() async {
-    if (_prompt.isNotEmpty) {
-      Map<String, dynamic>? res = await ApiService().postPrompt(_prompt);
-      _id = res?["id"];
+  // NOTE: These functions will be on the Python backend
+  // void _postRequest() async {
+  //   if (_prompt.isNotEmpty) {
+  //     Map<String, dynamic>? res = await ApiService().postPrompt(_prompt);
+  //     _id = res?["id"];
 
-      // var results = res?["results"];
-      // id = results?[0]["id"];
+  //     // var results = res?["results"];
+  //     // id = results?[0]["id"];
 
-      // print(res.toString());
-      log(_id ?? "Não foi possível gerar a imagem");
-    }
-    // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-  }
+  //     // print(res.toString());
+  //     log(_id ?? "Não foi possível gerar a imagem");
+  //   }
+  //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  // }
 
-  void _getRequest() async {
-    if (_id != null) {
-      Map<String, dynamic>? res = await ApiService().getStatus(_id!);
+  // void _getRequest() async {
+  //   if (_id != null) {
+  //     Map<String, dynamic>? res = await ApiService().getStatus(_id!);
 
-      if (res != null) {
-        log(res["status"]);
+  //     if (res != null) {
+  //       log(res["status"]);
 
-        if (res["status"] == "succeeded") {
-          log(res["output"][0]);
-          _imageUrl = res["output"][0];
-          setState(() {});
-        }
+  //       if (res["status"] == "succeeded") {
+  //         log(res["output"][0]);
+  //         _imageUrl = res["output"][0];
+  //         setState(() {});
+  //       }
 
-        return;
-      }
-    }
-  }
+  //       return;
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
@@ -242,6 +240,8 @@ class _CreationPageState extends State<CreationPage> {
     }
 
     log(_seed ?? "[vazio]");
+    log(_negativePrompt);
+    log(_prompt);
   }
 
   @override
