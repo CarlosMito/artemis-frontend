@@ -152,9 +152,9 @@ class _LoginDialogState extends State<LoginDialog> {
                     const SizedBox(height: 8),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Text(
                             "Novo por aqui? ",
                             style: TextStyle(

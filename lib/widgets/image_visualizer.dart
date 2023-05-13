@@ -172,7 +172,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                             ),
                             child: Column(
                               children: [
-                                Row(children: const [
+                                const Row(children: [
                                   Flexible(
                                     child: Text(
                                       "Prompt Positivo",
@@ -201,7 +201,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                               ),
                               child: Column(
                                 children: [
-                                  Row(children: const [
+                                  const Row(children: [
                                     Flexible(
                                       child: Text(
                                         "Prompt Negativo",
