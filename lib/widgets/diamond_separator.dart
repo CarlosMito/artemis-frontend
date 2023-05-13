@@ -62,7 +62,7 @@ class DiamondSeparator extends StatelessWidget {
         widthFactor: widthFactor,
         child: Row(children: [
           ...buildHalf(false),
-          content ?? Container(),
+          content ?? const SizedBox.shrink(),
           ...buildHalf(true),
         ]),
       ),
