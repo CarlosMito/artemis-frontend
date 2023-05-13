@@ -1,4 +1,4 @@
-import 'package:artemis/widgets/login_dialog.dart';
+import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatefulWidget {
@@ -12,16 +12,9 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const ArtemisAppBar(),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => const LoginDialog(),
-            );
-          },
-          child: const Text("Login"),
-        ),
+        child: Container(),
       ),
     );
   }

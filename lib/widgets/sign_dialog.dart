@@ -1,17 +1,33 @@
 import 'dart:developer';
 
+import 'package:artemis/enums/sign_type.dart';
 import 'package:flutter/material.dart';
 
-class LoginDialog extends StatefulWidget {
-  const LoginDialog({super.key});
+class SignDialog extends StatefulWidget {
+  final SignType signType;
+  const SignDialog({super.key, required this.signType});
 
   @override
-  State<LoginDialog> createState() => _LoginDialogState();
+  State<SignDialog> createState() => _SignDialogState();
 }
 
-class _LoginDialogState extends State<LoginDialog> {
+class _SignDialogState extends State<SignDialog> {
   String _email = "";
   String _password = "";
+  String _confirmPassword = "";
+
+  bool _isSignup = false;
+
+  String get _title => _isSignup ? "Cadastrar" : "Login";
+  String get _preText => _isSignup ? "Já possui uma conta? " : "Novo por aqui? ";
+  String get _posText => _isSignup ? "Acesse aqui" : "Crie uma conta ";
+
+  @override
+  void initState() {
+    super.initState();
+    _isSignup = widget.signType == SignType.signup;
+    // _title =
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +65,9 @@ class _LoginDialogState extends State<LoginDialog> {
                               color: const Color.fromARGB(255, 13, 183, 220),
                             ),
                           ),
-                          const Text(
-                            "Login",
-                            style: TextStyle(
+                          Text(
+                            _title,
+                            style: const TextStyle(
                               fontFamily: "Righteous",
                               fontSize: 34,
                             ),
@@ -103,18 +119,44 @@ class _LoginDialogState extends State<LoginDialog> {
                       enableSuggestions: false,
                       autocorrect: false,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 12),
+                    if (_isSignup)
+                      TextField(
+                        onChanged: (String text) {
+                          _confirmPassword = text;
+                        },
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color.fromARGB(255, 13, 183, 220),
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                              width: 1.5,
+                            ),
+                          ),
+                          labelText: "Confirmar Senha",
+                        ),
+                        obscureText: true,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                      ),
+                    SizedBox(height: _isSignup ? 24 : 12),
                     ElevatedButton(
                       onPressed: () {
                         log(_email);
                         log(_password);
+                        log(_confirmPassword);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 13, 183, 220),
                         padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),
                       ),
                       child: const Text(
-                        "Entrar",
+                        "Confirmar",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -157,22 +199,29 @@ class _LoginDialogState extends State<LoginDialog> {
                     const SizedBox(height: 8),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Novo por aqui? ",
-                            style: TextStyle(
+                            _preText,
+                            style: const TextStyle(
                               fontSize: 13,
                             ),
                           ),
                           MouseRegion(
                             cursor: SystemMouseCursors.click,
-                            child: Text(
-                              "Crie uma conta",
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Color.fromARGB(255, 0, 161, 197),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isSignup = !_isSignup;
+                                });
+                              },
+                              child: Text(
+                                _posText,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color.fromARGB(255, 0, 161, 197),
+                                ),
                               ),
                             ),
                           ),

@@ -1,7 +1,10 @@
+import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_button.dart';
-import 'package:artemis/widgets/login_dialog.dart';
+import 'package:artemis/widgets/sign_dialog.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:vrouter/vrouter.dart';
 
 class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? focus;
@@ -23,21 +26,33 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
     return AppBar(
       title: Row(
         children: [
-          SizedBox.square(
-            dimension: 26,
-            child: FittedBox(
-              child: Image.asset(
-                "assets/images/icons/artemis-icon-white.png",
-                fit: BoxFit.cover,
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () {
+                context.vRouter.to("/home");
+              },
+              child: Row(
+                children: [
+                  SizedBox.square(
+                    dimension: 26,
+                    child: FittedBox(
+                      child: Image.asset(
+                        "assets/images/icons/artemis-icon-white.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "ARTEMIS",
+                    style: TextStyle(
+                      fontFamily: "Righteous",
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Text(
-            "ARTEMIS",
-            style: TextStyle(
-              fontFamily: "Righteous",
-              fontSize: 18,
             ),
           ),
           const Spacer(),
@@ -47,13 +62,25 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
               spacing: 20,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                const ArtemisAppButton(text: "Texto à Imagem", route: "/text2image"),
+                const ArtemisAppButton(
+                  text: "Texto à Imagem",
+                  route: "/text2image",
+                ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                const ArtemisAppButton(text: "Explorar", route: "/explore"),
+                const ArtemisAppButton(
+                  text: "Explorar",
+                  route: "/explore",
+                ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                const ArtemisAppButton(text: "Contate-me", route: "/contact-me"),
+                const ArtemisAppButton(
+                  text: "Contate-me",
+                  route: "/contact-me",
+                ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                const ArtemisAppButton(text: "Sobre", route: "/about"),
+                const ArtemisAppButton(
+                  text: "Sobre",
+                  route: "/about",
+                ),
               ],
             ),
           const Spacer(),
@@ -71,7 +98,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                     onTap: () {
                       showDialog(
                         context: context,
-                        builder: (_) => const LoginDialog(),
+                        builder: (_) => const SignDialog(signType: SignType.signin),
                       );
                     },
                     child: Container(
@@ -83,18 +110,26 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 12,
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => const SignDialog(signType: SignType.signup),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: const Text("Cadastrar"),
                     ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Text("Cadastrar"),
                   ),
                 ),
               ],
