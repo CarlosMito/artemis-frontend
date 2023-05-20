@@ -1,45 +1,34 @@
 import 'package:artemis/models/piece.dart';
+import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'grid_piece_viewer.dart';
 
 typedef BannerTapCallback = void Function(Piece piece);
 
-class _GridTitleText extends StatelessWidget {
-  const _GridTitleText(this.text);
-
-  final String? text;
-
-  @override
-  Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerLeft,
-      child: Text(text!),
-    );
-  }
-}
-
-class GridPieceItem extends StatelessWidget {
-  const GridPieceItem({
-    Key? key,
-    required this.piece,
-    required this.onBannerTap,
-  }) : super(key: key);
-
+class GridPieceItem extends StatefulWidget {
   final Piece piece;
   final BannerTapCallback onBannerTap;
+
+  const GridPieceItem({super.key, required this.piece, required this.onBannerTap});
+
+  @override
+  State<GridPieceItem> createState() => _GridPieceItemState();
+}
+
+class _GridPieceItemState extends State<GridPieceItem> {
+  bool _onHover = false;
 
   void showPhoto(BuildContext context) {
     Navigator.push(context, MaterialPageRoute<void>(builder: (BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(piece.title!),
-        ),
+        appBar: const ArtemisAppBar(
+            // title: Text(piece.title!),
+            ),
         body: SizedBox.expand(
           child: Hero(
-            tag: piece.id,
-            child: GridPieceViewer(piece: piece),
+            tag: widget.piece.id,
+            child: GridPieceViewer(piece: widget.piece),
           ),
         ),
       );
@@ -48,41 +37,94 @@ class GridPieceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget image = Semantics(
-      label: '${piece.title} - ${piece.caption}',
-      child: GestureDetector(
-        onTap: () {
-          showPhoto(context);
-        },
-        child: Hero(
-          key: Key(piece.source),
-          tag: piece.id,
-          child: Image.network(
-            piece.source,
-            fit: BoxFit.cover,
+    final Widget image = GestureDetector(
+      onTap: () {
+        showPhoto(context);
+      },
+      child: Stack(
+        children: [
+          SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Semantics(
+              label: '${widget.piece.title} - ${widget.piece.caption}',
+              child: Hero(
+                key: Key(widget.piece.source),
+                tag: widget.piece.id,
+                child: Image.network(
+                  widget.piece.source,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-        ),
+          if (_onHover) Container(color: Colors.black.withOpacity(0.5)),
+        ],
       ),
     );
 
-    final IconData icon = piece.isFavorite ? Icons.star : Icons.star_border;
+    final IconData icon = widget.piece.isFavorite ? Icons.favorite : Icons.favorite_border;
 
-    return GridTile(
-      footer: GestureDetector(
-        onTap: () {
-          onBannerTap(piece);
-        },
-        child: GridTileBar(
-          backgroundColor: Colors.black45,
-          title: _GridTitleText(piece.title),
-          subtitle: _GridTitleText(piece.caption),
-          trailing: Icon(
-            icon,
-            color: Colors.white,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) {
+        setState(() {
+          _onHover = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _onHover = false;
+        });
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16.0),
+        child: GridTile(
+          header: Container(
+            margin: const EdgeInsets.only(top: 6.0),
+            child: _onHover
+                ? GridTileBar(
+                    title: const SizedBox.shrink(),
+                    trailing: IconButton(
+                      onPressed: () => widget.onBannerTap(widget.piece),
+                      icon: Icon(icon, color: Colors.white),
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
+          footer: _onHover
+              ? Container(
+                  margin: const EdgeInsets.only(bottom: 8.0),
+                  child: GestureDetector(
+                    child: GridTileBar(
+                      title: Text(
+                        widget.piece.title!,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontFamily: "Lato",
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Container(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          widget.piece.caption!,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontFamily: "Lato",
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+          child: image,
         ),
       ),
-      child: image,
     );
   }
 }

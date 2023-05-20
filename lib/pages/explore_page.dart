@@ -25,7 +25,7 @@ class _ExplorePageState extends State<ExplorePage> {
         pieces.add(Piece(
           source: value,
           title: "Teste $key",
-          caption: "Legenda $key",
+          caption: "@Legenda $key",
         ));
       }
     });
@@ -44,9 +44,9 @@ class _ExplorePageState extends State<ExplorePage> {
               bottom: false,
               child: GridView.count(
                 crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3,
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                padding: const EdgeInsets.all(4.0),
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+                padding: const EdgeInsets.all(10.0),
                 childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
                 children: pieces.map<Widget>((Piece piece) {
                   return GridPieceItem(

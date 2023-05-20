@@ -69,6 +69,11 @@ flutter:
     - family: Righteous
       fonts:
         - asset: assets/fonts/Righteous/Righteous-Regular.ttf
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato/Lato-Regular.ttf
+        - asset: assets/fonts/Lato/Lato-Thin.ttf
+          weight: 100
 
   # To add assets to your application, add an assets section, like this:
   assets:
