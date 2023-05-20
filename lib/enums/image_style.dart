@@ -1,4 +1,4 @@
-enum ImageStyle { anime, digitalArt, model3d, oilPainting, photography }
+enum ImageStyle { anime, digitalArt, model3d, oilPainting, photography, surrealism, comic, impressionist, graffiti, pop_art }
 
 extension ParseToString on ImageStyle {
   String toDisplay() {
@@ -13,8 +13,16 @@ extension ParseToString on ImageStyle {
         return "Pintura a Óleo";
       case ImageStyle.photography:
         return "Fotografia";
-      default:
-        return name;
+      case ImageStyle.surrealism:
+        return "Surrealista";
+      case ImageStyle.comic:
+        return "Quadrinhos";
+      case ImageStyle.impressionist:
+        return "Impressionista";
+      case ImageStyle.graffiti:
+        return "Grafiti";
+      case ImageStyle.pop_art:
+        return "Arte Pop";
     }
   }
 }
