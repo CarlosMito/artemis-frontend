@@ -9,7 +9,7 @@ class DisplayImageOption extends StatelessWidget {
 
   Widget buildChild() {
     return color == null
-        ? Image.network(
+        ? Image.asset(
             imageUrl!,
             fit: BoxFit.cover,
             width: double.infinity,

@@ -78,10 +78,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
-    - assets/images/icons/artemis-icon.png
-    - assets/images/icons/artemis-icon-white.png
-    - assets/images/icons/google-icon.png
-  #   - images/a_dot_ham.jpeg
+    - assets/images/background/
+    - assets/images/icons/
+    - assets/images/options/saturations/
+    - assets/images/options/styles/
+    - assets/images/options/values/
+    - assets/images/placeholders/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

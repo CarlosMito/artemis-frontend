@@ -142,7 +142,7 @@ class ImageRadioItem extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.network(
+          child: Image.asset(
             radioModel.imageUrl!,
             fit: BoxFit.cover,
             width: double.infinity,

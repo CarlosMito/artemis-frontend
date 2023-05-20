@@ -51,7 +51,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
               child: Hero(
                 key: Key(widget.piece.source),
                 tag: widget.piece.id,
-                child: Image.network(
+                child: Image.asset(
                   widget.piece.source,
                   fit: BoxFit.cover,
                 ),

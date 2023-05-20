@@ -31,7 +31,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   String _negativePrompt = "";
   String? _seed;
 
-  final List<OutputAPI> _generations = [
+  final List<OutputAPI> _outputs = [
     OutputAPI(
       input: InputAPI(
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
@@ -152,7 +152,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _styles.add(ImageRadioModel(
         false,
         label: style.toDisplay(),
-        imageUrl: imagePlaceholders[style],
+        imageUrl: imageMapping[style],
       ));
     }
 
@@ -160,7 +160,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _saturations.add(ImageRadioModel(
         false,
         label: saturation.toDisplay(),
-        imageUrl: imagePlaceholders[saturation],
+        imageUrl: imageMapping[saturation],
       ));
     }
 
@@ -168,7 +168,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _values.add(ImageRadioModel(
         false,
         label: value.toDisplay(),
-        imageUrl: imagePlaceholders[value],
+        imageUrl: imageMapping[value],
       ));
     }
 
@@ -179,26 +179,26 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     //================
     // Init Outputs
     //================
-    _generations[0].images = [
-      imagePlaceholders[0]!,
+    _outputs[0].images = [
+      imageMapping[0]!,
     ];
 
-    _generations[1].images = [
-      imagePlaceholders[1]!,
-      imagePlaceholders[2]!,
+    _outputs[1].images = [
+      imageMapping[1]!,
+      imageMapping[2]!,
     ];
 
-    _generations[2].images = [
-      imagePlaceholders[3]!,
-      imagePlaceholders[4]!,
-      imagePlaceholders[5]!,
+    _outputs[2].images = [
+      imageMapping[3]!,
+      imageMapping[4]!,
+      imageMapping[5]!,
     ];
 
-    _generations[3].images = [
-      imagePlaceholders[2]!,
-      imagePlaceholders[1]!,
-      imagePlaceholders[4]!,
-      imagePlaceholders[0]!,
+    _outputs[3].images = [
+      imageMapping[2]!,
+      imageMapping[1]!,
+      imageMapping[4]!,
+      imageMapping[0]!,
     ];
   }
 
@@ -442,12 +442,12 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   const SizedBox(height: 10.0),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: _generations.length,
+                      itemCount: _outputs.length,
                       separatorBuilder: (BuildContext context, int i) {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var output = _generations[i];
+                        var output = _outputs[i];
                         List<Widget> children = [];
 
                         for (int j = 0; j < output.images.length; j++) {
@@ -460,7 +460,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                     context: context,
                                     builder: (BuildContext ctx) {
                                       return ImageVisualizer(
-                                        outputs: _generations,
+                                        outputs: _outputs,
                                         setIndex: i,
                                         imageIndex: j,
                                       );
@@ -473,7 +473,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   ),
                                   child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: Image.network(
+                                    child: Image.asset(
                                       output.images[j],
                                       fit: BoxFit.cover,
                                     ),

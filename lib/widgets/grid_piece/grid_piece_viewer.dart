@@ -91,7 +91,7 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
           transform: Matrix4.identity()
             ..translate(_offset.dx, _offset.dy)
             ..scale(_scale),
-          child: Image.network(
+          child: Image.asset(
             widget.piece!.source,
             fit: BoxFit.contain,
           ),

@@ -20,7 +20,7 @@ class _ExplorePageState extends State<ExplorePage> {
   void initState() {
     super.initState();
 
-    imagePlaceholders.forEach((key, value) {
+    imageMapping.forEach((key, value) {
       if (key is int) {
         pieces.add(Piece(
           source: value,
