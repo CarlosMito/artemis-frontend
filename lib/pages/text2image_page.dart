@@ -4,9 +4,11 @@ import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/enums/my_placeholders.dart';
 import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/input_api.dart';
 import 'package:artemis/models/output_api.dart';
+import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:artemis/widgets/image_visualizer.dart';
 import 'package:artemis/widgets/input_image_card.dart';
@@ -473,9 +475,9 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   ),
                                   child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: Image.asset(
+                                    child: ArtemisNetworkImage(
                                       output.images[j],
-                                      fit: BoxFit.cover,
+                                      progressColor: Colors.white,
                                     ),
                                   ),
                                 ),

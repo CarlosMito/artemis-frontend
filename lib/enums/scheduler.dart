@@ -4,7 +4,7 @@ extension ParseToString on Scheduler {
   String toReplicateAPI() {
     // This method was coded based on the API available value
     // for the [scheduler] parameter in Replicate API
-    var exceptions = {Scheduler.dpmSolverMultistep: "DPMSolverMultistep"};
+    Map<Scheduler, String> exceptions = {Scheduler.dpmSolverMultistep: "DPMSolverMultistep"};
 
     if (exceptions.containsKey(this)) {
       return exceptions[this]!;

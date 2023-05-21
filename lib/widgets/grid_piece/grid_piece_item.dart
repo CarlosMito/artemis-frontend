@@ -1,7 +1,10 @@
+import 'package:artemis/enums/my_placeholders.dart';
 import 'package:artemis/models/piece.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
+import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/maps.dart';
 import 'grid_piece_viewer.dart';
 
 typedef BannerTapCallback = void Function(Piece piece);
@@ -51,9 +54,9 @@ class _GridPieceItemState extends State<GridPieceItem> {
               child: Hero(
                 key: Key(widget.piece.source),
                 tag: widget.piece.id,
-                child: Image.asset(
+                child: ArtemisNetworkImage(
                   widget.piece.source,
-                  fit: BoxFit.cover,
+                  progressColor: Colors.black,
                 ),
               ),
             ),

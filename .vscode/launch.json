@@ -9,7 +9,10 @@
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
-            "deviceId": "chrome"
+            "deviceId": "chrome",
+            "args": [
+                "--web-renderer html"
+            ]
         }
     ]
 }

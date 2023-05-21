@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../enums/image_saturation.dart';
 import '../enums/image_style.dart';
 import '../enums/image_value.dart';
+import '../enums/my_placeholders.dart';
 
 final Map<Color, String> colorMap = {
   Colors.black: "Preto",
@@ -49,25 +50,25 @@ const String optionsDir = "assets/images/options";
 const String placeholdersDir = "assets/images/placeholders";
 
 final Map<Object, String> imageMapping = {
-  0: "$placeholdersDir/placeholder_0.jpg",
-  1: "$placeholdersDir/placeholder_1.jpeg",
-  2: "$placeholdersDir/placeholder_2.jpg",
-  3: "$placeholdersDir/placeholder_3.jpg",
-  4: "$placeholdersDir/placeholder_4.jpeg",
-  5: "$placeholdersDir/placeholder_5.jpg",
-  6: "$placeholdersDir/placeholder_6.jpg",
-  7: "$placeholdersDir/placeholder_7.jpg",
-  8: "$placeholdersDir/placeholder_8.jpg",
-  9: "$placeholdersDir/placeholder_9.jpg",
-  10: "$placeholdersDir/placeholder_10.jpg",
-  11: "$placeholdersDir/placeholder_11.jpg",
+  0: "http://127.0.0.1:8000/images/outputs/placeholder_0.jpg",
+  1: "http://127.0.0.1:8000/images/outputs/placeholder_1.jpeg",
+  2: "http://127.0.0.1:8000/images/outputs/placeholder_2.jpg",
+  3: "http://127.0.0.1:8000/images/outputs/placeholder_3.jpg",
+  4: "http://127.0.0.1:8000/images/outputs/placeholder_4.jpeg",
+  5: "http://127.0.0.1:8000/images/outputs/placeholder_5.jpg",
+  6: "http://127.0.0.1:8000/images/outputs/placeholder_6.jpg",
+  7: "http://127.0.0.1:8000/images/outputs/placeholder_7.jpg",
+  8: "http://127.0.0.1:8000/images/outputs/placeholder_8.jpg",
+  9: "http://127.0.0.1:8000/images/outputs/placeholder_9.jpg",
+  10: "http://127.0.0.1:8000/images/outputs/placeholder_10.jpg",
+  11: "http://127.0.0.1:8000/images/outputs/placeholder_11.jpg",
   ImageStyle.anime: "$optionsDir/styles/anime.jpg",
   ImageStyle.oilPainting: "$optionsDir/styles/oil_painting.jpg",
   ImageStyle.digitalArt: "$optionsDir/styles/digital_art.jpg",
   ImageStyle.model3d: "$optionsDir/styles/3d_model.webp",
   ImageStyle.photography: "$optionsDir/styles/photography.webp",
   ImageStyle.surrealism: "$optionsDir/styles/surrealism.png",
-  ImageStyle.pop_art: "$optionsDir/styles/pop_art.jpg",
+  ImageStyle.popArt: "$optionsDir/styles/pop_art.jpg",
   ImageStyle.graffiti: "$optionsDir/styles/graffiti.jpg",
   ImageStyle.impressionist: "$optionsDir/styles/impressionist.jpg",
   ImageStyle.comic: "$optionsDir/styles/comic.jpg",
@@ -75,4 +76,5 @@ final Map<Object, String> imageMapping = {
   ImageSaturation.low: "$optionsDir/saturations/low.jpg",
   ImageValue.high: "$optionsDir/values/high.webp",
   ImageValue.low: "$optionsDir/values/low.jpg",
+  MyPlaceholders.imageError: "$placeholdersDir/image_error.jpg",
 };

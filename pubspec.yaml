@@ -34,6 +34,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   routemaster: ^1.0.1
   vrouter: ^1.2.1
+  cached_network_image: ^3.2.3
 
 
   # The following adds the Cupertino Icons font to your application.
