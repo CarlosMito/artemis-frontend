@@ -1,6 +1,4 @@
-import 'package:artemis/enums/my_placeholders.dart';
 import 'package:artemis/models/piece.dart';
-import 'package:artemis/utils/maps.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:flutter/material.dart';
 
