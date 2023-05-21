@@ -1,11 +1,9 @@
 {
-    // "cmake.configureOnOpen": false,
-    // "cmake.sourceDirectory": "${workspaceFolder}/linux/flutter"
     "dart.lineLength": 150,
     "[dart]": {
         "editor.rulers": [
             150
-        ],
+        ]
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
