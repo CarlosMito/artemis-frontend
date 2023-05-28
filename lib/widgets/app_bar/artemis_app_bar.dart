@@ -38,7 +38,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                     dimension: 26,
                     child: FittedBox(
                       child: Image.asset(
-                        "assets/images/icons/artemis-icon-white.png",
+                        "assets/images/icons/artemis-icon-2-white.png",
                         fit: BoxFit.cover,
                       ),
                     ),
