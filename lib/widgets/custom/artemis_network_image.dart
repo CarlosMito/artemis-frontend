@@ -1,4 +1,4 @@
-import 'package:artemis/enums/my_placeholders.dart';
+import 'package:artemis/enums/artemis_placeholder.dart';
 import 'package:artemis/utils/maps.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class _ArtemisNetworkImageState extends State<ArtemisNetworkImage> {
       },
       errorWidget: (BuildContext context, String string, dynamic d) {
         return Image.asset(
-          imageMapping[MyPlaceholders.imageError]!,
+          imageMapping[ArtemisPlaceholder.imageError]!,
           fit: BoxFit.cover,
         );
       },

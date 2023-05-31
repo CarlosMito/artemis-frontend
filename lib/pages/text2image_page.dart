@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
@@ -90,7 +91,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   // NOTE: These functions will be on the Python backend
   // void _postRequest() async {
   //   if (_prompt.isNotEmpty) {
-  //     Map<String, dynamic>? res = await ApiService().postPrompt(_prompt);
+  //     Map<String, dynamic>? res = await ReplicateApiService().postPrompt(_prompt);
   //     _id = res?["id"];
 
   //     // var results = res?["results"];
@@ -102,23 +103,29 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   // }
 
-  // void _getRequest() async {
-  //   if (_id != null) {
-  //     Map<String, dynamic>? res = await ApiService().getStatus(_id!);
+  String? _id;
 
-  //     if (res != null) {
-  //       log(res["status"]);
+  void _getRequest() async {
+    _id = "1";
 
-  //       if (res["status"] == "succeeded") {
-  //         log(res["output"][0]);
-  //         _imageUrl = res["output"][0];
-  //         setState(() {});
-  //       }
+    if (_id != null) {
+      Map<String, dynamic>? res = await ArtemisApiService().getStatus(_id!);
 
-  //       return;
-  //     }
-  //   }
-  // }
+      print(res);
+
+      // if (res != null) {
+      //   log(res["status"]);
+
+      //   if (res["status"] == "succeeded") {
+      //     log(res["output"][0]);
+      //     _imageUrl = res["output"][0];
+      //     setState(() {});
+      //   }
+
+      //   return;
+      // }
+    }
+  }
 
   @override
   void initState() {
@@ -204,45 +211,47 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   }
 
   void generateImage() {
-    for (RadioModel element in _imageDimensions) {
-      if (element.isSelected) {
-        log(element.value.toString());
-      }
-    }
+    // for (RadioModel element in _imageDimensions) {
+    //   if (element.isSelected) {
+    //     log(element.value.toString());
+    //   }
+    // }
 
-    for (RadioModel element in _numOutputs) {
-      if (element.isSelected) {
-        log(element.value.toString());
-      }
-    }
+    // for (RadioModel element in _numOutputs) {
+    //   if (element.isSelected) {
+    //     log(element.value.toString());
+    //   }
+    // }
 
-    for (ImageRadioModel element in _styles) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
+    // for (ImageRadioModel element in _styles) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
 
-    for (ImageRadioModel element in _colors) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
+    // for (ImageRadioModel element in _colors) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
 
-    for (ImageRadioModel element in _saturations) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
+    // for (ImageRadioModel element in _saturations) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
 
-    for (ImageRadioModel element in _values) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
+    // for (ImageRadioModel element in _values) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
 
-    log(_seed ?? "[vazio]");
-    log(_negativePrompt);
-    log(_prompt);
+    // log(_seed ?? "[vazio]");
+    // log(_negativePrompt);
+    // log(_prompt);
+
+    _getRequest();
   }
 
   @override

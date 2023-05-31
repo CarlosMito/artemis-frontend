@@ -1,1 +1,0 @@
-enum MyPlaceholders { imageError }

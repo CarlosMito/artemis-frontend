@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../enums/image_saturation.dart';
 import '../enums/image_style.dart';
 import '../enums/image_value.dart';
-import '../enums/my_placeholders.dart';
+import '../enums/artemis_placeholder.dart';
 
 final Map<Color, String> colorMap = {
   Colors.black: "Preto",
@@ -76,5 +76,5 @@ final Map<Object, String> imageMapping = {
   ImageSaturation.low: "$optionsDir/saturations/low.jpg",
   ImageValue.high: "$optionsDir/values/high.webp",
   ImageValue.low: "$optionsDir/values/low.jpg",
-  MyPlaceholders.imageError: "$placeholdersDir/image_error.jpg",
+  ArtemisPlaceholder.imageError: "$placeholdersDir/image_error.jpg",
 };

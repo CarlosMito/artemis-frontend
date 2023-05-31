@@ -13,22 +13,14 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
-class _LandingPageState extends State<LandingPage> {
-  Matrix4 _matrix = Matrix4.identity();
-  ValueNotifier<Matrix4>? _notifier;
+class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin {
   final Random _random = Random(6);
-
-  @override
-  void initState() {
-    super.initState();
-    _notifier = ValueNotifier(_matrix);
-  }
 
   List<Widget> _buildStars(double centerX, double centerY, totalStars) {
     List<Widget> stars = [];
 
     var minStarSize = 5;
-    var maxStarSize = 25;
+    var maxStarSize = 30;
     var radius = 300;
     var limitX = 700;
     var limitY = 700;
@@ -39,8 +31,8 @@ class _LandingPageState extends State<LandingPage> {
       var top = _random.nextDouble() * limitY - limitY / 2;
       var hypotenuse = sqrt(pow(left, 2) + pow(top, 2));
 
-      left += (left / hypotenuse) * radius;
-      top += (top / hypotenuse) * radius;
+      left += (left / hypotenuse) * radius - starSize / 2;
+      top += (top / hypotenuse) * radius - starSize / 2;
 
       stars.add(Positioned(
         top: centerX,
@@ -48,8 +40,8 @@ class _LandingPageState extends State<LandingPage> {
         child: CustomPaint(
           size: Size(starSize, starSize),
           painter: StarCustomPainter(
-            translateX: left - starSize / 2,
-            translateY: top - starSize / 2,
+            translateX: left,
+            translateY: top,
             color: const Color.fromARGB(255, 222, 205, 155),
           ),
         ),
@@ -70,33 +62,29 @@ class _LandingPageState extends State<LandingPage> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            CustomPaint(
-              size: const Size(400, 400),
-              painter: TrailingCustomPainter(color: const Color.fromARGB(255, 222, 205, 155)),
-            ),
-            CustomPaint(
-              size: const Size(400, 400),
-              painter: StarCustomPainter(
-                color: const Color.fromARGB(255, 222, 205, 155),
-                translateX: 600,
-              ),
-            ),
             // CustomPaint(
             //   size: const Size(400, 400),
-            //   painter: StarCustomPainter(color: const Color.fromARGB(255, 222, 205, 155)),
-            // )
-            // Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
-            //     .animate(onPlay: (controller) => controller.repeat())
-            //     .rotate(duration: const Duration(seconds: 70)),
-            // Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
-            //     .animate(onPlay: (controller) => controller.repeat())
-            //     .rotate(duration: const Duration(seconds: 100)),
-            // Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
-            //     .animate(onPlay: (controller) => controller.repeat())
-            //     .rotate(duration: const Duration(seconds: 85)),
-            // Image.asset("assets/images/background/golden-moon-phases.png")
-            //     .animate(onPlay: (controller) => controller.repeat())
-            //     .rotate(duration: const Duration(seconds: 500), begin: pi, end: 0),
+            //   painter: TrailingCustomPainter(color: const Color.fromARGB(255, 222, 205, 155)),
+            // ),
+            // CustomPaint(
+            //   size: const Size(400, 400),
+            //   painter: StarCustomPainter(
+            //     color: const Color.fromARGB(255, 222, 205, 155),
+            //     translateX: 600,
+            //   ),
+            // ),
+            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+                .animate(onPlay: (controller) => controller.repeat())
+                .rotate(duration: const Duration(seconds: 70)),
+            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+                .animate(onPlay: (controller) => controller.repeat())
+                .rotate(duration: const Duration(seconds: 100)),
+            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+                .animate(onPlay: (controller) => controller.repeat())
+                .rotate(duration: const Duration(seconds: 85)),
+            Image.asset("assets/images/background/golden-moon-phases.png")
+                .animate(onPlay: (controller) => controller.repeat())
+                .rotate(duration: const Duration(seconds: 500), begin: pi, end: 0),
           ],
         ),
       ),
