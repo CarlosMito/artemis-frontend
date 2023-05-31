@@ -27,21 +27,21 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
     for (var i = 0; i < totalStars; i++) {
       var starSize = _random.nextDouble() * maxStarSize + minStarSize;
-      var left = _random.nextDouble() * limitX - limitX / 2;
-      var top = _random.nextDouble() * limitY - limitY / 2;
-      var hypotenuse = sqrt(pow(left, 2) + pow(top, 2));
+      var dx = _random.nextDouble() * limitX - limitX / 2;
+      var dy = _random.nextDouble() * limitY - limitY / 2;
+      var hypotenuse = sqrt(pow(dx, 2) + pow(dy, 2));
 
-      left += (left / hypotenuse) * radius - starSize / 2;
-      top += (top / hypotenuse) * radius - starSize / 2;
+      dx += (dx / hypotenuse) * radius - starSize / 2;
+      dy += (dy / hypotenuse) * radius - starSize / 2;
 
       stars.add(Positioned(
-        top: centerX,
-        left: centerY,
+        top: centerY,
+        left: centerX,
         child: CustomPaint(
           size: Size(starSize, starSize),
           painter: StarCustomPainter(
-            translateX: left,
-            translateY: top,
+            translateX: dx,
+            translateY: dy,
             color: const Color.fromARGB(255, 222, 205, 155),
           ),
         ),
@@ -73,13 +73,13 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
             //     translateX: 600,
             //   ),
             // ),
-            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+            Stack(children: _buildStars(windowSize.width / 2, windowSize.height / 2, 15))
                 .animate(onPlay: (controller) => controller.repeat())
                 .rotate(duration: const Duration(seconds: 70)),
-            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+            Stack(children: _buildStars(windowSize.width / 2, windowSize.height / 2, 15))
                 .animate(onPlay: (controller) => controller.repeat())
                 .rotate(duration: const Duration(seconds: 100)),
-            Stack(children: _buildStars(windowSize.height / 2, windowSize.width / 2, 15))
+            Stack(children: _buildStars(windowSize.width / 2, windowSize.height / 2, 15))
                 .animate(onPlay: (controller) => controller.repeat())
                 .rotate(duration: const Duration(seconds: 85)),
             Image.asset("assets/images/background/golden-moon-phases.png")
