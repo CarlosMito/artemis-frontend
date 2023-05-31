@@ -106,11 +106,11 @@ class ArtemisApiService {
     //   "Content-Type": "application/json",
     // };
 
-    Map<String, dynamic> queryParameters = {
-      "id": 1,
+    Map<String, String> queryParameters = {
+      "id": id,
     };
 
-    // uri.replace(queryParameters: queryParameters);
+    uri.replace(queryParameters: queryParameters);
 
     log(uri.toString());
 

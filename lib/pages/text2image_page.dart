@@ -110,7 +110,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     if (_id != null) {
       Map<String, dynamic>? res = await ArtemisApiService().getStatus(_id!);
-
       print(res);
 
       // if (res != null) {
