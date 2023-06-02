@@ -6,6 +6,7 @@ import '../enums/image_value.dart';
 import '../enums/artemis_placeholder.dart';
 
 final Map<Color, String> colorMap = {
+  Colors.transparent: "Aleatório",
   Colors.black: "Preto",
   Colors.white: "Branco",
   Colors.red: "Vermelho",
