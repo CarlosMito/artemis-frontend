@@ -1,3 +1,4 @@
+import 'package:artemis/models/radio_model.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Refactor this code in a distant future (make a common class for both RadioTextButton and RadioImageButton and implement generics)
@@ -46,14 +47,6 @@ class _RadioTextButtonState extends State<RadioTextButton> {
   }
 }
 
-class RadioModel {
-  Object value;
-  bool isSelected;
-  final String text;
-
-  RadioModel(this.isSelected, this.value, this.text);
-}
-
 class RadioItem extends StatelessWidget {
   final RadioModel radioModel;
 
@@ -64,7 +57,7 @@ class RadioItem extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        padding: EdgeInsets.all(radioModel.isSelected ? 5.5 : 8),
+        padding: EdgeInsets.all(radioModel.isSelected ? 6 : 8),
         decoration: radioModel.isSelected
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
@@ -85,7 +78,7 @@ class RadioItem extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(
-            radioModel.text,
+            radioModel.label,
             style: TextStyle(
               color: radioModel.isSelected ? Colors.white : Colors.black,
             ),

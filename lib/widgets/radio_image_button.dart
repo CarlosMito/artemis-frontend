@@ -1,3 +1,4 @@
+import 'package:artemis/models/radio_model.dart';
 import 'package:flutter/material.dart';
 
 class RadioImageButton extends StatefulWidget {
@@ -43,7 +44,7 @@ class _RadioImageButtonState extends State<RadioImageButton> {
                     fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
                     fontSize: 18,
                     color: widget.radioModels[i].isSelected
-                        ? ((exceptions.contains(widget.radioModels[i].color)) ? Colors.black : widget.radioModels[i].color)
+                        ? ((exceptions.contains(widget.radioModels[i].backgroundColor)) ? Colors.black : widget.radioModels[i].backgroundColor)
                         : Colors.black,
                   ),
                 ),
@@ -56,25 +57,16 @@ class _RadioImageButtonState extends State<RadioImageButton> {
   }
 }
 
-class ImageRadioModel {
-  final String? imageUrl;
-  final Color? color;
-  final String label;
-  bool isSelected;
-
-  ImageRadioModel(this.isSelected, {required this.label, this.imageUrl, this.color});
-}
-
 class ImageRadioItem extends StatelessWidget {
   final ImageRadioModel radioModel;
 
   const ImageRadioItem({super.key, required this.radioModel});
 
   Widget buildColorRadioItem() {
-    if (radioModel.color == Colors.white) {
+    if (radioModel.backgroundColor == Colors.white) {
       return Container(
         decoration: BoxDecoration(
-          color: radioModel.color,
+          color: radioModel.backgroundColor,
           borderRadius: BorderRadius.circular(10),
           border: radioModel.isSelected
               ? Border.all(
@@ -94,7 +86,7 @@ class ImageRadioItem extends StatelessWidget {
       );
     }
 
-    if (radioModel.color == Colors.transparent) {
+    if (radioModel.backgroundColor == Colors.transparent) {
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -118,7 +110,7 @@ class ImageRadioItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: radioModel.color,
+        color: radioModel.backgroundColor,
         border: radioModel.isSelected
             ? Border.all(
                 color: Colors.white,

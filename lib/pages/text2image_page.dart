@@ -6,6 +6,7 @@ import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
+import 'package:artemis/models/radio_model.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
@@ -143,33 +144,37 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     super.initState();
 
     for (var element in ImageDimensions.values) {
-      _imageDimensions.add(RadioModel(false, element, element.toReplicateAPI()));
+      _imageDimensions.add(RadioModel(
+        value: element,
+        label: element.toReplicateAPI(),
+      ));
     }
 
     for (var element in Scheduler.values) {
-      _schedulers.add(RadioModel(false, element, element.toReplicateAPI()));
+      _schedulers.add(RadioModel(
+        value: element,
+        label: element.toReplicateAPI(),
+      ));
     }
 
     for (int i = 1; i < 5; i++) {
-      _numOutputs.add(RadioModel(false, i, i.toString()));
+      _numOutputs.add(RadioModel(
+        value: i,
+        label: i.toString(),
+      ));
     }
-
-    _styles.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
-    _colors.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
-    _saturations.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
-    _values.add(ImageRadioModel(true, label: "Aleatório", color: Colors.transparent));
 
     for (final mapEntry in colorMap.entries) {
       _colors.add(ImageRadioModel(
-        false,
+        value: mapEntry.key,
         label: mapEntry.value,
-        color: mapEntry.key,
+        backgroundColor: mapEntry.key,
       ));
     }
 
     for (var style in ImageStyle.values) {
       _styles.add(ImageRadioModel(
-        false,
+        value: style,
         label: style.toDisplay(),
         imageUrl: imageMapping[style],
       ));
@@ -177,7 +182,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     for (var saturation in ImageSaturation.values) {
       _saturations.add(ImageRadioModel(
-        false,
+        value: saturation,
         label: saturation.toDisplay(),
         imageUrl: imageMapping[saturation],
       ));
@@ -185,7 +190,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     for (var value in ImageValue.values) {
       _values.add(ImageRadioModel(
-        false,
+        value: value,
         label: value.toDisplay(),
         imageUrl: imageMapping[value],
       ));
@@ -194,6 +199,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     _imageDimensions[0].isSelected = true;
     _schedulers[0].isSelected = true;
     _numOutputs[0].isSelected = true;
+    _colors[0].isSelected = true;
+    _styles[0].isSelected = true;
+    _saturations[0].isSelected = true;
+    _values[0].isSelected = true;
 
     //================
     // Init Outputs

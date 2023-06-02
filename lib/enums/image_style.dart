@@ -1,8 +1,10 @@
-enum ImageStyle { anime, digitalArt, model3d, oilPainting, photography, surrealism, comic, impressionist, graffiti, popArt }
+enum ImageStyle { random, anime, digitalArt, model3d, oilPainting, photography, surrealism, comic, impressionist, graffiti, popArt }
 
 extension ParseToString on ImageStyle {
   String toDisplay() {
     switch (this) {
+      case ImageStyle.random:
+        return "Aleatório";
       case ImageStyle.anime:
         return "Anime";
       case ImageStyle.digitalArt:
