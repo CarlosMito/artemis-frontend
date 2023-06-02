@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class RadioModel {
-  final Object value;
+class RadioModel<T> {
+  final T value;
   final String label;
   bool isSelected;
 
   RadioModel({required this.value, required this.label, this.isSelected = false});
 }
 
-class ImageRadioModel extends RadioModel {
-  final String? imageUrl;
+class ImageRadioModel<T> extends RadioModel<T> {
+  final String? assetImage;
   final Color? backgroundColor;
 
-  ImageRadioModel({required super.value, required super.label, super.isSelected, this.imageUrl, this.backgroundColor});
+  ImageRadioModel({required super.value, required super.label, super.isSelected, this.assetImage, this.backgroundColor});
 }

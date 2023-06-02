@@ -62,115 +62,37 @@ class ImageRadioItem extends StatelessWidget {
 
   const ImageRadioItem({super.key, required this.radioModel});
 
-  Widget buildColorRadioItem() {
-    if (radioModel.backgroundColor == Colors.white) {
-      return Container(
-        decoration: BoxDecoration(
-          color: radioModel.backgroundColor,
-          borderRadius: BorderRadius.circular(10),
-          border: radioModel.isSelected
-              ? Border.all(
-                  color: Colors.grey[800]!,
-                  strokeAlign: -6,
-                  width: 2,
-                )
-              : null,
-        ),
-        child: radioModel.isSelected
-            ? (Icon(
-                Icons.check,
-                color: Colors.grey[600]!,
-                size: 32,
-              ))
-            : null,
-      );
-    }
+  Widget buildColorAndImageCard() {
+    Color? innerColor = radioModel.backgroundColor;
 
-    if (radioModel.backgroundColor == Colors.transparent) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: const Color.fromARGB(255, 196, 196, 196),
-          border: radioModel.isSelected
-              ? Border.all(
-                  color: Colors.white,
-                  strokeAlign: -6,
-                  width: 2,
-                )
-              : null,
-        ),
-        child: const Icon(
-          Icons.question_mark_outlined,
-          color: Colors.white,
-          size: 32,
-        ),
-      );
+    if (innerColor == null || innerColor == Colors.transparent) {
+      innerColor = Colors.grey[600];
     }
 
     return Container(
       decoration: BoxDecoration(
+        color: innerColor,
         borderRadius: BorderRadius.circular(10),
-        color: radioModel.backgroundColor,
-        border: radioModel.isSelected
-            ? Border.all(
-                color: Colors.white,
-                strokeAlign: -6,
-                width: 2,
-              )
-            : null,
       ),
-      child: radioModel.isSelected
-          ? (const Icon(
-              Icons.check,
-              color: Colors.white,
-              size: 32,
-            ))
+      child: radioModel.assetImage != null
+          ? Image.asset(
+              radioModel.assetImage!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            )
           : null,
-    );
-  }
-
-  Widget buildImageRadioItem() {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.asset(
-            radioModel.imageUrl!,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: radioModel.isSelected
-                ? Border.all(
-                    color: Colors.white,
-                    strokeAlign: -6,
-                    width: 2,
-                  )
-                : null,
-          ),
-          child: radioModel.isSelected
-              ? (const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 32,
-                ))
-              : null,
-        )
-      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    Color strokeColor = radioModel.backgroundColor == Colors.white ? Colors.black : Colors.white;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
+        // TODO: This could be parameters
         height: 160,
         width: 160,
         clipBehavior: Clip.hardEdge,
@@ -182,11 +104,33 @@ class ImageRadioItem extends StatelessWidget {
               color: Colors.grey[400]!,
               spreadRadius: 1,
               blurRadius: 2,
-              offset: const Offset(3, 3), // changes position of shadow
+              offset: const Offset(3, 3),
             ),
           ],
         ),
-        child: radioModel.imageUrl == null ? buildColorRadioItem() : buildImageRadioItem(),
+        child: Stack(
+          children: [
+            buildColorAndImageCard(),
+            if (radioModel.isSelected)
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: strokeColor,
+                    strokeAlign: -6,
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  Icons.check,
+                  color: strokeColor,
+                  size: 32,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

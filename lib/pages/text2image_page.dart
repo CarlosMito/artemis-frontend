@@ -81,13 +81,13 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ),
   ];
 
-  final List<RadioModel> _imageDimensions = [];
-  final List<RadioModel> _schedulers = [];
-  final List<RadioModel> _numOutputs = [];
-  final List<ImageRadioModel> _colors = [];
-  final List<ImageRadioModel> _styles = [];
-  final List<ImageRadioModel> _saturations = [];
-  final List<ImageRadioModel> _values = [];
+  final List<RadioModel<ImageDimensions>> _imageDimensions = [];
+  final List<RadioModel<Scheduler>> _schedulers = [];
+  final List<RadioModel<int>> _numOutputs = [];
+  final List<ImageRadioModel<Color>> _colors = [];
+  final List<ImageRadioModel<ImageStyle>> _styles = [];
+  final List<ImageRadioModel<ImageSaturation>> _saturations = [];
+  final List<ImageRadioModel<ImageValue>> _values = [];
 
   // NOTE: These functions will be on the Python backend
   void _postRequest(ArtemisInputAPI input) async {
@@ -176,7 +176,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _styles.add(ImageRadioModel(
         value: style,
         label: style.toDisplay(),
-        imageUrl: imageMapping[style],
+        assetImage: imageMapping[style],
       ));
     }
 
@@ -184,7 +184,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _saturations.add(ImageRadioModel(
         value: saturation,
         label: saturation.toDisplay(),
-        imageUrl: imageMapping[saturation],
+        assetImage: imageMapping[saturation],
       ));
     }
 
@@ -192,7 +192,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       _values.add(ImageRadioModel(
         value: value,
         label: value.toDisplay(),
-        imageUrl: imageMapping[value],
+        assetImage: imageMapping[value],
       ));
     }
 
@@ -239,48 +239,59 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     ArtemisInputAPI input = ArtemisInputAPI(prompt: _prompt);
 
-    for (RadioModel element in _imageDimensions) {
+    // for (var element in _imageDimensions) {
+    //   if (element.isSelected) {
+    //     input.imageDimensions = element.value;
+    //   }
+    // }
+
+    // for (var element in _numOutputs) {
+    //   if (element.isSelected) {
+    //     input.numOutputs = element.value;
+    //   }
+    // }
+
+    // for (var element in _styles) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
+
+    // for (var element in _colors) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
+
+    // for (var element in _saturations) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
+
+    // for (var element in _values) {
+    //   if (element.isSelected) {
+    //     log(element.label.toString());
+    //   }
+    // }
+
+    // log(_seed ?? "[vazio]");
+    // log(_negativePrompt);
+    // log(_prompt);
+
+    // log(input.imageDimensions.toReplicateAPI());
+
+    for (var element in _styles) {
       if (element.isSelected) {
-        input.imageDimensions = element.value as ImageDimensions;
+        input.style = element.value;
+        break;
       }
     }
 
-    for (RadioModel element in _numOutputs) {
-      if (element.isSelected) {
-        input.numOutputs = element.value as int;
-      }
-    }
+    log(input.style.toString());
 
-    for (ImageRadioModel element in _styles) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
-
-    for (ImageRadioModel element in _colors) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
-
-    for (ImageRadioModel element in _saturations) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
-
-    for (ImageRadioModel element in _values) {
-      if (element.isSelected) {
-        log(element.label.toString());
-      }
-    }
-
-    log(_seed ?? "[vazio]");
-    log(_negativePrompt);
-    log(_prompt);
-
-    _getRequest(["1", "2", "3"]);
-    _postRequest(input);
+    // _getRequest(["1", "2", "3"]);
+    // _postRequest(input);
   }
 
   @override
