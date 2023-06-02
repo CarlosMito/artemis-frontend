@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -64,40 +65,42 @@ class ReplicateApiService {
 }
 
 class ArtemisApiService {
-  // Future<Map<String, dynamic>?> postPrompt(String prompt) async {
-  //   log('Gerando prompt: "$prompt"');
+  static Future<Map<String, dynamic>?> postPrompt(ArtemisInputAPI input) async {
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.text2image}");
 
-  //   Uri url = Uri.parse(ReplicateApiConstants.baseUrl + ReplicateApiConstants.endpoints.text2image);
-  //   String? key = dotenv.env["REPLICATE_API_TOKEN"];
-  //   Map<String, String> headers = {"Authorization": "Token $key"};
-  //   Map<String, dynamic> body = {
-  //     "version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
-  //     "input": {"prompt": prompt}
-  //   };
+    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
+    // Map<String, String> headers = {"Authorization": "Token $key"};
 
-  //   String stringBody = jsonEncode(body);
-  //   stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
+    // Map<String, dynamic> body = {
+    //   "version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+    //   "input": {"prompt": input}
+    // };
 
-  //   log(jsonEncode(body));
-  //   log(url.toString());
+    // TODO: Turn it into map body
+    // input
+    Map<String, dynamic> body = {};
 
-  //   try {
-  //     Response res = await http.post(url, headers: headers, body: stringBody);
-  //     log("Status Code [POST]: ${res.statusCode.toString()}");
+    // String stringBody = jsonEncode(body);
+    // stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
 
-  //     if (res.statusCode == 201) {
-  //       return jsonDecode(res.body);
-  //     } else if (res.statusCode == 200) {
-  //       // print(jsonDecode(res.body));
-  //     }
-  //   } catch (e) {
-  //     log("Erro [POST]: $e");
-  //   }
+    // log(jsonEncode(body));
+    // log(url.toString());
 
-  //   return null;
-  // }
+    try {
+      Response res = await http.post(uri, body: body);
+      log("Status Code [POST]: ${res.statusCode.toString()}");
 
-  Future<Map<String, dynamic>?> getStatus(String id) async {
+      if (res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log("Erro [POST]: $e");
+    }
+
+    return null;
+  }
+
+  static Future<Map<String, dynamic>?> getStatus(List<String> idList) async {
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.text2image}");
 
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
@@ -106,19 +109,16 @@ class ArtemisApiService {
     //   "Content-Type": "application/json",
     // };
 
-    Map<String, String> queryParameters = {
-      "id": id,
+    Map<String, List<String>> queryParameters = {
+      "id": idList,
     };
 
-    uri.replace(queryParameters: queryParameters);
-
+    uri = uri.replace(queryParameters: queryParameters);
     log(uri.toString());
 
     try {
-      log("OK 1");
       Response res = await http.get(uri);
       log("Status Code [GET]: ${res.statusCode.toString()}");
-      log("OK 2");
 
       if (res.statusCode == 200) {
         return jsonDecode(res.body);

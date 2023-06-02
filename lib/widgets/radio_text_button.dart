@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// TODO: Refactor this code in a distant future (make a common class for both RadioTextButton and RadioImageButton and implement generics)
+
 class RadioTextButton extends StatefulWidget {
   final List<RadioModel> radioModels;
 

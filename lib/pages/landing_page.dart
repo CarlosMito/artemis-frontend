@@ -1,6 +1,6 @@
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/star_custom_painter.dart';
-import 'package:artemis/widgets/custom/trailing_custom_painter.dart';
+// import 'package:artemis/widgets/custom/trailing_custom_painter.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 

@@ -6,8 +6,8 @@ import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
-import 'package:artemis/models/input_api.dart';
-import 'package:artemis/models/output_api.dart';
+import 'package:artemis/models/text2image/artemis_input_api.dart';
+import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
@@ -33,14 +33,14 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   String _negativePrompt = "";
   String? _seed;
 
-  final List<OutputAPI> _outputs = [
-    OutputAPI(
-      input: InputAPI(
+  final List<ArtemisOutputAPI> _outputs = [
+    ArtemisOutputAPI(
+      input: ArtemisInputAPI(
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
       ),
     ),
-    OutputAPI(
-      input: InputAPI(
+    ArtemisOutputAPI(
+      input: ArtemisInputAPI(
         prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
             "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
         guidanceScale: 1,
@@ -50,8 +50,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         seed: 100,
       ),
     ),
-    OutputAPI(
-      input: InputAPI(
+    ArtemisOutputAPI(
+      input: ArtemisInputAPI(
         prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
             "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
             "'Content here, content here', making it look like readable English.",
@@ -70,8 +70,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         value: ImageValue.low,
       ),
     ),
-    OutputAPI(
-      input: InputAPI(
+    ArtemisOutputAPI(
+      input: ArtemisInputAPI(
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
         numOutputs: 4,
         color: Colors.pink,
@@ -89,37 +89,49 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final List<ImageRadioModel> _values = [];
 
   // NOTE: These functions will be on the Python backend
-  // void _postRequest() async {
-  //   if (_prompt.isNotEmpty) {
-  //     Map<String, dynamic>? res = await ReplicateApiService().postPrompt(_prompt);
-  //     _id = res?["id"];
+  void _postRequest(ArtemisInputAPI input) async {
+    _prompt = "A bedroom with nobody but a lot of furniture";
 
-  //     // var results = res?["results"];
-  //     // id = results?[0]["id"];
+    if (_prompt.isNotEmpty) {
+      Map<String, dynamic>? res = await ArtemisApiService.postPrompt(input);
+      // _id = res?["id"];
 
-  //     // print(res.toString());
-  //     log(_id ?? "Não foi possível gerar a imagem");
-  //   }
-  //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-  // }
+      // var results = res?["results"];
+      // id = results?[0]["id"];
 
-  String? _id;
+      // print(res.toString());
+      // log(_id ?? "Não foi possível gerar a imagem");
+    }
+    // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  }
 
-  void _getRequest() async {
-    _id = "1";
+  int temporary = 0;
 
-    if (_id != null) {
-      Map<String, dynamic>? res = await ArtemisApiService().getStatus(_id!);
-      print(res);
+  void _getRequest(List<String> idList) async {
+    idList.add(temporary.toString());
+    temporary++;
+
+    if (idList.isNotEmpty) {
+      log(idList.toString());
+      Map<String, dynamic>? res = await ArtemisApiService.getStatus(idList);
+
+      if (res != null) {
+        log("Response Keys:");
+        for (String key in res.keys) {
+          log("\t- $key");
+        }
+
+        log(res["total"].toString());
+      }
 
       // if (res != null) {
-      //   log(res["status"]);
+      //   log(res.toString());
 
-      //   if (res["status"] == "succeeded") {
-      //     log(res["output"][0]);
-      //     _imageUrl = res["output"][0];
-      //     setState(() {});
-      //   }
+      //   // if (res["status"] == "succeeded") {
+      //   //   log(res["output"][0]);
+      //   //   _imageUrl = res["output"][0];
+      //   //   setState(() {});
+      //   // }
 
       //   return;
       // }
@@ -210,47 +222,56 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   }
 
   void generateImage() {
-    // for (RadioModel element in _imageDimensions) {
-    //   if (element.isSelected) {
-    //     log(element.value.toString());
-    //   }
-    // }
+    _prompt = "A bedroom with nobody but a lot of furniture";
 
-    // for (RadioModel element in _numOutputs) {
-    //   if (element.isSelected) {
-    //     log(element.value.toString());
-    //   }
-    // }
+    if (_prompt.isEmpty) {
+      return;
+    }
 
-    // for (ImageRadioModel element in _styles) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
+    ArtemisInputAPI input = ArtemisInputAPI(prompt: _prompt);
 
-    // for (ImageRadioModel element in _colors) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
+    for (RadioModel element in _imageDimensions) {
+      if (element.isSelected) {
+        input.imageDimensions = element.value as ImageDimensions;
+      }
+    }
 
-    // for (ImageRadioModel element in _saturations) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
+    for (RadioModel element in _numOutputs) {
+      if (element.isSelected) {
+        input.numOutputs = element.value as int;
+      }
+    }
 
-    // for (ImageRadioModel element in _values) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
+    for (ImageRadioModel element in _styles) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
 
-    // log(_seed ?? "[vazio]");
-    // log(_negativePrompt);
-    // log(_prompt);
+    for (ImageRadioModel element in _colors) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
 
-    _getRequest();
+    for (ImageRadioModel element in _saturations) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    for (ImageRadioModel element in _values) {
+      if (element.isSelected) {
+        log(element.label.toString());
+      }
+    }
+
+    log(_seed ?? "[vazio]");
+    log(_negativePrompt);
+    log(_prompt);
+
+    _getRequest(["1", "2", "3"]);
+    _postRequest(input);
   }
 
   @override

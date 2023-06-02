@@ -1,14 +1,13 @@
 import 'dart:math';
 
+import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/enums/scheduler.dart';
 import 'package:flutter/material.dart';
 
-import '../enums/scheduler.dart';
-import '../enums/image_dimension.dart';
-
-class InputAPI {
+class ArtemisInputAPI {
   String prompt;
   String? negativePrompt;
   late ImageDimensions imageDimensions;
@@ -24,7 +23,7 @@ class InputAPI {
   ImageValue? value;
   Color? color;
 
-  InputAPI({
+  ArtemisInputAPI({
     required this.prompt,
     numOutputs,
     guidanceScale,

@@ -1,7 +1,7 @@
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/scheduler.dart';
-import 'package:artemis/models/output_api.dart';
+import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:artemis/widgets/display_image_option.dart';
 import 'package:artemis/widgets/display_text_option.dart';
@@ -10,11 +10,11 @@ import 'package:flutter/services.dart';
 
 import '../enums/image_saturation.dart';
 import '../enums/image_value.dart';
-import '../models/input_api.dart';
+import '../models/text2image/artemis_input_api.dart';
 import '../utils/maps.dart';
 
 class ImageVisualizer extends StatefulWidget {
-  final List<OutputAPI> outputs;
+  final List<ArtemisOutputAPI> outputs;
   final int setIndex;
   final int imageIndex;
 
@@ -25,7 +25,7 @@ class ImageVisualizer extends StatefulWidget {
 }
 
 class _ImageVisualizerState extends State<ImageVisualizer> {
-  late InputAPI _input;
+  late ArtemisInputAPI _input;
   late int _setIndex;
   late int _imageIndex;
 
