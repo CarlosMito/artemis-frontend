@@ -1,4 +1,3 @@
-import 'package:artemis/models/radio_model.dart';
 import 'package:artemis/utils/radio_controller.dart';
 import 'package:flutter/material.dart';
 

@@ -6,7 +6,6 @@ import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
-import 'package:artemis/models/radio_model.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/utils/radio_controller.dart';
@@ -32,7 +31,7 @@ class Text2ImagePage extends StatefulWidget {
 
 class _Text2ImagePageState extends State<Text2ImagePage> {
   String _prompt = "";
-  String _negativePrompt = "";
+  String? _negativePrompt;
   String? _seed;
 
   final List<ArtemisOutputAPI> _outputs = [
@@ -238,7 +237,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       return;
     }
 
-    ArtemisInputAPI input = ArtemisInputAPI(prompt: _prompt);
+    ArtemisInputAPI input = ArtemisInputAPI(
+      prompt: _prompt,
+      negativePrompt: _negativePrompt,
+      seed: _seed,
+    );
 
     input.color = _colors.selectedModel!.value;
     input.imageDimensions = _imageDimensions.selectedModel!.value;
@@ -250,7 +253,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     debugPrint(input.toString());
 
-    // _getRequest(["1"]);
+    _getStatus(["1"]);
     _postPrompt(input);
   }
 
