@@ -1,10 +1,11 @@
 import 'package:artemis/models/radio_model.dart';
+import 'package:artemis/utils/radio_controller.dart';
 import 'package:flutter/material.dart';
 
 class RadioImageButton extends StatefulWidget {
-  final List<ImageRadioModel> radioModels;
+  final RadioController radioController;
 
-  const RadioImageButton({super.key, required this.radioModels});
+  const RadioImageButton({super.key, required this.radioController});
 
   @override
   State<RadioImageButton> createState() => _RadioImageButtonState();
@@ -19,32 +20,33 @@ class _RadioImageButtonState extends State<RadioImageButton> {
       height: 200,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.radioModels.length,
+        itemCount: widget.radioController.radioModels.length,
         separatorBuilder: (BuildContext context, int i) => const SizedBox(width: 14),
         itemBuilder: (BuildContext context, int i) {
+          RadioModel currentRadioModel = widget.radioController.radioModels[i];
+          bool isSelected = widget.radioController.selectedModel == currentRadioModel;
+
           return GestureDetector(
             onTap: () {
               setState(() {
-                for (var element in widget.radioModels) {
-                  element.isSelected = false;
-                }
-                widget.radioModels[i].isSelected = true;
+                widget.radioController.selectedModel = currentRadioModel;
               });
             },
             child: Column(
               children: [
                 ImageRadioItem(
-                  radioModel: widget.radioModels[i],
+                  radioModel: currentRadioModel,
+                  isSelected: isSelected,
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  widget.radioModels[i].label,
+                  currentRadioModel.label,
                   style: TextStyle(
                     fontFamily: "Lexend",
-                    fontWeight: widget.radioModels[i].isSelected ? FontWeight.bold : null,
+                    fontWeight: isSelected ? FontWeight.bold : null,
                     fontSize: 18,
-                    color: widget.radioModels[i].isSelected
-                        ? ((exceptions.contains(widget.radioModels[i].backgroundColor)) ? Colors.black : widget.radioModels[i].backgroundColor)
+                    color: isSelected
+                        ? ((exceptions.contains(currentRadioModel.backgroundColor)) ? Colors.black : currentRadioModel.backgroundColor)
                         : Colors.black,
                   ),
                 ),
@@ -58,9 +60,10 @@ class _RadioImageButtonState extends State<RadioImageButton> {
 }
 
 class ImageRadioItem extends StatelessWidget {
-  final ImageRadioModel radioModel;
+  final RadioModel radioModel;
+  final bool isSelected;
 
-  const ImageRadioItem({super.key, required this.radioModel});
+  const ImageRadioItem({super.key, required this.radioModel, this.isSelected = false});
 
   Widget buildColorAndImageCard() {
     Color? innerColor = radioModel.backgroundColor;
@@ -111,7 +114,7 @@ class ImageRadioItem extends StatelessWidget {
         child: Stack(
           children: [
             buildColorAndImageCard(),
-            if (radioModel.isSelected)
+            if (isSelected)
               Container(
                 width: double.infinity,
                 height: double.infinity,

@@ -9,6 +9,7 @@ import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/radio_model.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
+import 'package:artemis/utils/radio_controller.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
@@ -81,16 +82,16 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ),
   ];
 
-  final List<RadioModel<ImageDimensions>> _imageDimensions = [];
-  final List<RadioModel<Scheduler>> _schedulers = [];
-  final List<RadioModel<int>> _numOutputs = [];
-  final List<ImageRadioModel<Color>> _colors = [];
-  final List<ImageRadioModel<ImageStyle>> _styles = [];
-  final List<ImageRadioModel<ImageSaturation>> _saturations = [];
-  final List<ImageRadioModel<ImageValue>> _values = [];
+  final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
+  final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
+  final RadioController _numOutputs = RadioController(radioModels: <RadioModel<int>>[]);
+  final RadioController _colors = RadioController(radioModels: <RadioModel<Color>>[]);
+  final RadioController _styles = RadioController(radioModels: <RadioModel<ImageStyle>>[]);
+  final RadioController _saturations = RadioController(radioModels: <RadioModel<ImageSaturation>>[]);
+  final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
 
   // NOTE: These functions will be on the Python backend
-  void _postRequest(ArtemisInputAPI input) async {
+  void _postPrompt(ArtemisInputAPI input) async {
     _prompt = "A bedroom with nobody but a lot of furniture";
 
     if (_prompt.isNotEmpty) {
@@ -108,7 +109,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
   int temporary = 0;
 
-  void _getRequest(List<String> idList) async {
+  void _getStatus(List<String> idList) async {
     idList.add(temporary.toString());
     temporary++;
 
@@ -139,33 +140,30 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
+  void initRadioControllers() {
     for (var element in ImageDimensions.values) {
-      _imageDimensions.add(RadioModel(
+      _imageDimensions.radioModels.add(RadioModel<ImageDimensions>(
         value: element,
         label: element.toReplicateAPI(),
       ));
     }
 
     for (var element in Scheduler.values) {
-      _schedulers.add(RadioModel(
+      _schedulers.radioModels.add(RadioModel<Scheduler>(
         value: element,
         label: element.toReplicateAPI(),
       ));
     }
 
     for (int i = 1; i < 5; i++) {
-      _numOutputs.add(RadioModel(
+      _numOutputs.radioModels.add(RadioModel<int>(
         value: i,
         label: i.toString(),
       ));
     }
 
     for (final mapEntry in colorMap.entries) {
-      _colors.add(ImageRadioModel(
+      _colors.radioModels.add(RadioModel<Color>(
         value: mapEntry.key,
         label: mapEntry.value,
         backgroundColor: mapEntry.key,
@@ -173,7 +171,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     for (var style in ImageStyle.values) {
-      _styles.add(ImageRadioModel(
+      _styles.radioModels.add(RadioModel<ImageStyle>(
         value: style,
         label: style.toDisplay(),
         assetImage: imageMapping[style],
@@ -181,7 +179,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     for (var saturation in ImageSaturation.values) {
-      _saturations.add(ImageRadioModel(
+      _saturations.radioModels.add(RadioModel<ImageSaturation>(
         value: saturation,
         label: saturation.toDisplay(),
         assetImage: imageMapping[saturation],
@@ -189,20 +187,23 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     for (var value in ImageValue.values) {
-      _values.add(ImageRadioModel(
+      _values.radioModels.add(RadioModel<ImageValue>(
         value: value,
         label: value.toDisplay(),
         assetImage: imageMapping[value],
       ));
     }
 
-    _imageDimensions[0].isSelected = true;
-    _schedulers[0].isSelected = true;
-    _numOutputs[0].isSelected = true;
-    _colors[0].isSelected = true;
-    _styles[0].isSelected = true;
-    _saturations[0].isSelected = true;
-    _values[0].isSelected = true;
+    for (var controller in [_imageDimensions, _schedulers, _numOutputs, _colors, _styles, _saturations, _values]) {
+      controller.selectFirst();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    initRadioControllers();
 
     //================
     // Init Outputs
@@ -239,59 +240,18 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     ArtemisInputAPI input = ArtemisInputAPI(prompt: _prompt);
 
-    // for (var element in _imageDimensions) {
-    //   if (element.isSelected) {
-    //     input.imageDimensions = element.value;
-    //   }
-    // }
+    input.color = _colors.selectedModel!.value;
+    input.imageDimensions = _imageDimensions.selectedModel!.value;
+    input.scheduler = _schedulers.selectedModel!.value;
+    input.numOutputs = _numOutputs.selectedModel!.value;
+    input.style = _styles.selectedModel!.value;
+    input.saturation = _saturations.selectedModel!.value;
+    input.value = _values.selectedModel!.value;
 
-    // for (var element in _numOutputs) {
-    //   if (element.isSelected) {
-    //     input.numOutputs = element.value;
-    //   }
-    // }
+    debugPrint(input.toString());
 
-    // for (var element in _styles) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
-
-    // for (var element in _colors) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
-
-    // for (var element in _saturations) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
-
-    // for (var element in _values) {
-    //   if (element.isSelected) {
-    //     log(element.label.toString());
-    //   }
-    // }
-
-    // log(_seed ?? "[vazio]");
-    // log(_negativePrompt);
-    // log(_prompt);
-
-    // log(input.imageDimensions.toReplicateAPI());
-
-    for (var element in _styles) {
-      if (element.isSelected) {
-        input.style = element.value;
-        break;
-      }
-    }
-
-    log(input.style.toString());
-
-    // _getRequest(["1", "2", "3"]);
-    // _postRequest(input);
+    // _getRequest(["1"]);
+    _postPrompt(input);
   }
 
   @override
@@ -367,17 +327,17 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         // InputCard(
                         //   title: "Agendador",
                         //   width: 220.0,
-                        //   child: CustomRadioButton(radioModels: _schedulers),
+                        //   child: CustomRadioButton(radioController: _schedulers),
                         // ),
                         InputTextCard(
                           title: "Tamanho",
                           width: 220,
-                          child: RadioTextButton(radioModels: _imageDimensions),
+                          child: RadioTextButton(radioController: _imageDimensions),
                         ),
                         InputTextCard(
                           title: "Quantidade",
                           width: 220,
-                          child: RadioTextButton(radioModels: _numOutputs),
+                          child: RadioTextButton(radioController: _numOutputs),
                         ),
                         InputTextCard(
                           title: "Semente",
@@ -406,7 +366,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   InputImageCard(
                     title: "Estilo",
                     child: RadioImageButton(
-                      radioModels: _styles,
+                      radioController: _styles,
                     ),
                   ),
                   const SizedBox(height: 60),
@@ -420,14 +380,14 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         title: "Saturação",
                         width: 530,
                         child: RadioImageButton(
-                          radioModels: _saturations,
+                          radioController: _saturations,
                         ),
                       ),
                       InputImageCard(
                         title: "Iluminação",
                         width: 530,
                         child: RadioImageButton(
-                          radioModels: _values,
+                          radioController: _values,
                         ),
                       ),
                     ],
@@ -436,7 +396,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   InputImageCard(
                     title: "Cor Principal",
                     child: RadioImageButton(
-                      radioModels: _colors,
+                      radioController: _colors,
                     ),
                   ),
                   const SizedBox(height: 80),

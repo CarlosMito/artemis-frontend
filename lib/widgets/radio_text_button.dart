@@ -1,12 +1,12 @@
-import 'package:artemis/models/radio_model.dart';
+import 'package:artemis/utils/radio_controller.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Refactor this code in a distant future (make a common class for both RadioTextButton and RadioImageButton and implement generics)
 
 class RadioTextButton extends StatefulWidget {
-  final List<RadioModel> radioModels;
+  final RadioController radioController;
 
-  const RadioTextButton({super.key, required this.radioModels});
+  const RadioTextButton({super.key, required this.radioController});
 
   @override
   State<RadioTextButton> createState() => _RadioTextButtonState();
@@ -16,18 +16,18 @@ class _RadioTextButtonState extends State<RadioTextButton> {
   List<Widget> createRadioItems([double? width]) {
     var radioItems = <Widget>[];
 
-    for (int i = 0; i < widget.radioModels.length; i++) {
+    for (var radioModel in widget.radioController.radioModels) {
       radioItems.add(FittedBox(
         child: GestureDetector(
           onTap: () {
             setState(() {
-              for (var element in widget.radioModels) {
-                element.isSelected = false;
-              }
-              widget.radioModels[i].isSelected = true;
+              widget.radioController.selectedModel = radioModel;
             });
           },
-          child: RadioItem(radioModel: widget.radioModels[i]),
+          child: RadioItem(
+            radioModel: radioModel,
+            isSelected: widget.radioController.selectedModel == radioModel,
+          ),
         ),
       ));
     }
@@ -49,16 +49,17 @@ class _RadioTextButtonState extends State<RadioTextButton> {
 
 class RadioItem extends StatelessWidget {
   final RadioModel radioModel;
+  final bool isSelected;
 
-  const RadioItem({super.key, required this.radioModel});
+  const RadioItem({super.key, required this.radioModel, this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        padding: EdgeInsets.all(radioModel.isSelected ? 6 : 8),
-        decoration: radioModel.isSelected
+        padding: EdgeInsets.all(isSelected ? 6 : 8),
+        decoration: isSelected
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: const Color.fromARGB(255, 13, 13, 16),
@@ -80,7 +81,7 @@ class RadioItem extends StatelessWidget {
           child: Text(
             radioModel.label,
             style: TextStyle(
-              color: radioModel.isSelected ? Colors.white : Colors.black,
+              color: isSelected ? Colors.white : Colors.black,
             ),
           ),
         ),

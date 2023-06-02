@@ -25,23 +25,25 @@ class ArtemisInputAPI {
 
   ArtemisInputAPI({
     required this.prompt,
-    numOutputs,
-    guidanceScale,
-    scheduler,
-    imageDimensions,
-    numInferenceSteps,
-    seed,
-    this.negativePrompt,
     this.style,
     this.saturation,
     this.value,
     this.color,
+    this.negativePrompt,
+    this.numOutputs = 1,
+    this.scheduler = Scheduler.dpmSolverMultistep,
+    this.guidanceScale = 7.5,
+    this.numInferenceSteps = 50,
+    this.imageDimensions = ImageDimensions.dim512,
+    seed,
   }) {
-    this.numOutputs = numOutputs ?? 1;
-    this.guidanceScale = guidanceScale ?? 7.5;
-    this.scheduler = scheduler ?? Scheduler.dpmSolverMultistep;
-    this.imageDimensions = imageDimensions ?? ImageDimensions.dim512;
-    this.numInferenceSteps = numInferenceSteps ?? 50;
     this.seed = seed ?? Random().nextInt(4294967296);
+  }
+
+  @override
+  String toString() {
+    return "ArtemisInputAPI(prompt: $prompt, negativePrompt: $negativePrompt, imageDimensions: $imageDimensions, numOutputs: $numOutputs, "
+        "numInferenceSteps: $numInferenceSteps, guidanceScale: $guidanceScale, scheduler: $scheduler, seed: $seed, style: $style, "
+        "saturation: $saturation, value: $value, color: $color)";
   }
 }
