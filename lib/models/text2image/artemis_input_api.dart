@@ -17,12 +17,12 @@ class ArtemisInputAPI {
   late int seed;
 
   // Post processing
-  ImageStyle? style;
-  ImageSaturation? saturation;
-  ImageValue? value;
+  ImageStyle style;
+  ImageSaturation saturation;
+  ImageValue value;
 
-  // Store the integer representation of the color instead of the
-  // Flutter Colors class for serialization purposes
+  // It stores the integer representation of the color instead of
+  // Flutter's Color class for serialization purposes
   int colorValue;
 
   ArtemisInputAPI({
@@ -49,31 +49,32 @@ class ArtemisInputAPI {
         "saturation: $saturation, value: $value, color: $colorValue)";
   }
 
-  // String prompt;
-  // String? negativePrompt;
-  // late ImageDimensions imageDimensions;
-  // late int numOutputs;
-  // late int numInferenceSteps;
-  // late double guidanceScale;
-  // late Scheduler scheduler;
-  // late int seed;
-  // ImageStyle? style;
-  // ImageSaturation? saturation;
-  // ImageValue? value;
-  // Color? color;
+  ArtemisInputAPI.fromJson(Map<String, dynamic> json)
+      : prompt = json["prompt"],
+        negativePrompt = json["negativePrompt"],
+        imageDimensions = ImageDimensions.values.byName(json["imageDimensions"]),
+        numOutputs = json["numOutputs"],
+        numInferenceSteps = json["numInferenceSteps"],
+        guidanceScale = json["guidanceScale"],
+        scheduler = Scheduler.values.byName(json["scheduler"]),
+        seed = json["seed"],
+        style = ImageStyle.values.byName(json["style"]),
+        saturation = ImageSaturation.values.byName(json["saturation"]),
+        value = ImageValue.values.byName(json["value"]),
+        colorValue = json["color"];
 
   Map<String, dynamic> toJson() => {
         "prompt": prompt,
         "negativePrompt": negativePrompt,
-        "imageDimensions": imageDimensions,
+        "imageDimensions": imageDimensions.name,
         "numOutputs": numOutputs,
         "numInferenceSteps": numInferenceSteps,
         "guidanceScale": guidanceScale,
-        "scheduler": scheduler,
+        "scheduler": scheduler.name,
         "seed": seed,
-        "style": style,
-        "saturation": saturation,
-        "value": value,
+        "style": style.name,
+        "saturation": saturation.name,
+        "value": value.name,
         "color": colorValue,
       };
 }

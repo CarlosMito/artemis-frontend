@@ -41,9 +41,9 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
     List<DisplayImageOption> imageOptions = [];
 
     imageOptions.add(DisplayImageOption(label: colorMap[_input.colorValue], color: Color(_input.colorValue)));
-    imageOptions.add(DisplayImageOption(label: _input.style?.toDisplay(), imageUrl: imageMapping[_input.style]));
-    imageOptions.add(DisplayImageOption(label: _input.saturation?.toDisplay(), imageUrl: imageMapping[_input.saturation]));
-    imageOptions.add(DisplayImageOption(label: _input.value?.toDisplay(), imageUrl: imageMapping[_input.value]));
+    imageOptions.add(DisplayImageOption(label: _input.style.toDisplay(), imageUrl: imageMapping[_input.style]));
+    imageOptions.add(DisplayImageOption(label: _input.saturation.toDisplay(), imageUrl: imageMapping[_input.saturation]));
+    imageOptions.add(DisplayImageOption(label: _input.value.toDisplay(), imageUrl: imageMapping[_input.value]));
 
     return imageOptions;
   }
