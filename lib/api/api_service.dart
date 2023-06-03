@@ -71,18 +71,12 @@ class ArtemisApiService {
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
     // Map<String, String> headers = {"Authorization": "Token $key"};
 
-    // Map<String, dynamic> body = {
-    //   "version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
-    //   "input": {"prompt": input}
-    // };
-
     Map<String, String> body = input.toJson();
 
     // String stringBody = jsonEncode(body);
     // stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
 
     log(jsonEncode(body));
-    print(jsonEncode(body));
     log(uri.toString());
 
     try {
@@ -92,6 +86,8 @@ class ArtemisApiService {
       if (res.statusCode == 201) {
         return jsonDecode(res.body);
       }
+
+      log(res.body.toString());
     } catch (e) {
       log("Erro [POST]: $e");
     }

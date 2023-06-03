@@ -4,6 +4,7 @@ import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/enums/model_version.dart';
 import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/user.dart';
 
@@ -11,11 +12,12 @@ class ArtemisInputAPI {
   User user;
   String prompt;
   String negativePrompt;
-  late ImageDimensions imageDimensions;
-  late int numOutputs;
-  late int numInferenceSteps;
-  late double guidanceScale;
-  late Scheduler scheduler;
+  ImageDimensions imageDimensions;
+  int numOutputs;
+  int numInferenceSteps;
+  double guidanceScale;
+  Scheduler scheduler;
+  StableDiffusionVersion version;
   late int seed;
 
   // Post processing
@@ -40,6 +42,7 @@ class ArtemisInputAPI {
     this.guidanceScale = 7.5,
     this.numInferenceSteps = 50,
     this.imageDimensions = ImageDimensions.dim512,
+    this.version = StableDiffusionVersion.v2_1,
     seed,
   }) {
     this.seed = seed ?? Random().nextInt(4294967296);
@@ -49,7 +52,7 @@ class ArtemisInputAPI {
   String toString() {
     return "ArtemisInputAPI(prompt: $prompt, negativePrompt: $negativePrompt, imageDimensions: $imageDimensions, numOutputs: $numOutputs, "
         "numInferenceSteps: $numInferenceSteps, guidanceScale: $guidanceScale, scheduler: $scheduler, seed: $seed, style: $style, "
-        "saturation: $saturation, value: $value, color: $colorValue)";
+        "saturation: $saturation, value: $value, color: $colorValue, version: $version)";
   }
 
   // ArtemisInputAPI.fromJson(Map<String, dynamic> json)
@@ -81,5 +84,6 @@ class ArtemisInputAPI {
         "saturation": saturation.name,
         "value": value.name,
         "color": colorValue.toString(),
+        "version": version.value,
       };
 }
