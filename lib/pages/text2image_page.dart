@@ -66,7 +66,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         numOutputs: 3,
         seed: 384690124,
         style: ImageStyle.digitalArt,
-        color: Colors.amber,
+        colorValue: Colors.amber.value,
         saturation: ImageSaturation.high,
         value: ImageValue.low,
       ),
@@ -75,7 +75,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       input: ArtemisInputAPI(
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
         numOutputs: 4,
-        color: Colors.pink,
+        colorValue: Colors.pink.value,
         value: ImageValue.low,
       ),
     ),
@@ -84,7 +84,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
   final RadioController _numOutputs = RadioController(radioModels: <RadioModel<int>>[]);
-  final RadioController _colors = RadioController(radioModels: <RadioModel<Color>>[]);
+  final RadioController _colors = RadioController(radioModels: <RadioModel<int>>[]);
   final RadioController _styles = RadioController(radioModels: <RadioModel<ImageStyle>>[]);
   final RadioController _saturations = RadioController(radioModels: <RadioModel<ImageSaturation>>[]);
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
@@ -162,8 +162,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     for (final mapEntry in colorMap.entries) {
-      _colors.radioModels.add(RadioModel<Color>(
-        value: mapEntry.key,
+      _colors.radioModels.add(RadioModel<int>(
+        value: mapEntry.key.value,
         label: mapEntry.value,
         backgroundColor: mapEntry.key,
       ));
@@ -243,7 +243,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       seed: _seed,
     );
 
-    input.color = _colors.selectedModel!.value;
+    input.colorValue = _colors.selectedModel!.value;
     input.imageDimensions = _imageDimensions.selectedModel!.value;
     input.scheduler = _schedulers.selectedModel!.value;
     input.numOutputs = _numOutputs.selectedModel!.value;
@@ -253,7 +253,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     debugPrint(input.toString());
 
-    _getStatus(["1"]);
+    // _getStatus(["1"]);
     _postPrompt(input);
   }
 
