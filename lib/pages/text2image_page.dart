@@ -33,7 +33,7 @@ class Text2ImagePage extends StatefulWidget {
 class _Text2ImagePageState extends State<Text2ImagePage> {
   final User _user = User(BigInt.from(1), "carlosmito");
   String _prompt = "";
-  String? _negativePrompt;
+  String _negativePrompt = "";
   String? _seed;
 
   final List<ArtemisOutputAPI> _outputs = [];
@@ -48,9 +48,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
   // NOTE: These functions will be on the Python backend
   void _postPrompt(ArtemisInputAPI input) async {
-    _prompt = "A bedroom with nobody but a lot of furniture";
-
-    if (_prompt.isNotEmpty) {
+    if (input.prompt.isNotEmpty) {
       Map<String, dynamic>? res = await ArtemisApiService.postPrompt(input);
       // _id = res?["id"];
 
@@ -66,8 +64,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   int temporary = 0;
 
   void _getStatus(List<String> idList) async {
-    idList.add(temporary.toString());
-    temporary++;
+    // idList.add(temporary.toString());
+    // temporary++;
+
+    idList = ["p3hy6h7pijbqzjrhk36342v62a"];
 
     if (idList.isNotEmpty) {
       log(idList.toString());
@@ -79,7 +79,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           log("\t- $key");
         }
 
-        log(res["total"].toString());
+        log(res["message"].toString());
       }
 
       // if (res != null) {
@@ -241,7 +241,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ];
   }
 
-  void generateImage() {
+  void _generateImage() {
     _prompt = "A bedroom with nobody but a lot of furniture";
 
     if (_prompt.isEmpty) {
@@ -251,7 +251,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ArtemisInputAPI input = ArtemisInputAPI(
       user: _user,
       prompt: _prompt,
-      negativePrompt: _negativePrompt ?? "",
+      negativePrompt: _negativePrompt,
       seed: _seed,
     );
 
@@ -278,7 +278,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           Expanded(
             child: Scaffold(
               floatingActionButton: FloatingActionButton.extended(
-                onPressed: generateImage,
+                onPressed: _generateImage,
                 icon: const Icon(Icons.send),
                 label: const Text("Gerar Imagem"),
                 backgroundColor: const Color.fromARGB(255, 10, 150, 200),
@@ -286,6 +286,17 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               body: ListView(
                 padding: const EdgeInsets.all(50),
                 children: [
+                  ElevatedButton(
+                    onPressed: () => _getStatus([]),
+                    child: const Text("GET"),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: _generateImage,
+                    child: const Text("POST"),
+                  ),
                   Container(
                     margin: const EdgeInsets.all(60),
                     alignment: Alignment.center,

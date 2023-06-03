@@ -36,6 +36,8 @@ class _RadioImageButtonState extends State<RadioImageButton> {
                 ImageRadioItem(
                   radioModel: currentRadioModel,
                   isSelected: isSelected,
+                  width: 160,
+                  height: 160,
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -61,8 +63,10 @@ class _RadioImageButtonState extends State<RadioImageButton> {
 class ImageRadioItem extends StatelessWidget {
   final RadioModel radioModel;
   final bool isSelected;
+  final double? width;
+  final double? height;
 
-  const ImageRadioItem({super.key, required this.radioModel, this.isSelected = false});
+  const ImageRadioItem({super.key, required this.radioModel, this.isSelected = false, this.width, this.height});
 
   Widget buildColorAndImageCard() {
     Color? innerColor = radioModel.backgroundColor;
@@ -94,9 +98,8 @@ class ImageRadioItem extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        // TODO: This could be parameters
-        height: 160,
-        width: 160,
+        height: width,
+        width: height,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
