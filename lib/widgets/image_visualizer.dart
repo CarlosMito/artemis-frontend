@@ -192,7 +192,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          if (_input.negativePrompt != null)
+                          if (_input.negativePrompt.isNotEmpty)
                             Container(
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
@@ -214,7 +214,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                                   ]),
                                   const SizedBox(height: 10),
                                   Text(
-                                    _input.negativePrompt!,
+                                    _input.negativePrompt,
                                     style: const TextStyle(fontFamily: "Lexend"),
                                   ),
                                 ],

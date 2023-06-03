@@ -8,6 +8,7 @@ import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
+import 'package:artemis/models/user.dart';
 import 'package:artemis/utils/radio_controller.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
@@ -30,56 +31,12 @@ class Text2ImagePage extends StatefulWidget {
 }
 
 class _Text2ImagePageState extends State<Text2ImagePage> {
+  final User _user = User(BigInt.from(1), "carlosmito");
   String _prompt = "";
   String? _negativePrompt;
   String? _seed;
 
-  final List<ArtemisOutputAPI> _outputs = [
-    ArtemisOutputAPI(
-      input: ArtemisInputAPI(
-        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-      ),
-    ),
-    ArtemisOutputAPI(
-      input: ArtemisInputAPI(
-        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-        guidanceScale: 1,
-        imageDimensions: ImageDimensions.dim768,
-        scheduler: Scheduler.klms,
-        numOutputs: 2,
-        seed: 100,
-      ),
-    ),
-    ArtemisOutputAPI(
-      input: ArtemisInputAPI(
-        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
-            "'Content here, content here', making it look like readable English.",
-        negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
-            "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
-            "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
-        guidanceScale: 9,
-        imageDimensions: ImageDimensions.dim768,
-        scheduler: Scheduler.kEuler,
-        numInferenceSteps: 100,
-        numOutputs: 3,
-        seed: 384690124,
-        style: ImageStyle.digitalArt,
-        colorValue: Colors.amber.value,
-        saturation: ImageSaturation.high,
-        value: ImageValue.low,
-      ),
-    ),
-    ArtemisOutputAPI(
-      input: ArtemisInputAPI(
-        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-        numOutputs: 4,
-        colorValue: Colors.pink.value,
-        value: ImageValue.low,
-      ),
-    ),
-  ];
+  final List<ArtemisOutputAPI> _outputs = [];
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -198,11 +155,65 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
   }
 
+  void createExampleData() {
+    _outputs.addAll([
+      ArtemisOutputAPI(
+        input: ArtemisInputAPI(
+          user: _user,
+          prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+        ),
+      ),
+      ArtemisOutputAPI(
+        input: ArtemisInputAPI(
+          user: _user,
+          prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+              "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
+          guidanceScale: 1,
+          imageDimensions: ImageDimensions.dim768,
+          scheduler: Scheduler.klms,
+          numOutputs: 2,
+          seed: 100,
+        ),
+      ),
+      ArtemisOutputAPI(
+        input: ArtemisInputAPI(
+          user: _user,
+          prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+              "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
+              "'Content here, content here', making it look like readable English.",
+          negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
+              "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
+              "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+          guidanceScale: 9,
+          imageDimensions: ImageDimensions.dim768,
+          scheduler: Scheduler.kEuler,
+          numInferenceSteps: 100,
+          numOutputs: 3,
+          seed: 384690124,
+          style: ImageStyle.digitalArt,
+          colorValue: Colors.amber.value,
+          saturation: ImageSaturation.high,
+          value: ImageValue.low,
+        ),
+      ),
+      ArtemisOutputAPI(
+        input: ArtemisInputAPI(
+          user: _user,
+          prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+          numOutputs: 4,
+          colorValue: Colors.pink.value,
+          value: ImageValue.low,
+        ),
+      )
+    ]);
+  }
+
   @override
   void initState() {
     super.initState();
 
     initRadioControllers();
+    createExampleData();
 
     //================
     // Init Outputs
@@ -238,8 +249,9 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     ArtemisInputAPI input = ArtemisInputAPI(
+      user: _user,
       prompt: _prompt,
-      negativePrompt: _negativePrompt,
+      negativePrompt: _negativePrompt ?? "",
       seed: _seed,
     );
 

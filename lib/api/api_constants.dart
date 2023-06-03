@@ -5,7 +5,7 @@ class ReplicateApiConstants {
 
 class ArtemisApiConstants {
   static const String baseUrl = "http://localhost:8000";
-  static const Endpoints endpoints = Endpoints("artemis/api/text2image");
+  static const Endpoints endpoints = Endpoints("api/text2image");
 }
 
 class Endpoints {

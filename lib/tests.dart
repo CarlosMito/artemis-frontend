@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:artemis/models/text2image/artemis_input_api.dart';
+import 'package:artemis/models/user.dart';
 
 void main() {
-  var input = ArtemisInputAPI(prompt: "Prompt test");
-  print(ArtemisInputAPI.fromJson(jsonDecode(jsonEncode(input))));
+  User user = User(BigInt.from(1), "test");
+  var input = ArtemisInputAPI(user: user, prompt: "Prompt test");
+  // print(ArtemisInputAPI.fromJson(jsonDecode(jsonEncode(input))));
 }

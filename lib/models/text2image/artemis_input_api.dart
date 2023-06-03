@@ -5,10 +5,12 @@ import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
+import 'package:artemis/models/user.dart';
 
 class ArtemisInputAPI {
+  User user;
   String prompt;
-  String? negativePrompt;
+  String negativePrompt;
   late ImageDimensions imageDimensions;
   late int numOutputs;
   late int numInferenceSteps;
@@ -26,8 +28,9 @@ class ArtemisInputAPI {
   int colorValue;
 
   ArtemisInputAPI({
+    required this.user,
     required this.prompt,
-    this.negativePrompt,
+    this.negativePrompt = "",
     this.colorValue = 0x00000000,
     this.style = ImageStyle.random,
     this.saturation = ImageSaturation.random,
@@ -49,32 +52,34 @@ class ArtemisInputAPI {
         "saturation: $saturation, value: $value, color: $colorValue)";
   }
 
-  ArtemisInputAPI.fromJson(Map<String, dynamic> json)
-      : prompt = json["prompt"],
-        negativePrompt = json["negativePrompt"],
-        imageDimensions = ImageDimensions.values.byName(json["imageDimensions"]),
-        numOutputs = json["numOutputs"],
-        numInferenceSteps = json["numInferenceSteps"],
-        guidanceScale = json["guidanceScale"],
-        scheduler = Scheduler.values.byName(json["scheduler"]),
-        seed = json["seed"],
-        style = ImageStyle.values.byName(json["style"]),
-        saturation = ImageSaturation.values.byName(json["saturation"]),
-        value = ImageValue.values.byName(json["value"]),
-        colorValue = json["color"];
+  // ArtemisInputAPI.fromJson(Map<String, dynamic> json)
+  //     : user = json["user"],
+  //       prompt = json["prompt"],
+  //       negativePrompt = json["negativePrompt"],
+  //       imageDimensions = ImageDimensions.values.byName(json["imageDimensions"]),
+  //       numOutputs = json["numOutputs"],
+  //       numInferenceSteps = json["numInferenceSteps"],
+  //       guidanceScale = json["guidanceScale"],
+  //       scheduler = Scheduler.values.byName(json["scheduler"]),
+  //       seed = json["seed"],
+  //       style = ImageStyle.values.byName(json["style"]),
+  //       saturation = ImageSaturation.values.byName(json["saturation"]),
+  //       value = ImageValue.values.byName(json["value"]),
+  //       colorValue = json["color"];
 
-  Map<String, dynamic> toJson() => {
+  Map<String, String> toJson() => {
+        "user": user.id.toString(),
         "prompt": prompt,
         "negativePrompt": negativePrompt,
         "imageDimensions": imageDimensions.name,
-        "numOutputs": numOutputs,
-        "numInferenceSteps": numInferenceSteps,
-        "guidanceScale": guidanceScale,
+        "numOutputs": numOutputs.toString(),
+        "numInferenceSteps": numInferenceSteps.toString(),
+        "guidanceScale": guidanceScale.toString(),
         "scheduler": scheduler.name,
-        "seed": seed,
+        "seed": seed.toString(),
         "style": style.name,
         "saturation": saturation.name,
         "value": value.name,
-        "color": colorValue,
+        "color": colorValue.toString(),
       };
 }

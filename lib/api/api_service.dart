@@ -76,15 +76,14 @@ class ArtemisApiService {
     //   "input": {"prompt": input}
     // };
 
-    // TODO: Turn it into map body
-    // input
-    Map<String, dynamic> body = {};
+    Map<String, String> body = input.toJson();
 
     // String stringBody = jsonEncode(body);
     // stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
 
-    // log(jsonEncode(body));
-    // log(url.toString());
+    log(jsonEncode(body));
+    print(jsonEncode(body));
+    log(uri.toString());
 
     try {
       Response res = await http.post(uri, body: body);
