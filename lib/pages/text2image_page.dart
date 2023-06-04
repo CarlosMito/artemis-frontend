@@ -47,56 +47,40 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
 
   // NOTE: These functions will be on the Python backend
-  void _postPrompt(ArtemisInputAPI input) async {
-    if (input.prompt.isNotEmpty) {
-      Map<String, dynamic>? res = await ArtemisApiService.postPrompt(input);
-      // _id = res?["id"];
+  // void _postPrompt(ArtemisInputAPI input) async {
+  //   if (input.prompt.isNotEmpty) {
+  //     Map<String, dynamic>? res = await ArtemisApiService.postPrompt(input);
+  //     // _id = res?["id"];
 
-      // var results = res?["results"];
-      // id = results?[0]["id"];
+  //     // var results = res?["results"];
+  //     // id = results?[0]["id"];
 
-      // print(res.toString());
-      // log(_id ?? "Não foi possível gerar a imagem");
-    }
-    // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-  }
-
-  int temporary = 0;
+  //     // print(res.toString());
+  //     // log(_id ?? "Não foi possível gerar a imagem");
+  //   }
+  //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
+  // }
 
   void _getStatus(List<String> idList) async {
-    // idList.add(temporary.toString());
-    // temporary++;
-
-    idList = ["p3hy6h7pijbqzjrhk36342v62a"];
+    idList = ["pmnwbgwobjbvfbrin4whyfgqee"];
 
     if (idList.isNotEmpty) {
       log(idList.toString());
-      Map<String, dynamic>? res = await ArtemisApiService.getStatus(idList);
+      Map<String, dynamic>? response = await ArtemisApiService.getStatus(idList);
 
-      if (res != null) {
-        log("Response Keys:");
-        for (String key in res.keys) {
-          log("\t- $key");
+      if (response != null) {
+        log(response.toString());
+
+        if (response["outputs"] != null) {
+          // log(response["output"][0]);
+          // _imageUrl = response["output"][0];
+          // setState(() {});
         }
-
-        log(res["message"].toString());
       }
-
-      // if (res != null) {
-      //   log(res.toString());
-
-      //   // if (res["status"] == "succeeded") {
-      //   //   log(res["output"][0]);
-      //   //   _imageUrl = res["output"][0];
-      //   //   setState(() {});
-      //   // }
-
-      //   return;
-      // }
     }
   }
 
-  void initRadioControllers() {
+  void _initRadioControllers() {
     for (var element in ImageDimensions.values) {
       _imageDimensions.radioModels.add(RadioModel<ImageDimensions>(
         value: element,
@@ -155,7 +139,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
   }
 
-  void createExampleData() {
+  void _createExampleData() {
     _outputs.addAll([
       ArtemisOutputAPI(
         input: ArtemisInputAPI(
@@ -206,14 +190,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         ),
       )
     ]);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    initRadioControllers();
-    createExampleData();
 
     //================
     // Init Outputs
@@ -241,8 +217,31 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ];
   }
 
-  void _generateImage() {
-    _prompt = "A bedroom with nobody but a lot of furniture";
+  void _fetchCreations() async {}
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initRadioControllers();
+    _createExampleData();
+    _fetchCreations();
+  }
+
+  void _generateImage() async {
+    // TODO: Create a mechanism to refresh depending when the image was downloaded (creation completed)
+
+    // Prompts used to test
+    // IDs: [1836712131, ?]
+    // goddess close-up portrait skull with mohawk, ram skull, skeleton, thorax, x-ray, backbone, jellyfish phoenix head, nautilus, orchid, skull, betta fish, bioluminiscent creatures, intricate artwork by Tooth Wu and wlop and beeple. octane render, trending on artstation, greg rutkowski very coherent symmetrical artwork. cinematic, hyper realism, high detail, octane render, 8k
+    // IDs: [156196113, 2954722577]
+    // portrait skull with mohawk
+
+    // space girl| standing alone on hill| centered| detailed gorgeous face| anime style| key visual| intricate detail| highly detailed| breathtaking| vibrant| panoramic| cinematic| Carne Griffiths| Conrad Roset| ghibli
+    // 12th centuryhalf naked female samurai in the style of greg rutkowski and Guweiz and Yoji Shinkawa, intricate black and red samurai armor, cinematic lighting, dark rainy city, depth of field, lumen reflections, photography, stunning environment, hyperrealism, insanely detailed, midjourneyart style
+    // a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowski and magali villanueve
+
+    _prompt = "portrait skull with mohawk";
 
     if (_prompt.isEmpty) {
       return;
@@ -252,21 +251,24 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       user: _user,
       prompt: _prompt,
       negativePrompt: _negativePrompt,
-      seed: _seed,
     );
 
+    if (_seed != null) input.seed = int.parse(_seed!);
+
     input.colorValue = _colors.selectedModel!.value;
-    input.imageDimensions = _imageDimensions.selectedModel!.value;
-    input.scheduler = _schedulers.selectedModel!.value;
+    // input.imageDimensions = _imageDimensions.selectedModel!.value;
+    // input.scheduler = _schedulers.selectedModel!.value;
     input.numOutputs = _numOutputs.selectedModel!.value;
     input.style = _styles.selectedModel!.value;
     input.saturation = _saturations.selectedModel!.value;
     input.value = _values.selectedModel!.value;
 
+    // input.numOutputs = 4;
+
     debugPrint(input.toString());
 
-    // _getStatus(["1"]);
-    _postPrompt(input);
+    Map<String, dynamic>? response = await ArtemisApiService.postPrompt(input);
+    log(response.toString());
   }
 
   @override
@@ -286,16 +288,21 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               body: ListView(
                 padding: const EdgeInsets.all(50),
                 children: [
-                  ElevatedButton(
-                    onPressed: () => _getStatus([]),
-                    child: const Text("GET"),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    onPressed: _generateImage,
-                    child: const Text("POST"),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getStatus([]),
+                        child: const Text("GET"),
+                      ),
+                      const Spacer(),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: _generateImage,
+                        child: const Text("POST"),
+                      ),
+                    ],
                   ),
                   Container(
                     margin: const EdgeInsets.all(60),
