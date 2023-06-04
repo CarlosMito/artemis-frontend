@@ -5,20 +5,20 @@ import '../enums/image_style.dart';
 import '../enums/image_value.dart';
 import '../enums/artemis_placeholder.dart';
 
-final Map<Color, String> colorMap = {
-  Colors.transparent: "Aleatório",
-  Colors.black: "Preto",
-  Colors.white: "Branco",
-  Colors.red: "Vermelho",
-  Colors.amber: "Âmbar",
-  Colors.green: "Verde",
-  Colors.blueAccent: "Azul",
-  Colors.purple: "Roxo",
-  Colors.indigo: "Indigo",
-  Colors.teal: "Cerceta",
-  Colors.orange: "Laranja",
-  Colors.pink: "Rosa",
-  Colors.cyan: "Ciano",
+final Map<int, String> colorMap = {
+  Colors.transparent.value: "Aleatório",
+  Colors.black.value: "Preto",
+  Colors.white.value: "Branco",
+  Colors.red.value: "Vermelho",
+  Colors.amber.value: "Âmbar",
+  Colors.green.value: "Verde",
+  Colors.blueAccent.value: "Azul",
+  Colors.purple.value: "Roxo",
+  Colors.indigo.value: "Indigo",
+  Colors.teal.value: "Cerceta",
+  Colors.orange.value: "Laranja",
+  Colors.pink.value: "Rosa",
+  Colors.cyan.value: "Ciano",
 };
 
 // https://i.pinimg.com/originals/61/c3/b1/61c3b11e7770bd68ac268d95dc6ee790.jpg

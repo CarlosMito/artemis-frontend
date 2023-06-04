@@ -104,9 +104,9 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     for (final mapEntry in colorMap.entries) {
       _colors.radioModels.add(RadioModel<int>(
-        value: mapEntry.key.value,
+        value: mapEntry.key,
         label: mapEntry.value,
-        backgroundColor: mapEntry.key,
+        backgroundColor: Color(mapEntry.key),
       ));
     }
 

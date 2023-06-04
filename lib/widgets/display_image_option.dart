@@ -8,7 +8,7 @@ class DisplayImageOption extends StatelessWidget {
   const DisplayImageOption({super.key, required this.label, this.color, this.imageUrl});
 
   Widget buildChild() {
-    return color == null
+    return color == null || color == Colors.transparent
         ? Image.asset(
             imageUrl!,
             fit: BoxFit.cover,
@@ -20,7 +20,7 @@ class DisplayImageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (color == null && imageUrl == null) return const SizedBox.shrink();
+    if ((color == null || color == Colors.transparent) && imageUrl == null) return const SizedBox.shrink();
 
     return Column(
       children: [
