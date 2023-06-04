@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'grid_piece_viewer.dart';
 
-typedef BannerTapCallback = void Function(Piece piece);
+typedef BannerTapCallback = void Function(DisplayPiece piece);
 
 class GridPieceItem extends StatefulWidget {
-  final Piece piece;
+  final DisplayPiece piece;
   final BannerTapCallback onBannerTap;
 
   const GridPieceItem({super.key, required this.piece, required this.onBannerTap});
@@ -41,10 +41,10 @@ class _GridPieceItemState extends State<GridPieceItem> {
             child: Semantics(
               label: '${widget.piece.title} - ${widget.piece.caption}',
               child: Hero(
-                key: Key(widget.piece.source),
+                key: Key(widget.piece.image),
                 tag: widget.piece.id,
                 child: ArtemisNetworkImage(
-                  widget.piece.source,
+                  widget.piece.image,
                   progressColor: Colors.black,
                 ),
               ),

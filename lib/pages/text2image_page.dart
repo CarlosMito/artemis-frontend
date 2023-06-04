@@ -508,11 +508,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext ctx) {
-                                      return ImageVisualizer(
-                                        outputs: _outputs,
-                                        setIndex: i,
-                                        imageIndex: j,
-                                      );
+                                      return ImageVisualizer(outputs: _outputs, setIndex: i, imageIndex: j);
                                     },
                                   );
                                 },

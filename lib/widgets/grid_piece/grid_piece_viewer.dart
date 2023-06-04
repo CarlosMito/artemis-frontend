@@ -1,12 +1,13 @@
 import 'package:artemis/models/piece.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
+import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 
 class GridPieceViewer extends StatefulWidget {
   const GridPieceViewer({Key? key, required this.piece}) : super(key: key);
 
-  final Piece piece;
+  final DisplayPiece piece;
 
   @override
   State<GridPieceViewer> createState() => _GridPieceViewerState();
@@ -29,22 +30,38 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                child: Hero(
-                  key: Key(widget.piece.source),
-                  tag: widget.piece.id,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: ArtemisNetworkImage(
-                      widget.piece.source,
-                      progressColor: Colors.black,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Hero(
+                        key: Key(widget.piece.image),
+                        tag: widget.piece.id,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: ArtemisNetworkImage(
+                            widget.piece.image,
+                            progressColor: Colors.black,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.download)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+                        IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
             Expanded(
-              child: Column(
-                children: [],
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: InputInfoListView(input: widget.piece.input),
               ),
             ),
           ],
