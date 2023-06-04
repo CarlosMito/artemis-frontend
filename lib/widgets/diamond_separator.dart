@@ -10,6 +10,8 @@ class DiamondSeparator extends StatelessWidget {
   final double? widthFactor;
   final Widget? content;
   final EdgeInsetsGeometry? margin;
+  final double? lineWidth;
+  final Color? color;
 
   const DiamondSeparator({
     super.key,
@@ -20,6 +22,8 @@ class DiamondSeparator extends StatelessWidget {
     this.content,
     this.margin,
     this.widthFactor,
+    this.lineWidth,
+    this.color,
   });
 
   List<Widget> buildHalf(bool reverse) {
@@ -29,7 +33,7 @@ class DiamondSeparator extends StatelessWidget {
         child: Container(
           height: outerIconSize ?? 5,
           width: outerIconSize ?? 5,
-          color: Colors.black,
+          color: color ?? Colors.black,
         ),
       ),
       SizedBox(width: spacing ?? 8),
@@ -38,15 +42,15 @@ class DiamondSeparator extends StatelessWidget {
         child: Container(
           height: innerIconSize ?? 7,
           width: innerIconSize ?? 7,
-          color: Colors.black,
+          color: color ?? Colors.black,
         ),
       ),
       SizedBox(width: spacing ?? 8),
       Expanded(
         child: Container(
           width: double.infinity,
-          height: 1,
-          color: Colors.black,
+          height: lineWidth ?? 1,
+          color: color ?? Colors.black,
         ),
       ),
     ];
@@ -57,6 +61,7 @@ class DiamondSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       margin: margin,
       child: FractionallySizedBox(
         widthFactor: widthFactor,

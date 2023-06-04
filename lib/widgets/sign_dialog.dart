@@ -62,7 +62,7 @@ class _SignDialogState extends State<SignDialog> {
                             child: Container(
                               height: 4,
                               width: 40,
-                              color: const Color.fromARGB(255, 13, 183, 220),
+                              color: const Color.fromARGB(255, 216, 143, 0),
                             ),
                           ),
                           Text(
@@ -152,7 +152,7 @@ class _SignDialogState extends State<SignDialog> {
                         log(_confirmPassword);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 13, 183, 220),
+                        backgroundColor: const Color.fromARGB(255, 216, 143, 0),
                         padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),
                       ),
                       child: const Text(

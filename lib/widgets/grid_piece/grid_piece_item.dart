@@ -1,5 +1,4 @@
 import 'package:artemis/models/piece.dart';
-import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:flutter/material.dart';
 
