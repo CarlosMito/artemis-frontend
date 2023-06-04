@@ -1,11 +1,8 @@
-import 'dart:html';
-
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/right_triangle_custom_painter.dart';
 import 'package:artemis/widgets/custom/star_custom_painter.dart';
 import 'package:artemis/widgets/custom/triangle_custom_painter.dart';
 import 'package:artemis/widgets/diamond_separator.dart';
-// import 'package:artemis/widgets/custom/trailing_custom_painter.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -21,23 +18,20 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin {
   final Random _random = Random(6);
 
-  List<Widget> _buildStars(double centerX, double centerY, totalStars) {
+  List<Widget> _buildStars(double centerX, double centerY, int totalStars, double radiusStart, double range) {
     List<Widget> stars = [];
 
     var minStarSize = 5;
     var maxStarSize = 30;
-    var radius = 300;
-    var limitX = 700;
-    var limitY = 700;
 
     for (var i = 0; i < totalStars; i++) {
       var starSize = _random.nextDouble() * maxStarSize + minStarSize;
-      var dx = _random.nextDouble() * limitX - limitX / 2;
-      var dy = _random.nextDouble() * limitY - limitY / 2;
+      var dx = _random.nextDouble() * range - range / 2;
+      var dy = _random.nextDouble() * range - range / 2;
       var hypotenuse = sqrt(pow(dx, 2) + pow(dy, 2));
 
-      dx += (dx / hypotenuse) * radius - starSize / 2;
-      dy += (dy / hypotenuse) * radius - starSize / 2;
+      dx += (dx / hypotenuse) * radiusStart - starSize / 2;
+      dy += (dy / hypotenuse) * radiusStart - starSize / 2;
 
       bool isStar = starSize > (minStarSize + ((maxStarSize - minStarSize) / 5));
 
@@ -72,8 +66,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final Size windowSize = MediaQueryData.fromView(View.of(context)).size;
-    final Size center = Size(windowSize.width / 3, windowSize.height / 2);
+    const double moonSize = 700;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -84,140 +77,129 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         ),
       ),
       backgroundColor: Colors.black,
-      body: ListView(
-        children: [
-          // Stack(
-          //   alignment: Alignment.center,
-          //   children: [
-          //     //     // CustomPaint(
-          //     //     //   size: const Size(400, 400),
-          //     //     //   painter: TrailingCustomPainter(color: const Color.fromARGB(255, 222, 205, 155)),
-          //     //     // ),
-          //     //     // CustomPaint(
-          //     //     //   size: const Size(400, 400),
-          //     //     //   painter: StarCustomPainter(
-          //     //     //     color: const Color.fromARGB(255, 222, 205, 155),
-          //     //     //     translateX: 600,
-          //     //     //   ),
-          //     //     // ),
-
-          //   ],
-          // ),
-          // FittedBox(
-          //   child: Stack(
-          //     children: [
-          //       // Stack(children: _buildStars(center.width, center.height, 15))
-          //       //     .animate(onPlay: (controller) => controller.repeat())
-          //       //     .rotate(duration: const Duration(seconds: 70)),
-          //       // Stack(children: _buildStars(center.width, center.height, 15))
-          //       //     .animate(onPlay: (controller) => controller.repeat())
-          //       //     .rotate(duration: const Duration(seconds: 100)),
-          // Stack(children: _buildStars(center.width, center.height, 15))
-          //     .animate(onPlay: (controller) => controller.repeat())
-          //     .rotate(duration: const Duration(seconds: 85)),
-          //       Image.asset("assets/images/background/golden-moon-phases.png")
-          //           .animate(onPlay: (controller) => controller.repeat())
-          //           .rotate(duration: const Duration(seconds: 500), begin: pi, end: 0),
-          //     ],
-          //   ),
-          // ),
-
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 80, top: 80),
-                child: Image.asset("assets/images/background/golden-moon-phases.png", width: 800)
-                    .animate(onPlay: (controller) => controller.repeat())
-                    .rotate(duration: const Duration(seconds: 500), begin: pi, end: 0),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.only(right: 80, top: 80),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Text(
-                      "EXPERIMENTE",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 233, 180, 80),
-                        fontFamily: "Lexend",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 44,
+      body: LayoutBuilder(
+        builder: (context, constraints) => ListView(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 80, top: 80),
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: moonSize,
+                        width: moonSize,
+                        child: Stack(children: _buildStars(moonSize / 2, moonSize / 2, 30, moonSize / 2, 1000))
+                            .animate(onPlay: (controller) => controller.repeat())
+                            .rotate(duration: const Duration(seconds: 70)),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    const SizedBox(
-                      width: 320,
-                      child: Text(
-                        "Utilize a ferramenta de Texto à Imagem para criar novas obras rápidamente através de descrições textuais",
+                      SizedBox(
+                        height: moonSize,
+                        width: moonSize,
+                        child: Stack(children: _buildStars(moonSize / 2, moonSize / 2, 30, moonSize / 2, 1000))
+                            .animate(onPlay: (controller) => controller.repeat())
+                            .rotate(duration: const Duration(seconds: 85)),
+                      ),
+                      SizedBox(
+                        height: moonSize,
+                        width: moonSize,
+                        child: Stack(children: _buildStars(moonSize / 2, moonSize / 2, 30, moonSize / 2, 1000))
+                            .animate(onPlay: (controller) => controller.repeat())
+                            .rotate(duration: const Duration(seconds: 100)),
+                      ),
+                      Image.asset("assets/images/background/golden-moon-phases.png", width: moonSize)
+                          .animate(onPlay: (controller) => controller.repeat())
+                          .rotate(duration: const Duration(seconds: 500), begin: pi, end: 0),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.only(right: 80, top: 100),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        "EXPERIMENTE",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 233, 180, 80),
                           fontFamily: "Lexend",
-                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 44,
                         ),
-                        textAlign: TextAlign.end,
                       ),
-                    ),
-                    const SizedBox(height: 14),
-                    Container(
-                      height: 2,
-                      width: 122,
-                      color: Colors.white,
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+                      const SizedBox(
+                        width: 320,
+                        child: Text(
+                          "Utilize a ferramenta de Texto à Imagem para criar novas obras rápidamente através de descrições textuais",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: "Lexend",
+                            fontSize: 16,
+                            backgroundColor: Colors.black,
+                          ),
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      Container(
+                        height: 2,
+                        width: 122,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          // Stack(children: _buildStars(center.width, center.height, 15))
-          //     .animate(onPlay: (controller) => controller.repeat())
-          //     .rotate(duration: const Duration(seconds: 85)),
-          Row(
-            children: [
-              Expanded(
-                child: CustomPaint(
-                  size: const Size(60, 70),
-                  painter: RightTriangleCustomPainter(color: Colors.white),
-                ),
-              ),
-              Expanded(
-                child: Transform.flip(
-                  flipX: true,
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
                   child: CustomPaint(
                     size: const Size(60, 70),
                     painter: RightTriangleCustomPainter(color: Colors.white),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const AboutSection(),
-          Row(
-            children: [
-              Expanded(
-                child: Transform.flip(
-                  flipY: true,
-                  flipX: true,
-                  child: CustomPaint(
-                    size: const Size(60, 60),
-                    painter: RightTriangleCustomPainter(color: Colors.white),
+                Expanded(
+                  child: Transform.flip(
+                    flipX: true,
+                    child: CustomPaint(
+                      size: const Size(60, 70),
+                      painter: RightTriangleCustomPainter(color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Transform.flip(
-                  flipY: true,
-                  child: CustomPaint(
-                    size: const Size(60, 60),
-                    painter: RightTriangleCustomPainter(color: Colors.white),
+              ],
+            ),
+            const AboutSection(),
+            Row(
+              children: [
+                Expanded(
+                  child: Transform.flip(
+                    flipY: true,
+                    flipX: true,
+                    child: CustomPaint(
+                      size: const Size(60, 60),
+                      painter: RightTriangleCustomPainter(color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const ContactMeSection(),
-        ],
+                Expanded(
+                  child: Transform.flip(
+                    flipY: true,
+                    child: CustomPaint(
+                      size: const Size(60, 60),
+                      painter: RightTriangleCustomPainter(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const ContactMeSection(),
+          ],
+        ),
       ),
     );
   }
@@ -228,92 +210,130 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 920,
-      width: double.infinity,
-      color: Colors.white,
-      child: Center(
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 26,
-          runSpacing: 26,
-          children: [
-            FittedBox(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-                decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        Container(
+          height: 920,
+          width: double.infinity,
+          color: Colors.white,
+          child: Center(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 26,
+              runSpacing: 26,
+              children: [
+                FittedBox(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+                    decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "SOBRE",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 216, 143, 0),
+                            fontFamily: "Lexend",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
+                          ),
+                        ),
+                        Container(
+                          height: 4,
+                          width: 62,
+                          color: const Color.fromARGB(255, 216, 143, 0),
+                        ),
+                        const SizedBox(height: 36),
+                        const SizedBox(
+                          width: 252,
+                          child: Text(
+                            "Este site é o resultado do meu projeto final de conclusão do curso de Ciência da Computação, desenvolvido durante minha "
+                            "graduação na UFSJ sob a orientação do professor Edimilson Batista dos Santos.",
+                            style: TextStyle(
+                              fontFamily: "Lexend",
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                      ],
+                    ),
+                  ),
+                ),
+                Stack(
                   children: [
-                    const Text(
-                      "SOBRE",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 216, 143, 0),
-                        fontFamily: "Lexend",
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
-                      ),
-                    ),
-                    Container(
-                      height: 4,
-                      width: 62,
-                      color: const Color.fromARGB(255, 216, 143, 0),
-                    ),
-                    const SizedBox(height: 36),
                     const SizedBox(
-                      width: 252,
-                      child: Text(
-                        "Este site é o resultado do meu projeto final de conclusão do curso de Ciência da Computação, desenvolvido durante minha "
-                        "graduação na UFSJ sob a orientação do professor Edimilson Batista dos Santos.",
-                        style: TextStyle(
-                          fontFamily: "Lexend",
-                          fontSize: 18,
+                      height: 470,
+                      width: 810,
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: 400,
+                        width: 800,
+                        child: Image.asset(
+                          "assets/images/background/ctan-ufsj.jpg",
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                        ),
+                        child: Image.asset(
+                          "assets/images/background/ufsj.jpg",
+                          fit: BoxFit.fitWidth,
+                          height: 100,
+                        ),
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ),
-            Stack(
-              children: [
-                const SizedBox(
-                  height: 470,
-                  width: 810,
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                    height: 400,
-                    width: 800,
-                    child: Image.asset(
-                      "assets/images/background/ctan-ufsj.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
-                    ),
-                    child: Image.asset(
-                      "assets/images/background/ufsj.jpg",
-                      fit: BoxFit.fitWidth,
-                      height: 100,
-                    ),
-                  ),
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        const Positioned(
+          top: 20,
+          child: Wrap(
+            spacing: 50,
+            children: [
+              Icon(
+                Icons.star,
+                size: 15,
+                color: Color.fromARGB(255, 255, 170, 0),
+              ),
+              Icon(
+                Icons.star,
+                size: 30,
+                color: Color.fromARGB(255, 109, 61, 15),
+              ),
+              Icon(
+                Icons.star,
+                size: 40,
+                color: Color.fromARGB(255, 255, 170, 0),
+              ),
+              Icon(
+                Icons.star,
+                size: 30,
+                color: Color.fromARGB(255, 109, 61, 15),
+              ),
+              Icon(
+                Icons.star,
+                size: 15,
+                color: Color.fromARGB(255, 255, 170, 0),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -327,10 +347,6 @@ class ContactMeSection extends StatelessWidget {
       height: 600,
       child: Center(
         child: Column(
-          // direction: Axis.vertical,
-          // alignment: WrapAlignment.center,
-          // crossAxisAlignment: WrapCrossAlignment.center,
-          // spacing: 20,
           children: [
             SizedBox(height: 140),
             FittedBox(
