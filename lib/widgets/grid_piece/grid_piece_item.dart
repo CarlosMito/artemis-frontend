@@ -21,19 +21,11 @@ class _GridPieceItemState extends State<GridPieceItem> {
   bool _onHover = false;
 
   void showPhoto(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute<void>(builder: (BuildContext context) {
-      return Scaffold(
-        appBar: const ArtemisAppBar(
-            // title: Text(piece.title!),
-            ),
-        body: SizedBox.expand(
-          child: Hero(
-            tag: widget.piece.id,
-            child: GridPieceViewer(piece: widget.piece),
-          ),
-        ),
-      );
-    }));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (BuildContext context) {
+        return GridPieceViewer(piece: widget.piece);
+      }),
+    );
   }
 
   @override

@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class ArtemisNetworkImage extends StatefulWidget {
   final String imageUrl;
   final Color? progressColor;
+  final BoxFit? fit;
 
-  const ArtemisNetworkImage(this.imageUrl, {super.key, this.progressColor});
+  const ArtemisNetworkImage(this.imageUrl, {super.key, this.progressColor, this.fit});
 
   @override
   State<ArtemisNetworkImage> createState() => _ArtemisNetworkImageState();
@@ -18,7 +19,7 @@ class _ArtemisNetworkImageState extends State<ArtemisNetworkImage> {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: widget.imageUrl,
-      fit: BoxFit.cover,
+      fit: widget.fit ?? BoxFit.cover,
       placeholder: (BuildContext context, String string) {
         return Center(
           child: CircularProgressIndicator(
@@ -29,7 +30,7 @@ class _ArtemisNetworkImageState extends State<ArtemisNetworkImage> {
       errorWidget: (BuildContext context, String string, dynamic d) {
         return Image.asset(
           imageMapping[ArtemisPlaceholder.imageError]!,
-          fit: BoxFit.cover,
+          fit: widget.fit ?? BoxFit.cover,
         );
       },
     );

@@ -78,7 +78,7 @@ flutter:
   assets:
     - .env
     - assets/images/background/
-    - assets/images/icons/
+    - assets/images/logos/
     - assets/images/options/saturations/
     - assets/images/options/styles/
     - assets/images/options/values/

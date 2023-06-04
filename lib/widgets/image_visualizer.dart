@@ -147,7 +147,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                           const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10), widthFactor: 0.7),
                           const Center(
                             child: Text(
-                              "Visualização",
+                              "Visualizar",
                               style: TextStyle(fontFamily: "Lexend", fontSize: 26, fontWeight: FontWeight.bold),
                             ),
                           ),

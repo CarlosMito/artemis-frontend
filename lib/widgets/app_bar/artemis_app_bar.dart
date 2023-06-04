@@ -38,7 +38,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                     dimension: 26,
                     child: FittedBox(
                       child: Image.asset(
-                        "assets/images/icons/artemis-icon-2-white.png",
+                        "assets/images/logos/artemis-white.png",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -73,13 +73,13 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                 ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
                 const ArtemisAppButton(
-                  text: "Contate-me",
-                  route: "/contact-me",
+                  text: "Sobre",
+                  route: "/about",
                 ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
                 const ArtemisAppButton(
-                  text: "Sobre",
-                  route: "/about",
+                  text: "Contate-me",
+                  route: "/contact-me",
                 ),
               ],
             ),

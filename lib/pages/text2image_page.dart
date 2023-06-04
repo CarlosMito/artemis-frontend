@@ -274,7 +274,13 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ArtemisAppBar(),
+      appBar: PreferredSize(
+        preferredSize: const ArtemisAppBar().preferredSize,
+        child: const Hero(
+          tag: ArtemisAppBar,
+          child: ArtemisAppBar(),
+        ),
+      ),
       body: Row(
         children: [
           Expanded(

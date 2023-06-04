@@ -181,7 +181,7 @@ class _SignDialogState extends State<SignDialog> {
                               SizedBox.square(
                                 dimension: 18,
                                 child: Image.asset(
-                                  "assets/images/icons/google-icon.png",
+                                  "assets/images/logos/google.png",
                                 ),
                               ),
                               const SizedBox(width: 10),

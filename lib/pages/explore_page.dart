@@ -35,7 +35,13 @@ class _ExplorePageState extends State<ExplorePage> {
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      appBar: const ArtemisAppBar(),
+      appBar: PreferredSize(
+        preferredSize: const ArtemisAppBar().preferredSize,
+        child: const Hero(
+          tag: ArtemisAppBar,
+          child: ArtemisAppBar(),
+        ),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(

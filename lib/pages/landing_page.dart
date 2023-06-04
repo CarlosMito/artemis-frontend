@@ -56,7 +56,13 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     final Size windowSize = MediaQueryData.fromView(View.of(context)).size;
 
     return Scaffold(
-      appBar: const ArtemisAppBar(),
+      appBar: PreferredSize(
+        preferredSize: const ArtemisAppBar().preferredSize,
+        child: const Hero(
+          tag: ArtemisAppBar,
+          child: ArtemisAppBar(),
+        ),
+      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(
