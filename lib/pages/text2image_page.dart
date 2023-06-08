@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:js_interop';
 
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
@@ -20,6 +21,7 @@ import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../utils/maps.dart';
 
@@ -36,7 +38,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   String _negativePrompt = "";
   String? _seed;
 
-  final List<List<ArtemisOutputAPI>> _outputs = [];
+  List<List<ArtemisOutputAPI>>? _outputs;
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -78,6 +80,40 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         }
       }
     }
+  }
+
+  void _loginArtemis() async {
+    String? username = dotenv.env["USERNAME_TEST"];
+    String? password = dotenv.env["PASSWORD_TEST"];
+
+    if (username != null && password != null) {
+      ArtemisApiService.loginArtemis(username, password);
+    }
+  }
+
+  void _logoutArtemis() async {
+    ArtemisApiService.logoutArtemis();
+  }
+
+  void _getCreations(List<String> idList) async {
+    _outputs = await ArtemisApiService.getCreations(_user);
+
+    // idList = ["qqw7znhobbgnpppt745uu6lsxi"];
+
+    // if (idList.isNotEmpty) {
+    //   log(idList.toString());
+    //   Map<String, dynamic>? response = await ArtemisApiService.getStatus(idList);
+
+    //   if (response != null) {
+    //     log(response.toString());
+
+    //     if (response["outputs"] != null) {
+    //       // log(response["output"][0]);
+    //       // _imageUrl = response["output"][0];
+    //       // setState(() {});
+    //     }
+    //   }
+    // }
   }
 
   void _initRadioControllers() {
@@ -183,7 +219,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       )
     ];
 
-    _outputs.addAll([
+    _outputs?.addAll([
       [
         ArtemisOutputAPI(
           input: inputs[0],
@@ -322,17 +358,35 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                 children: [
                   Row(
                     children: [
+                      // ElevatedButton(
+                      //   onPressed: () => _getStatus([]),
+                      //   child: const Text("GET"),
+                      // ),
+                      // const Spacer(),
+                      // ElevatedButton(
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: Colors.red,
+                      //   ),
+                      //   onPressed: _generateImage,
+                      //   child: const Text("POST"),
+                      // ),
                       ElevatedButton(
-                        onPressed: () => _getStatus([]),
-                        child: const Text("GET"),
+                        onPressed: () => _getCreations([]),
+                        child: const Text("GET OUTPUTS"),
                       ),
-                      const Spacer(),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.pink,
                         ),
-                        onPressed: _generateImage,
-                        child: const Text("POST"),
+                        onPressed: _loginArtemis,
+                        child: const Text("LOGIN"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                        ),
+                        onPressed: _logoutArtemis,
+                        child: const Text("LOGOUT"),
                       ),
                     ],
                   ),
@@ -517,12 +571,12 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   const SizedBox(height: 10.0),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: _outputs.length,
+                      itemCount: _outputs?.length ?? 0,
                       separatorBuilder: (BuildContext context, int i) {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var outputset = _outputs[i];
+                        var outputset = _outputs![i];
                         List<Widget> children = [];
 
                         for (int j = 0; j < outputset.length; j++) {
@@ -534,7 +588,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext ctx) {
-                                      return ImageVisualizer(outputs: _outputs, setIndex: i, imageIndex: j);
+                                      return ImageVisualizer(outputs: _outputs!, setIndex: i, imageIndex: j);
                                     },
                                   );
                                 },
