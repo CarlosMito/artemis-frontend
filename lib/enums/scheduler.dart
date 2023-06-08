@@ -1,4 +1,4 @@
-enum Scheduler { ddim, kEuler, dpmSolverMultistep, kEulerAncestral, pndm, klms }
+enum Scheduler { dpmSolverMultistep, ddim, kEuler, kEulerAncestral, pndm, klms }
 
 extension ParseToString on Scheduler {
   String toReplicateAPI() {

@@ -68,62 +68,64 @@ class ReplicateApiService {
 }
 
 class ArtemisApiService {
-  static Future<Map<String, dynamic>?> postPrompt(ArtemisInputAPI input) async {
+  static Future<int?> postPrompt(ArtemisInputAPI input) async {
+    Response response;
+    String name = "postPrompt";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.text2image}");
-
-    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
-    // Map<String, String> headers = {"Authorization": "Token $key"};
+    log("URL: ${uri.toString()}", name: name);
 
     Map<String, String> body = input.toJson();
 
     // String stringBody = jsonEncode(body);
     // stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
 
-    log(jsonEncode(body));
-    log(uri.toString());
+    debugPrint(jsonEncode(body));
 
     try {
-      Response res = await http.post(uri, body: body);
-      log("Status Code [POST]: ${res.statusCode.toString()}");
-
-      if (res.statusCode == 201) {
-        return jsonDecode(res.body);
+      response = await http.post(uri, body: body);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 201) {
+        log("Error: ${response.body}", name: name);
+        return null;
       }
-
-      log(res.body.toString());
     } catch (e) {
-      log("Erro [POST]: $e");
+      log("Error: $e", name: name);
+      return null;
     }
 
-    return null;
+    log("Response: ${response.body}", name: name);
+
+    return jsonDecode(response.body)["id"];
   }
 
-  static Future<Map<String, dynamic>?> getStatus(List<String> idList) async {
-    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.text2image}");
-
+  static Future<Map<String, dynamic>?> updateStatus(String inputId) async {
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
     // Map<String, String> headers = {
     //   "Authorization": "Token $key",
     //   "Content-Type": "application/json",
     // };
 
-    Map<String, List<String>> queryParameters = {
-      "id": idList,
-    };
-
+    Response response;
+    String name = "updateStatus";
+    Map<String, String> queryParameters = {"input_id": inputId};
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.text2image}");
     uri = uri.replace(queryParameters: queryParameters);
-    log(uri.toString());
+
+    log(uri.toString(), name: name);
 
     try {
-      Response res = await http.get(uri);
-      log("Status Code [GET]: ${res.statusCode.toString()}");
-
-      if (res.statusCode == 200) {
-        return jsonDecode(res.body);
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return null;
       }
     } catch (e) {
-      log("Erro [GET]: $e");
+      log("Error: $e", name: name);
+      return null;
     }
+
+    debugPrint(jsonDecode(response.body).toString());
 
     return null;
   }
@@ -143,7 +145,10 @@ class ArtemisApiService {
     try {
       response = await http.get(uri);
       log("Status Code: ${response.statusCode.toString()}", name: name);
-      if (response.statusCode != 200) return null;
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return null;
+      }
     } catch (e) {
       log("Error: $e", name: name);
       return null;
@@ -164,6 +169,7 @@ class ArtemisApiService {
     }
 
     log("Total Inputs: ${inputs.length}", name: name);
+    log(inputs.keys.toString(), name: name);
 
     Map<String, List<String>> queryParameters = {"id": outputIds};
     uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}");
@@ -174,7 +180,10 @@ class ArtemisApiService {
     try {
       response = await http.get(uri);
       log("Status Code: ${response.statusCode.toString()}", name: name);
-      if (response.statusCode != 200) return null;
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return null;
+      }
     } catch (e) {
       log("Error: $e", name: name);
       return null;

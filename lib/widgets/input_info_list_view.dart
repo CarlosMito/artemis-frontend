@@ -63,61 +63,15 @@ class InputInfoListView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: [
-              const Row(children: [
-                Flexible(
-                  child: Text(
-                    "Prompt Positivo",
-                    style: TextStyle(
-                      fontFamily: "Lexend",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ]),
-              const SizedBox(height: 10),
-              Text(
-                input.prompt,
-                style: const TextStyle(fontFamily: "Lexend"),
-              ),
-            ],
-          ),
+        PromptTextBlock(
+          title: "Prompt",
+          text: input.prompt,
         ),
         const SizedBox(height: 4),
         if (input.negativePrompt.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                const Row(children: [
-                  Flexible(
-                    child: Text(
-                      "Prompt Negativo",
-                      style: TextStyle(
-                        fontFamily: "Lexend",
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ]),
-                const SizedBox(height: 10),
-                Text(
-                  input.negativePrompt,
-                  style: const TextStyle(fontFamily: "Lexend"),
-                ),
-              ],
-            ),
+          PromptTextBlock(
+            title: "Prompt Negativo",
+            text: input.negativePrompt,
           ),
         const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 40), widthFactor: 0.5),
         Wrap(
@@ -134,6 +88,43 @@ class InputInfoListView extends StatelessWidget {
           children: buildDisplayImageOptions(),
         )
       ],
+    );
+  }
+}
+
+class PromptTextBlock extends StatelessWidget {
+  final String title;
+  final String text;
+
+  const PromptTextBlock({super.key, required this.title, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: "Lexend",
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            text,
+            style: const TextStyle(
+              fontFamily: "Lexend",
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

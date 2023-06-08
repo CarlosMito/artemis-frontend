@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'dart:math';
 
 import 'package:artemis/enums/image_dimension.dart';
@@ -7,7 +6,6 @@ import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/model_version.dart';
 import 'package:artemis/enums/scheduler.dart';
-import 'package:artemis/models/user.dart';
 
 class ArtemisInputAPI {
   BigInt userId;
@@ -76,16 +74,16 @@ class ArtemisInputAPI {
         "user": userId.toString(),
         "prompt": prompt,
         "negativePrompt": negativePrompt,
-        "imageDimensions": imageDimensions.name,
+        "imageDimensions": imageDimensions.toReplicateAPI(),
         "numOutputs": numOutputs.toString(),
         "numInferenceSteps": numInferenceSteps.toString(),
         "guidanceScale": guidanceScale.toString(),
-        "scheduler": scheduler.name,
+        "scheduler": scheduler.toReplicateAPI(),
         "seed": seed.toString(),
         "style": style.name,
         "saturation": saturation.name,
         "value": value.name,
-        "color": colorValue.toString(),
+        "colorValue": colorValue.toString(),
         "version": version.value,
       };
 }

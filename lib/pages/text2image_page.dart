@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:js_interop';
 
 import 'package:artemis/api/api_service.dart';
@@ -37,8 +39,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   String _prompt = "";
   String _negativePrompt = "";
   String? _seed;
+  int? _currentInputId;
+  Timer? updateStatusTimer;
 
-  List<List<ArtemisOutputAPI>>? _outputs;
+  List<List<ArtemisOutputAPI>>? _outputs = [];
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -63,22 +67,27 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   // }
 
-  void _getStatus(List<String> idList) async {
-    idList = ["qqw7znhobbgnpppt745uu6lsxi"];
+  void _updateStatus([int? inputId]) async {
+    var targetId = inputId ?? _currentInputId;
 
-    if (idList.isNotEmpty) {
-      log(idList.toString());
-      Map<String, dynamic>? response = await ArtemisApiService.getStatus(idList);
+    if (targetId != null) {
+      log(targetId.toString());
+      Map<String, dynamic>? response = await ArtemisApiService.updateStatus(targetId.toString());
 
       if (response != null) {
         log(response.toString());
 
-        if (response["outputs"] != null) {
-          // log(response["output"][0]);
-          // _imageUrl = response["output"][0];
-          // setState(() {});
+        List<int>? percentages = response["percentages"];
+
+        if (percentages != null) {
+          if (percentages.reduce(math.min) >= 100) {}
+          _currentInputId = null;
+          updateStatusTimer?.cancel();
+          _getCreations();
         }
       }
+    } else {
+      updateStatusTimer?.cancel();
     }
   }
 
@@ -96,26 +105,12 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   }
 
   void _getCreations() async {
-    _outputs = await ArtemisApiService.getCreations(_user);
+    var auxiliar = await ArtemisApiService.getCreations(_user);
 
-    setState(() {});
-
-    // idList = ["qqw7znhobbgnpppt745uu6lsxi"];
-
-    // if (idList.isNotEmpty) {
-    //   log(idList.toString());
-    //   Map<String, dynamic>? response = await ArtemisApiService.getStatus(idList);
-
-    //   if (response != null) {
-    //     log(response.toString());
-
-    //     if (response["outputs"] != null) {
-    //       // log(response["output"][0]);
-    //       // _imageUrl = response["output"][0];
-    //       // setState(() {});
-    //     }
-    //   }
-    // }
+    if (auxiliar != null) {
+      _outputs = auxiliar.reversed.toList();
+      setState(() {});
+    }
   }
 
   void _initRadioControllers() {
@@ -273,7 +268,30 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ]);
   }
 
-  void _fetchCreations() async {}
+  showAlertDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  20.0,
+                ),
+              ),
+            ),
+            // contentPadding: EdgeInsets.only(bottom: 20.0),
+            title: Text(
+              "Prompt Vazio",
+              style: TextStyle(fontSize: 24.0),
+            ),
+            // content: Container(
+            //   padding: const EdgeInsets.all(20),
+            //   child: const Text("O campo prompt é obrigatório"),
+            // ),
+          );
+        });
+  }
 
   @override
   void initState() {
@@ -281,7 +299,13 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
     _initRadioControllers();
     _createExampleData();
-    _fetchCreations();
+    // _getCreations();
+  }
+
+  @override
+  void dispose() {
+    updateStatusTimer?.cancel();
+    super.dispose();
   }
 
   void _generateImage() async {
@@ -305,11 +329,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // IDs: [3985702484]
 
     _prompt =
-        "12th century female samurai in the style of greg rutkowski and Guweiz and Yoji Shinkawa, intricate black and red samurai armor, cinematic lighting, dark rainy city, depth of field, lumen reflections, photography, stunning environment, hyperrealism, insanely detailed, midjourneyart style";
-
-    if (_prompt.isEmpty) {
-      return;
-    }
+        "airy, pin-up, sci-fi, steam punk, very deitaled, realistic, figurative painter, fineart, Oil painting on canvas, beautiful painting by Daniel F Gerhartz --ar 9:16 --beta --upbeta";
 
     ArtemisInputAPI input = ArtemisInputAPI(
       userId: _user.id,
@@ -320,19 +340,28 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     if (_seed != null) input.seed = int.parse(_seed!);
 
     input.colorValue = _colors.selectedModel!.value;
-    // input.imageDimensions = _imageDimensions.selectedModel!.value;
-    // input.scheduler = _schedulers.selectedModel!.value;
+    input.imageDimensions = _imageDimensions.selectedModel!.value;
+    input.scheduler = _schedulers.selectedModel!.value;
     input.numOutputs = _numOutputs.selectedModel!.value;
     input.style = _styles.selectedModel!.value;
     input.saturation = _saturations.selectedModel!.value;
     input.value = _values.selectedModel!.value;
 
-    input.numOutputs = 4;
+    // ==========================
+    // Template image generation
+    // ==========================
+    // input.numOutputs = 4;
 
-    debugPrint(input.toString());
+    if (_currentInputId == null) {
+      _currentInputId = await ArtemisApiService.postPrompt(input);
 
-    Map<String, dynamic>? response = await ArtemisApiService.postPrompt(input);
-    log(response.toString());
+      if (_currentInputId != null) {
+        updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) => _updateStatus());
+        log(_currentInputId.toString());
+      }
+    } else {
+      log("Another creation in process!");
+    }
   }
 
   @override
@@ -350,7 +379,16 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           Expanded(
             child: Scaffold(
               floatingActionButton: FloatingActionButton.extended(
-                onPressed: _generateImage,
+                onPressed: () {
+                  if (_prompt.isEmpty) {
+                    // showAlertDialog();
+                    return;
+                  }
+                  // setState(() {
+                  //   _validatePrompt = _prompt.isNotEmpty;
+                  // });
+                  _generateImage();
+                },
                 icon: const Icon(Icons.send),
                 label: const Text("Gerar Imagem"),
                 backgroundColor: const Color.fromARGB(255, 10, 150, 200),
@@ -360,18 +398,20 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                 children: [
                   Row(
                     children: [
-                      // ElevatedButton(
-                      //   onPressed: () => _getStatus([]),
-                      //   child: const Text("GET"),
-                      // ),
-                      // const Spacer(),
-                      // ElevatedButton(
-                      //   style: ElevatedButton.styleFrom(
-                      //     backgroundColor: Colors.red,
-                      //   ),
-                      //   onPressed: _generateImage,
-                      //   child: const Text("POST"),
-                      // ),
+                      ElevatedButton(
+                        onPressed: () => _updateStatus(29),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                        ),
+                        child: const Text("UPDATE STATUS"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                        ),
+                        onPressed: _generateImage,
+                        child: const Text("REQUEST CREATION"),
+                      ),
                       ElevatedButton(
                         onPressed: () => _getCreations(),
                         child: const Text("GET OUTPUTS"),
@@ -580,6 +620,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                       itemBuilder: (BuildContext context, int i) {
                         var outputset = _outputs![i];
                         List<Widget> children = [];
+
+                        if (outputset.isEmpty) return const SizedBox.shrink();
 
                         for (int j = 0; j < outputset.length; j++) {
                           children.add(
