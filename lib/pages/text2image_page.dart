@@ -36,7 +36,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   String _negativePrompt = "";
   String? _seed;
 
-  final List<ArtemisOutputAPI> _outputs = [];
+  final List<List<ArtemisOutputAPI>> _outputs = [];
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -62,7 +62,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   // }
 
   void _getStatus(List<String> idList) async {
-    idList = ["pmnwbgwobjbvfbrin4whyfgqee"];
+    idList = ["qqw7znhobbgnpppt745uu6lsxi"];
 
     if (idList.isNotEmpty) {
       log(idList.toString());
@@ -140,81 +140,99 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   }
 
   void _createExampleData() {
-    _outputs.addAll([
-      ArtemisOutputAPI(
-        input: ArtemisInputAPI(
-          user: _user,
-          prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-        ),
+    List<ArtemisInputAPI> inputs = [
+      ArtemisInputAPI(
+        user: _user,
+        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
       ),
-      ArtemisOutputAPI(
-        input: ArtemisInputAPI(
-          user: _user,
-          prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-              "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-          guidanceScale: 1,
-          imageDimensions: ImageDimensions.dim768,
-          scheduler: Scheduler.klms,
-          numOutputs: 2,
-          seed: 100,
-        ),
+      ArtemisInputAPI(
+        user: _user,
+        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
+        guidanceScale: 1,
+        imageDimensions: ImageDimensions.dim768,
+        scheduler: Scheduler.klms,
+        numOutputs: 2,
+        seed: 100,
       ),
-      ArtemisOutputAPI(
-        input: ArtemisInputAPI(
-          user: _user,
-          prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-              "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
-              "'Content here, content here', making it look like readable English.",
-          negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
-              "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
-              "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
-          guidanceScale: 9,
-          imageDimensions: ImageDimensions.dim768,
-          scheduler: Scheduler.kEuler,
-          numInferenceSteps: 100,
-          numOutputs: 3,
-          seed: 384690124,
-          style: ImageStyle.digitalArt,
-          colorValue: Colors.amber.value,
-          saturation: ImageSaturation.high,
-          value: ImageValue.low,
-        ),
+      ArtemisInputAPI(
+        user: _user,
+        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
+            "'Content here, content here', making it look like readable English.",
+        negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
+            "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
+            "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+        guidanceScale: 9,
+        imageDimensions: ImageDimensions.dim768,
+        scheduler: Scheduler.kEuler,
+        numInferenceSteps: 100,
+        numOutputs: 3,
+        seed: 384690124,
+        style: ImageStyle.digitalArt,
+        colorValue: Colors.amber.value,
+        saturation: ImageSaturation.high,
+        value: ImageValue.low,
       ),
-      ArtemisOutputAPI(
-        input: ArtemisInputAPI(
-          user: _user,
-          prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-          numOutputs: 4,
-          colorValue: Colors.pink.value,
-          value: ImageValue.low,
-        ),
+      ArtemisInputAPI(
+        user: _user,
+        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+        numOutputs: 4,
+        colorValue: Colors.pink.value,
+        value: ImageValue.low,
       )
+    ];
+
+    _outputs.addAll([
+      [
+        ArtemisOutputAPI(
+          input: inputs[0],
+          image: imageMapping[0]!,
+        )
+      ],
+      [
+        ArtemisOutputAPI(
+          input: inputs[1],
+          image: imageMapping[1]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[1],
+          image: imageMapping[2]!,
+        )
+      ],
+      [
+        ArtemisOutputAPI(
+          input: inputs[2],
+          image: imageMapping[3]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[2],
+          image: imageMapping[4]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[2],
+          image: imageMapping[5]!,
+        )
+      ],
+      [
+        ArtemisOutputAPI(
+          input: inputs[3],
+          image: imageMapping[2]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[3],
+          image: imageMapping[1]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[3],
+          image: imageMapping[4]!,
+        ),
+        ArtemisOutputAPI(
+          input: inputs[3],
+          image: imageMapping[0]!,
+        )
+      ],
     ]);
-
-    //================
-    // Init Outputs
-    //================
-    _outputs[0].images = [
-      imageMapping[0]!,
-    ];
-
-    _outputs[1].images = [
-      imageMapping[1]!,
-      imageMapping[2]!,
-    ];
-
-    _outputs[2].images = [
-      imageMapping[3]!,
-      imageMapping[4]!,
-      imageMapping[5]!,
-    ];
-
-    _outputs[3].images = [
-      imageMapping[2]!,
-      imageMapping[1]!,
-      imageMapping[4]!,
-      imageMapping[0]!,
-    ];
   }
 
   void _fetchCreations() async {}
@@ -237,11 +255,19 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // IDs: [156196113, 2954722577]
     // portrait skull with mohawk
 
+    // [Not working]
     // space girl| standing alone on hill| centered| detailed gorgeous face| anime style| key visual| intricate detail| highly detailed| breathtaking| vibrant| panoramic| cinematic| Carne Griffiths| Conrad Roset| ghibli
-    // 12th centuryhalf naked female samurai in the style of greg rutkowski and Guweiz and Yoji Shinkawa, intricate black and red samurai armor, cinematic lighting, dark rainy city, depth of field, lumen reflections, photography, stunning environment, hyperrealism, insanely detailed, midjourneyart style
-    // a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowski and magali villanueve
 
-    _prompt = "portrait skull with mohawk";
+    // 12th century female samurai in the style of greg rutkowski and Guweiz and Yoji Shinkawa, intricate black and red samurai armor, cinematic lighting, dark rainy city, depth of field, lumen reflections, photography, stunning environment, hyperrealism, insanely detailed, midjourneyart style
+
+    // a portrait of an old coal miner in 19th century, beautiful painting with highly detailed face by greg rutkowski and magali villanueve
+    // IDs: [2469936864]
+
+    // "a portrait of an old coal miner in 19th century"
+    // IDs: [3985702484]
+
+    _prompt =
+        "12th century female samurai in the style of greg rutkowski and Guweiz and Yoji Shinkawa, intricate black and red samurai armor, cinematic lighting, dark rainy city, depth of field, lumen reflections, photography, stunning environment, hyperrealism, insanely detailed, midjourneyart style";
 
     if (_prompt.isEmpty) {
       return;
@@ -263,7 +289,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     input.saturation = _saturations.selectedModel!.value;
     input.value = _values.selectedModel!.value;
 
-    // input.numOutputs = 4;
+    input.numOutputs = 4;
 
     debugPrint(input.toString());
 
@@ -496,10 +522,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var output = _outputs[i];
+                        var outputset = _outputs[i];
                         List<Widget> children = [];
 
-                        for (int j = 0; j < output.images.length; j++) {
+                        for (int j = 0; j < outputset.length; j++) {
                           children.add(
                             MouseRegion(
                               cursor: SystemMouseCursors.click,
@@ -519,7 +545,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   child: AspectRatio(
                                     aspectRatio: 1,
                                     child: ArtemisNetworkImage(
-                                      output.images[j],
+                                      outputset[j].image,
                                       progressColor: Colors.white,
                                     ),
                                   ),

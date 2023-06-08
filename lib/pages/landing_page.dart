@@ -66,7 +66,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    const double moonSize = 700;
+    const double moonSize = 800;
 
     return Scaffold(
       appBar: PreferredSize(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ImageVisualizer extends StatefulWidget {
-  final List<ArtemisOutputAPI> outputs;
+  final List<List<ArtemisOutputAPI>> outputs;
   final int setIndex;
   final int imageIndex;
 
@@ -25,7 +25,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
     super.initState();
     _setIndex = widget.setIndex;
     _imageIndex = widget.imageIndex;
-    _input = widget.outputs[_setIndex].input;
+    _input = widget.outputs[_setIndex][_imageIndex].input;
   }
 
   void previousImage() {
@@ -36,14 +36,14 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
     } else if (_setIndex > 0) {
       setState(() {
         _setIndex -= 1;
-        _imageIndex = widget.outputs[_setIndex].images.length - 1;
-        _input = widget.outputs[_setIndex].input;
+        _imageIndex = widget.outputs[_setIndex].length - 1;
+        _input = widget.outputs[_setIndex][_imageIndex].input;
       });
     }
   }
 
   void nextImage() {
-    if (_imageIndex < widget.outputs[_setIndex].images.length - 1) {
+    if (_imageIndex < widget.outputs[_setIndex].length - 1) {
       setState(() {
         _imageIndex += 1;
       });
@@ -51,7 +51,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
       setState(() {
         _imageIndex = 0;
         _setIndex += 1;
-        _input = widget.outputs[_setIndex].input;
+        _input = widget.outputs[_setIndex][_imageIndex].input;
       });
     }
   }
@@ -89,7 +89,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                     decoration: BoxDecoration(
                       color: const Color(0xff7c94b6),
                       image: DecorationImage(
-                        image: NetworkImage(widget.outputs[_setIndex].images[_imageIndex]),
+                        image: NetworkImage(widget.outputs[_setIndex][_imageIndex].image),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
