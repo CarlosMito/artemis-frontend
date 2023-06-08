@@ -95,8 +95,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ArtemisApiService.logoutArtemis();
   }
 
-  void _getCreations(List<String> idList) async {
+  void _getCreations() async {
     _outputs = await ArtemisApiService.getCreations(_user);
+
+    setState(() {});
 
     // idList = ["qqw7znhobbgnpppt745uu6lsxi"];
 
@@ -178,11 +180,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   void _createExampleData() {
     List<ArtemisInputAPI> inputs = [
       ArtemisInputAPI(
-        user: _user,
+        userId: _user.id,
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
       ),
       ArtemisInputAPI(
-        user: _user,
+        userId: _user.id,
         prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
             "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
         guidanceScale: 1,
@@ -192,7 +194,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         seed: 100,
       ),
       ArtemisInputAPI(
-        user: _user,
+        userId: _user.id,
         prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
             "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
             "'Content here, content here', making it look like readable English.",
@@ -211,7 +213,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         value: ImageValue.low,
       ),
       ArtemisInputAPI(
-        user: _user,
+        userId: _user.id,
         prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
         numOutputs: 4,
         colorValue: Colors.pink.value,
@@ -310,7 +312,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
 
     ArtemisInputAPI input = ArtemisInputAPI(
-      user: _user,
+      userId: _user.id,
       prompt: _prompt,
       negativePrompt: _negativePrompt,
     );
@@ -371,7 +373,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                       //   child: const Text("POST"),
                       // ),
                       ElevatedButton(
-                        onPressed: () => _getCreations([]),
+                        onPressed: () => _getCreations(),
                         child: const Text("GET OUTPUTS"),
                       ),
                       ElevatedButton(

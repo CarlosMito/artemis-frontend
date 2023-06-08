@@ -5,6 +5,6 @@ import 'package:artemis/models/user.dart';
 
 void main() {
   User user = User(BigInt.from(1), "test");
-  ArtemisInputAPI(user: user, prompt: "Prompt test");
+  ArtemisInputAPI(userId: user.id, prompt: "Prompt test");
   // print(ArtemisInputAPI.fromJson(jsonDecode(jsonEncode(input))));
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
@@ -128,7 +129,10 @@ class ArtemisApiService {
   }
 
   static Future<List<List<ArtemisOutputAPI>>?> getCreations(User user) async {
+    Response response;
+    String name = "getCreations";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.inputs}/${user.id}");
+    log("URL: ${uri.toString()}", name: name);
 
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
     // Map<String, String> headers = {
@@ -136,25 +140,68 @@ class ArtemisApiService {
     //   "Content-Type": "application/json",
     // };
 
-    log(uri.toString());
-
     try {
-      Response res = await http.get(uri);
-      log("Status Code [GET]: ${res.statusCode.toString()}");
-
-      if (res.statusCode == 200) {
-        print(res.body);
-        return null;
-        // return jsonDecode(res.body);
-      }
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) return null;
     } catch (e) {
-      log("Erro [GET]: $e");
+      log("Error: $e", name: name);
+      return null;
     }
 
-    return null;
+    Map<int, ArtemisInputAPI> inputs = {};
+    List<String> outputIds = [];
+
+    for (var data in jsonDecode(response.body)) {
+      try {
+        inputs[data["id"]] = ArtemisInputAPI.fromJson(data);
+        for (var outputId in data["outputs"]) {
+          outputIds.add(outputId.toString());
+        }
+      } catch (e) {
+        log("Parsing Error: $e", name: name);
+      }
+    }
+
+    log("Total Inputs: ${inputs.length}", name: name);
+
+    Map<String, List<String>> queryParameters = {"id": outputIds};
+    uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}");
+    uri = uri.replace(queryParameters: queryParameters);
+
+    log("URL: ${uri.toString()}", name: name);
+
+    try {
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) return null;
+    } catch (e) {
+      log("Error: $e", name: name);
+      return null;
+    }
+
+    Map<int, List<ArtemisOutputAPI>> auxiliar = {};
+    for (var data in jsonDecode(response.body)) {
+      try {
+        int inputId = data["input"];
+
+        if (!auxiliar.containsKey(inputId)) {
+          auxiliar[inputId] = [];
+        }
+
+        auxiliar[inputId]!.add(ArtemisOutputAPI.fromJson(data, inputs[inputId]!));
+      } catch (e) {
+        log("Parsing Error: $e", name: name);
+      }
+    }
+
+    log("Total Outputs: ${outputIds.length}", name: name);
+
+    return auxiliar.values.toList();
   }
 
   static void loginArtemis(String username, String password) async {
+    String name = "loginArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.login}");
 
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
@@ -163,7 +210,7 @@ class ArtemisApiService {
     //   "Content-Type": "application/json",
     // };
 
-    log(uri.toString());
+    log("URL: ${uri.toString()}", name: name);
 
     Map<String, String> body = {
       "username": username,
@@ -172,18 +219,19 @@ class ArtemisApiService {
 
     try {
       Response res = await http.post(uri, body: body);
-      log("Status Code [GET]: ${res.statusCode.toString()}");
+      log("Status Code: ${res.statusCode.toString()}", name: name);
 
       if (res.statusCode == 200) {
-        log(res.body);
+        log(res.body, name: name);
         // return jsonDecode(res.body);
       }
     } catch (e) {
-      log("Erro [LOGIN]: $e");
+      log("Error: $e", name: name);
     }
   }
 
   static void logoutArtemis() async {
+    String name = "logoutArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.logout}");
 
     // String? key = dotenv.env["REPLICATE_API_TOKEN"];
@@ -192,18 +240,18 @@ class ArtemisApiService {
     //   "Content-Type": "application/json",
     // };
 
-    log("[logoutArtemis]: ${uri.toString()}");
+    log("URL: ${uri.toString()}", name: name);
 
     try {
       Response res = await http.get(uri);
-      log("Status Code: ${res.statusCode.toString()}");
+      log("Status Code: ${res.statusCode.toString()}", name: name);
 
       if (res.statusCode == 200) {
-        log(res.body);
+        log(res.body, name: name);
         // return jsonDecode(res.body);
       }
     } catch (e) {
-      log("Erro [LOGOUT]: $e");
+      log("Error: $e", name: name);
     }
   }
 }

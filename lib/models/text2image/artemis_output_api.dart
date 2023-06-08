@@ -9,4 +9,9 @@ class ArtemisOutputAPI {
   int favoriteCount;
 
   ArtemisOutputAPI({required this.input, required this.image, this.title, this.caption, this.isPublic = false, this.favoriteCount = 0});
+
+  ArtemisOutputAPI.fromJson(Map<String, dynamic> json, this.input)
+      : image = json["image"],
+        isPublic = json["isPublic"],
+        favoriteCount = json["favoriteCount"];
 }

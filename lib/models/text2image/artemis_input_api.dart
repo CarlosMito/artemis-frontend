@@ -1,3 +1,4 @@
+import 'dart:js_interop';
 import 'dart:math';
 
 import 'package:artemis/enums/image_dimension.dart';
@@ -9,7 +10,7 @@ import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/user.dart';
 
 class ArtemisInputAPI {
-  User user;
+  BigInt userId;
   String prompt;
   String negativePrompt;
   ImageDimensions imageDimensions;
@@ -30,17 +31,17 @@ class ArtemisInputAPI {
   int colorValue;
 
   ArtemisInputAPI({
-    required this.user,
+    required this.userId,
     required this.prompt,
     this.negativePrompt = "",
-    this.colorValue = 0x00000000,
-    this.style = ImageStyle.random,
-    this.saturation = ImageSaturation.random,
-    this.value = ImageValue.random,
     this.numOutputs = 1,
-    this.scheduler = Scheduler.dpmSolverMultistep,
     this.guidanceScale = 7.5,
     this.numInferenceSteps = 50,
+    this.colorValue = 0x00000000,
+    this.style = ImageStyle.random,
+    this.value = ImageValue.random,
+    this.saturation = ImageSaturation.random,
+    this.scheduler = Scheduler.dpmSolverMultistep,
     this.imageDimensions = ImageDimensions.dim512,
     this.version = StableDiffusionVersion.v2_1,
     seed,
@@ -55,23 +56,24 @@ class ArtemisInputAPI {
         "saturation: $saturation, value: $value, color: $colorValue, version: $version)";
   }
 
-  // ArtemisInputAPI.fromJson(Map<String, dynamic> json)
-  //     : user = json["user"],
-  //       prompt = json["prompt"],
-  //       negativePrompt = json["negativePrompt"],
-  //       imageDimensions = ImageDimensions.values.byName(json["imageDimensions"]),
-  //       numOutputs = json["numOutputs"],
-  //       numInferenceSteps = json["numInferenceSteps"],
-  //       guidanceScale = json["guidanceScale"],
-  //       scheduler = Scheduler.values.byName(json["scheduler"]),
-  //       seed = json["seed"],
-  //       style = ImageStyle.values.byName(json["style"]),
-  //       saturation = ImageSaturation.values.byName(json["saturation"]),
-  //       value = ImageValue.values.byName(json["value"]),
-  //       colorValue = json["color"];
+  ArtemisInputAPI.fromJson(Map<String, dynamic> json)
+      : userId = BigInt.from(json["user"]),
+        prompt = json["prompt"],
+        negativePrompt = json["negativePrompt"] ?? "",
+        numOutputs = json["numOutputs"],
+        numInferenceSteps = json["numInferenceSteps"],
+        seed = json["seed"],
+        colorValue = json["colorValue"],
+        guidanceScale = json["guidanceScale"],
+        imageDimensions = ImageDimensions.values.byName(json["imageDimensions"] ?? "dim512"),
+        scheduler = Scheduler.values.byName(json["scheduler"] ?? "dpmSolverMultistep"),
+        style = ImageStyle.values.byName(json["style"] ?? "random"),
+        value = ImageValue.values.byName(json["value"] ?? "random"),
+        saturation = ImageSaturation.values.byName(json["saturation"] ?? "random"),
+        version = StableDiffusionVersion.v2_1; //""StableDiffusionVersion(json["verson"]),
 
   Map<String, String> toJson() => {
-        "user": user.id.toString(),
+        "user": userId.toString(),
         "prompt": prompt,
         "negativePrompt": negativePrompt,
         "imageDimensions": imageDimensions.name,
