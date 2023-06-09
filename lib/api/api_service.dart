@@ -68,6 +68,38 @@ class ReplicateApiService {
 }
 
 class ArtemisApiService {
+  static Future<String?> fetchCSRFToken() async {
+    Response response;
+    dynamic jsonBody;
+    String name = "fetchCSRFToken";
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.csrf}");
+    log("URL: ${uri.toString()}", name: name);
+
+    // debugPrint(response.headers.toString());
+    // debugPrint(response.body.toString());
+    // log(data.toString());
+
+    try {
+      response = await http.get(uri);
+      jsonBody = jsonDecode(response.body);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return null;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return null;
+    }
+
+    if (!jsonBody.containsKey("csrfToken")) {
+      log("Error: Failed to fetch CSRF token", name: name);
+      return null;
+    }
+
+    return jsonBody["csrfToken"]!;
+  }
+
   static Future<int?> postPrompt(ArtemisInputAPI input) async {
     Response response;
     String name = "postPrompt";
@@ -75,14 +107,18 @@ class ArtemisApiService {
     log("URL: ${uri.toString()}", name: name);
 
     Map<String, String> body = input.toJson();
-
-    // String stringBody = jsonEncode(body);
-    // stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
-
     debugPrint(jsonEncode(body));
 
+    String? csrfToken = await ArtemisApiService.fetchCSRFToken();
+
+    if (csrfToken == null) {
+      return null;
+    }
+
+    Map<String, String> headers = {'X-CSRFToken': csrfToken};
+
     try {
-      response = await http.post(uri, body: body);
+      response = await http.post(uri, body: body, headers: headers);
       log("Status Code: ${response.statusCode.toString()}", name: name);
       if (response.statusCode != 201) {
         log("Error: ${response.body}", name: name);
@@ -116,7 +152,7 @@ class ArtemisApiService {
     try {
       response = await http.get(uri);
       log("Status Code: ${response.statusCode.toString()}", name: name);
-      if (response.statusCode != 200) {
+      if (response.statusCode != 200 && response.statusCode != 410) {
         log("Error: ${response.body}", name: name);
         return null;
       }
@@ -125,9 +161,10 @@ class ArtemisApiService {
       return null;
     }
 
-    debugPrint(jsonDecode(response.body).toString());
+    var jsonBody = jsonDecode(response.body);
+    debugPrint(jsonBody.toString());
 
-    return null;
+    return jsonBody;
   }
 
   static Future<List<List<ArtemisOutputAPI>>?> getCreations(User user) async {

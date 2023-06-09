@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
-import 'dart:js_interop';
 
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
@@ -35,10 +34,13 @@ class Text2ImagePage extends StatefulWidget {
 }
 
 class _Text2ImagePageState extends State<Text2ImagePage> {
+  final promptController = TextEditingController();
+  final negativePromptController = TextEditingController();
+  final seedController = TextEditingController();
+
   final User _user = User(BigInt.from(1), "carlosmito");
-  String _prompt = "";
-  String _negativePrompt = "";
-  String? _seed;
+  // String _prompt = "";
+  // String _negativePrompt = "";
   int? _currentInputId;
   Timer? updateStatusTimer;
 
@@ -67,23 +69,29 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
   // }
 
-  void _updateStatus([int? inputId]) async {
+  Future<void> _updateStatus([int? inputId]) async {
     var targetId = inputId ?? _currentInputId;
 
     if (targetId != null) {
-      log(targetId.toString());
       Map<String, dynamic>? response = await ArtemisApiService.updateStatus(targetId.toString());
 
       if (response != null) {
-        log(response.toString());
-
-        List<int>? percentages = response["percentages"];
-
-        if (percentages != null) {
-          if (percentages.reduce(math.min) >= 100) {}
+        if (response.containsKey("error")) {
           _currentInputId = null;
           updateStatusTimer?.cancel();
-          _getCreations();
+          return;
+        }
+
+        debugPrint(response.toString());
+
+        List<int>? percentages = response["percentages"].toList().cast<int>();
+
+        if (percentages != null && percentages.isNotEmpty) {
+          if (percentages.reduce(math.min) >= 100) {
+            _currentInputId = null;
+            updateStatusTimer?.cancel();
+            _getCreations();
+          }
         }
       }
     } else {
@@ -305,12 +313,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   @override
   void dispose() {
     updateStatusTimer?.cancel();
+    promptController.dispose();
     super.dispose();
   }
 
   void _generateImage() async {
-    // TODO: Create a mechanism to refresh depending when the image was downloaded (creation completed)
-
     // Prompts used to test
     // IDs: [1836712131, ?]
     // goddess close-up portrait skull with mohawk, ram skull, skeleton, thorax, x-ray, backbone, jellyfish phoenix head, nautilus, orchid, skull, betta fish, bioluminiscent creatures, intricate artwork by Tooth Wu and wlop and beeple. octane render, trending on artstation, greg rutkowski very coherent symmetrical artwork. cinematic, hyper realism, high detail, octane render, 8k
@@ -328,16 +335,16 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // "a portrait of an old coal miner in 19th century"
     // IDs: [3985702484]
 
-    _prompt =
-        "airy, pin-up, sci-fi, steam punk, very deitaled, realistic, figurative painter, fineart, Oil painting on canvas, beautiful painting by Daniel F Gerhartz --ar 9:16 --beta --upbeta";
+    // _prompt =
+    //     "airy, pin-up, sci-fi, steam punk, very deitaled, realistic, figurative painter, fineart, Oil painting on canvas, beautiful painting by Daniel F Gerhartz --ar 9:16 --beta --upbeta";
 
     ArtemisInputAPI input = ArtemisInputAPI(
       userId: _user.id,
-      prompt: _prompt,
-      negativePrompt: _negativePrompt,
+      prompt: promptController.text,
+      negativePrompt: negativePromptController.text,
     );
 
-    if (_seed != null) input.seed = int.parse(_seed!);
+    if (seedController.text.isNotEmpty) input.seed = int.parse(seedController.text);
 
     input.colorValue = _colors.selectedModel!.value;
     input.imageDimensions = _imageDimensions.selectedModel!.value;
@@ -350,13 +357,15 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // ==========================
     // Template image generation
     // ==========================
-    // input.numOutputs = 4;
+    // input.numOutputs = 2;
 
     if (_currentInputId == null) {
       _currentInputId = await ArtemisApiService.postPrompt(input);
 
       if (_currentInputId != null) {
-        updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) => _updateStatus());
+        updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
+          await _updateStatus();
+        });
         log(_currentInputId.toString());
       }
     } else {
@@ -380,7 +389,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
             child: Scaffold(
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
-                  if (_prompt.isEmpty) {
+                  if (promptController.text.isEmpty) {
                     // showAlertDialog();
                     return;
                   }
@@ -399,7 +408,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   Row(
                     children: [
                       ElevatedButton(
-                        onPressed: () => _updateStatus(29),
+                        onPressed: () => _updateStatus(39),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
                         ),
@@ -410,7 +419,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                           backgroundColor: Colors.orange,
                         ),
                         onPressed: _generateImage,
-                        child: const Text("REQUEST CREATION"),
+                        child: const Text("GENERATE IMAGE"),
                       ),
                       ElevatedButton(
                         onPressed: () => _getCreations(),
@@ -453,9 +462,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   ),
                   const SizedBox(height: 14.0),
                   TextField(
-                    onChanged: (String text) {
-                      _prompt = text;
-                    },
+                    // onChanged: (String text) {
+                    //   _prompt = text;
+                    // },
+                    controller: promptController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Descreva o que você quer gerar",
@@ -463,9 +473,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   ),
                   const SizedBox(height: 6.0),
                   TextField(
-                    onChanged: (String text) {
-                      _negativePrompt = text;
-                    },
+                    controller: negativePromptController,
                     style: const TextStyle(color: Color.fromARGB(255, 240, 240, 240)),
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -508,9 +516,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                             child: TextField(
                               keyboardType: TextInputType.number,
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              onChanged: (String text) {
-                                _seed = text;
-                              },
+                              controller: seedController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),

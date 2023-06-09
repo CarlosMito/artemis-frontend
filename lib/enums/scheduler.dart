@@ -18,3 +18,12 @@ extension ParseToString on Scheduler {
     return name.toUpperCase();
   }
 }
+
+extension EnumByReplicateName on Iterable<Scheduler> {
+  Scheduler byReplicateName(String replicateName) {
+    for (var value in this) {
+      if (value.toReplicateAPI() == replicateName) return value;
+    }
+    throw ArgumentError.value(replicateName, "name", "No enum value with that name");
+  }
+}

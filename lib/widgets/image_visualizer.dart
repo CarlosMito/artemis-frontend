@@ -1,5 +1,6 @@
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
+import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,16 +88,16 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                   aspectRatio: 1,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xff7c94b6),
-                      image: DecorationImage(
-                        image: NetworkImage(widget.outputs[_setIndex][_imageIndex].image),
-                        fit: BoxFit.cover,
-                      ),
+                      color: Colors.black,
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                       border: Border.all(
                         color: Colors.black,
                         width: 5,
                       ),
+                    ),
+                    child: ArtemisNetworkImage(
+                      widget.outputs[_setIndex][_imageIndex].image,
+                      progressColor: Colors.white,
                     ),
                   ),
                 ),
