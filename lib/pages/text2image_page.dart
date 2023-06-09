@@ -39,12 +39,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final seedController = TextEditingController();
 
   final User _user = User(BigInt.from(1), "carlosmito");
-  // String _prompt = "";
-  // String _negativePrompt = "";
   int? _currentInputId;
   Timer? updateStatusTimer;
 
-  List<List<ArtemisOutputAPI>>? _outputs = [];
+  List<List<ArtemisOutputAPI>> _outputs = [];
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -53,21 +51,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _styles = RadioController(radioModels: <RadioModel<ImageStyle>>[]);
   final RadioController _saturations = RadioController(radioModels: <RadioModel<ImageSaturation>>[]);
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
-
-  // NOTE: These functions will be on the Python backend
-  // void _postPrompt(ArtemisInputAPI input) async {
-  //   if (input.prompt.isNotEmpty) {
-  //     Map<String, dynamic>? res = await ArtemisApiService.postPrompt(input);
-  //     // _id = res?["id"];
-
-  //     // var results = res?["results"];
-  //     // id = results?[0]["id"];
-
-  //     // print(res.toString());
-  //     // log(_id ?? "Não foi possível gerar a imagem");
-  //   }
-  //   // Future.delayed(const Duration(seconds: 1)).then((value) => setState(() {}));
-  // }
 
   Future<void> _updateStatus([int? inputId]) async {
     var targetId = inputId ?? _currentInputId;
@@ -224,7 +207,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       )
     ];
 
-    _outputs?.addAll([
+    _outputs.addAll([
       [
         ArtemisOutputAPI(
           input: inputs[0],
@@ -619,12 +602,12 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   const SizedBox(height: 10.0),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: _outputs?.length ?? 0,
+                      itemCount: _outputs.length,
                       separatorBuilder: (BuildContext context, int i) {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        var outputset = _outputs![i];
+                        List<ArtemisOutputAPI> outputset = _outputs[i];
                         List<Widget> children = [];
 
                         if (outputset.isEmpty) return const SizedBox.shrink();
@@ -638,7 +621,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext ctx) {
-                                      return ImageVisualizer(outputs: _outputs!, setIndex: i, imageIndex: j);
+                                      return ImageVisualizer(outputs: _outputs, setIndex: i, imageIndex: j);
                                     },
                                   );
                                 },
