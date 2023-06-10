@@ -37,6 +37,7 @@ class _InputTextCardState extends State<InputTextCard> {
           children: [
             Text(
               widget.title,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: "Lexend",
                 fontSize: 20,

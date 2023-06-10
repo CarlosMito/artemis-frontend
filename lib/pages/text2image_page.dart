@@ -11,6 +11,7 @@ import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
+import 'package:artemis/utils/custom_range_text_input_formatter.dart';
 import 'package:artemis/utils/radio_controller.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
@@ -37,6 +38,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final promptController = TextEditingController();
   final negativePromptController = TextEditingController();
   final seedController = TextEditingController();
+  final numInferenceStepsController = TextEditingController();
+  final guidanceScaleController = TextEditingController();
 
   final User _user = User(BigInt.from(1), "carlosmito");
   Timer? updateStatusTimer;
@@ -296,6 +299,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   void dispose() {
     updateStatusTimer?.cancel();
     promptController.dispose();
+    negativePromptController.dispose();
+    seedController.dispose();
+    numInferenceStepsController.dispose();
+    guidanceScaleController.dispose();
     super.dispose();
   }
 
@@ -376,9 +383,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                     // showAlertDialog();
                     return;
                   }
-                  // setState(() {
-                  //   _validatePrompt = _prompt.isNotEmpty;
-                  // });
+
                   _generateImage();
                 },
                 icon: const Icon(Icons.send),
@@ -445,9 +450,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   ),
                   const SizedBox(height: 14.0),
                   TextField(
-                    // onChanged: (String text) {
-                    //   _prompt = text;
-                    // },
                     controller: promptController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -469,48 +471,95 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                     margin: EdgeInsets.symmetric(vertical: 60),
                     widthFactor: 0.8,
                   ),
-                  Transform.scale(
-                    scale: 1.175,
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 35,
-                      runSpacing: 35,
-                      children: [
-                        // InputCard(
-                        //   title: "Agendador",
-                        //   width: 220.0,
-                        //   child: CustomRadioButton(radioController: _schedulers),
-                        // ),
-                        InputTextCard(
-                          title: "Tamanho",
-                          width: 220,
-                          child: RadioTextButton(radioController: _imageDimensions),
-                        ),
-                        InputTextCard(
-                          title: "Quantidade",
-                          width: 220,
-                          child: RadioTextButton(radioController: _numOutputs),
-                        ),
-                        InputTextCard(
-                          title: "Semente",
-                          width: 220,
-                          child: SizedBox(
-                            height: 35.0,
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                              controller: seedController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                                hintText: "0",
-                                isDense: true,
-                              ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 35,
+                    runSpacing: 35,
+                    children: [
+                      InputTextCard(
+                        title: "Tamanho",
+                        width: 220,
+                        child: RadioTextButton(radioController: _imageDimensions),
+                      ),
+                      InputTextCard(
+                        title: "Quantidade",
+                        width: 220,
+                        child: RadioTextButton(radioController: _numOutputs),
+                      ),
+                      InputTextCard(
+                        title: "Semente",
+                        width: 220,
+                        child: SizedBox(
+                          height: 35.0,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            controller: seedController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                              hintText: "Aleatório",
+                              isDense: true,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 35,
+                    runSpacing: 35,
+                    children: [
+                      InputTextCard(
+                        title: "Agendador",
+                        width: 260,
+                        child: RadioTextButton(radioController: _schedulers),
+                      ),
+                      InputTextCard(
+                        title: "Inferências",
+                        width: 220,
+                        child: SizedBox(
+                          height: 35.0,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              CustomRangeTextInputFormatter(minValue: 1, maxValue: 200),
+                            ],
+                            controller: numInferenceStepsController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                              hintText: "50",
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                      InputTextCard(
+                        title: "Escala de Orientação",
+                        width: 260,
+                        child: SizedBox(
+                          height: 35.0,
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r"([0-9]|\.)")),
+                              CustomRangeTextInputFormatter(minValue: 1, maxValue: 100),
+                            ],
+                            controller: guidanceScaleController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                              hintText: "7.5",
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 60),
                   InputImageCard(
@@ -645,8 +694,12 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                 onTap: () {
                                   showDialog(
                                     context: context,
-                                    builder: (BuildContext ctx) {
-                                      return ImageVisualizer(outputs: onlyOutputs, setIndex: i - decrement, imageIndex: j);
+                                    builder: (BuildContext currentContext) {
+                                      return ImageVisualizer(
+                                        outputs: onlyOutputs,
+                                        setIndex: i - decrement,
+                                        imageIndex: j,
+                                      );
                                     },
                                   );
                                 },

@@ -9,6 +9,7 @@ import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:artemis/widgets/display_image_option.dart';
 import 'package:artemis/widgets/display_text_option.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputInfoListView extends StatelessWidget {
   final ArtemisInputAPI input;
@@ -47,7 +48,11 @@ class InputInfoListView extends StatelessWidget {
         const Center(
           child: Text(
             "Visualizar",
-            style: TextStyle(fontFamily: "Lexend", fontSize: 26, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontFamily: "Lexend",
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const DiamondSeparator(margin: EdgeInsets.symmetric(vertical: 10), widthFactor: 0.7),
@@ -92,11 +97,18 @@ class InputInfoListView extends StatelessWidget {
   }
 }
 
-class PromptTextBlock extends StatelessWidget {
+class PromptTextBlock extends StatefulWidget {
   final String title;
   final String text;
 
   const PromptTextBlock({super.key, required this.title, required this.text});
+
+  @override
+  State<PromptTextBlock> createState() => _PromptTextBlockState();
+}
+
+class _PromptTextBlockState extends State<PromptTextBlock> {
+  bool showCopyMessage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -109,18 +121,71 @@ class PromptTextBlock extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: "Lexend",
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontFamily: "Lexend",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              if (showCopyMessage)
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  child: const Text(
+                    "Copiado!",
+                    style: TextStyle(fontFamily: "Lexend"),
+                  ),
+                ),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(text: widget.text));
+
+                    setState(() {
+                      showCopyMessage = true;
+                    });
+
+                    Future.delayed(const Duration(seconds: 2), () async {
+                      setState(() {
+                        showCopyMessage = false;
+                      });
+                    });
+
+                    // NOTE: I tried using Fluttertoast, but I didn't like the result for the web (I couldn't change the font family)
+                    // const snackBar = SnackBar(
+                    //   content: Text(
+                    //     "Copiado para a área de transferência!",
+                    //     style: TextStyle(fontFamily: "Lexend"),
+                    //   ),
+                    //   // action: SnackBarAction(
+                    //   //   label: 'Undo',
+                    //   //   onPressed: () {
+                    //   //     // Some code to undo the change.
+                    //   //   },
+                    //   // ),
+                    // );
+
+                    // ScaffoldMessenger.of(currentContext ?? context).showSnackBar(snackBar);
+                  },
+                  child: const Icon(
+                    Icons.copy,
+                    size: 22,
+                  ),
+                ),
+              )
+            ],
           ),
           const SizedBox(height: 10),
-          Text(
-            text,
-            style: const TextStyle(
-              fontFamily: "Lexend",
+          SelectionArea(
+            child: Text(
+              widget.text,
+              style: const TextStyle(
+                fontFamily: "Lexend",
+              ),
             ),
           ),
         ],
@@ -128,3 +193,79 @@ class PromptTextBlock extends StatelessWidget {
     );
   }
 }
+
+
+
+// class PromptTextBlock extends StatelessWidget {
+//   final String title;
+//   final String text;
+
+//   const PromptTextBlock({super.key, required this.title, required this.text});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(14),
+//       decoration: BoxDecoration(
+//         border: Border.all(),
+//         borderRadius: BorderRadius.circular(8),
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             children: [
+//               Text(
+//                 title,
+//                 style: const TextStyle(
+//                   fontFamily: "Lexend",
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//               const Spacer(),
+//               MouseRegion(
+//                 cursor: SystemMouseCursors.click,
+//                 child: GestureDetector(
+//                   onTap: () async {
+//                     await Clipboard.setData(ClipboardData(text: text));
+
+//                     Future.delayed(const Duration(seconds: 3), () async {});
+
+//                     // NOTE: I tried using Fluttertoast, but I didn't like the result for the web (I couldn't change the font family)
+//                     // const snackBar = SnackBar(
+//                     //   content: Text(
+//                     //     "Copiado para a área de transferência!",
+//                     //     style: TextStyle(fontFamily: "Lexend"),
+//                     //   ),
+//                     //   // action: SnackBarAction(
+//                     //   //   label: 'Undo',
+//                     //   //   onPressed: () {
+//                     //   //     // Some code to undo the change.
+//                     //   //   },
+//                     //   // ),
+//                     // );
+
+//                     // ScaffoldMessenger.of(currentContext ?? context).showSnackBar(snackBar);
+//                   },
+//                   child: const Icon(
+//                     Icons.copy,
+//                     size: 22,
+//                   ),
+//                 ),
+//               )
+//             ],
+//           ),
+//           const SizedBox(height: 10),
+//           SelectionArea(
+//             child: Text(
+//               text,
+//               style: const TextStyle(
+//                 fontFamily: "Lexend",
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
