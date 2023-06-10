@@ -334,6 +334,16 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     );
 
     if (seedController.text.isNotEmpty) input.seed = int.parse(seedController.text);
+    if (numInferenceStepsController.text.isNotEmpty) input.numInferenceSteps = int.parse(numInferenceStepsController.text);
+    if (guidanceScaleController.text.isNotEmpty) {
+      String text = guidanceScaleController.text;
+
+      if (text[text.length - 1] == '.') {
+        text = "${text}0";
+      }
+
+      input.guidanceScale = double.parse(text);
+    }
 
     input.colorValue = _colors.selectedModel!.value;
     input.imageDimensions = _imageDimensions.selectedModel!.value;
@@ -348,19 +358,21 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // ==========================
     // input.numOutputs = 2;
 
-    if (_outputs[0] == null) {
-      _outputs[0] = await ArtemisApiService.postPrompt(input);
+    debugPrint(input.toString());
 
-      if (_outputs[0] != null) {
-        updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
-          await _updateStatus();
-        });
-        setState(() {});
-        log(_outputs[0].toString());
-      }
-    } else {
-      log("Another creation in process!");
-    }
+    // if (_outputs[0] == null) {
+    //   _outputs[0] = await ArtemisApiService.postPrompt(input);
+
+    //   if (_outputs[0] != null) {
+    //     updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
+    //       await _updateStatus();
+    //     });
+    //     setState(() {});
+    //     log(_outputs[0].toString());
+    //   }
+    // } else {
+    //   log("Another creation in process!");
+    // }
   }
 
   @override
@@ -520,7 +532,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
-                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 200),
+                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 500),
                           ],
                           controller: numInferenceStepsController,
                           decoration: const InputDecoration(
@@ -537,7 +549,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r"([0-9]|\.)")),
-                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 100),
+                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 20),
                           ],
                           controller: guidanceScaleController,
                           decoration: const InputDecoration(
