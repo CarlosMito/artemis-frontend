@@ -478,35 +478,31 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                     children: [
                       InputTextCard(
                         title: "Tamanho",
-                        width: 220,
+                        width: 300,
                         child: RadioTextButton(radioController: _imageDimensions),
                       ),
                       InputTextCard(
                         title: "Quantidade",
-                        width: 220,
+                        width: 300,
                         child: RadioTextButton(radioController: _numOutputs),
                       ),
                       InputTextCard(
                         title: "Semente",
-                        width: 220,
-                        child: SizedBox(
-                          height: 35.0,
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                            controller: seedController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                              hintText: "Aleatório",
-                              isDense: true,
-                            ),
+                        width: 300,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          controller: seedController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Aleatório",
+                            isDense: true,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 35),
                   Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 35,
@@ -514,48 +510,40 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                     children: [
                       InputTextCard(
                         title: "Agendador",
-                        width: 260,
+                        width: 360,
                         child: RadioTextButton(radioController: _schedulers),
                       ),
                       InputTextCard(
                         title: "Inferências",
-                        width: 220,
-                        child: SizedBox(
-                          height: 35.0,
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              CustomRangeTextInputFormatter(minValue: 1, maxValue: 200),
-                            ],
-                            controller: numInferenceStepsController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                              hintText: "50",
-                              isDense: true,
-                            ),
+                        width: 300,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 200),
+                          ],
+                          controller: numInferenceStepsController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "50",
+                            isDense: true,
                           ),
                         ),
                       ),
                       InputTextCard(
                         title: "Escala de Orientação",
-                        width: 260,
-                        child: SizedBox(
-                          height: 35.0,
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r"([0-9]|\.)")),
-                              CustomRangeTextInputFormatter(minValue: 1, maxValue: 100),
-                            ],
-                            controller: guidanceScaleController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                              hintText: "7.5",
-                              isDense: true,
-                            ),
+                        width: 360,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r"([0-9]|\.)")),
+                            CustomRangeTextInputFormatter(minValue: 1, maxValue: 100),
+                          ],
+                          controller: guidanceScaleController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "7.5",
+                            isDense: true,
                           ),
                         ),
                       ),

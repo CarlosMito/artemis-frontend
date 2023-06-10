@@ -53,10 +53,12 @@ class RadioItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double borderWidth = 1.5;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Container(
-        padding: EdgeInsets.all(isSelected ? 6 : 8),
+        padding: EdgeInsets.all(isSelected ? 6 : 10),
         decoration: isSelected
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
@@ -64,6 +66,7 @@ class RadioItem extends StatelessWidget {
                 border: Border.all(
                   color: Colors.white,
                   strokeAlign: -6.0,
+                  width: borderWidth,
                 ),
               )
             : BoxDecoration(
@@ -75,11 +78,12 @@ class RadioItem extends StatelessWidget {
               ),
         alignment: Alignment.center,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Text(
             radioModel.label,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.black,
+              fontSize: 18,
             ),
           ),
         ),

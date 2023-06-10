@@ -17,7 +17,7 @@ class _InputTextCardState extends State<InputTextCard> {
     return SizedBox(
       width: widget.width,
       child: Container(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 22.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
           color: Colors.white,
@@ -40,7 +40,7 @@ class _InputTextCardState extends State<InputTextCard> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: "Lexend",
-                fontSize: 20,
+                fontSize: 26,
               ),
             ),
             const SizedBox(height: 20),
