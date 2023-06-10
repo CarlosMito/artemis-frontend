@@ -39,10 +39,9 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final seedController = TextEditingController();
 
   final User _user = User(BigInt.from(1), "carlosmito");
-  int? _currentInputId;
   Timer? updateStatusTimer;
 
-  List<List<ArtemisOutputAPI>> _outputs = [];
+  List<dynamic> _outputs = [null];
 
   final RadioController _imageDimensions = RadioController(radioModels: <RadioModel<ImageDimensions>>[]);
   final RadioController _schedulers = RadioController(radioModels: <RadioModel<Scheduler>>[]);
@@ -53,25 +52,24 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
 
   Future<void> _updateStatus([int? inputId]) async {
-    var targetId = inputId ?? _currentInputId;
+    var targetId = inputId ?? _outputs[0];
 
     if (targetId != null) {
       Map<String, dynamic>? response = await ArtemisApiService.updateStatus(targetId.toString());
 
       if (response != null) {
         if (response.containsKey("error")) {
-          _currentInputId = null;
+          _outputs[0] = null;
           updateStatusTimer?.cancel();
+          setState(() {});
           return;
         }
-
-        debugPrint(response.toString());
 
         List<int>? percentages = response["percentages"].toList().cast<int>();
 
         if (percentages != null && percentages.isNotEmpty) {
           if (percentages.reduce(math.min) >= 100) {
-            _currentInputId = null;
+            _outputs[0] = null;
             updateStatusTimer?.cancel();
             _getCreations();
           }
@@ -99,7 +97,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     var auxiliar = await ArtemisApiService.getCreations(_user);
 
     if (auxiliar != null) {
-      _outputs = auxiliar.reversed.toList();
+      _outputs = [null, ...auxiliar.reversed.toList()];
       setState(() {});
     }
   }
@@ -208,6 +206,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     ];
 
     _outputs.addAll([
+      // 1,
       [
         ArtemisOutputAPI(
           input: inputs[0],
@@ -342,14 +341,15 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // ==========================
     // input.numOutputs = 2;
 
-    if (_currentInputId == null) {
-      _currentInputId = await ArtemisApiService.postPrompt(input);
+    if (_outputs[0] == null) {
+      _outputs[0] = await ArtemisApiService.postPrompt(input);
 
-      if (_currentInputId != null) {
+      if (_outputs[0] != null) {
         updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
           await _updateStatus();
         });
-        log(_currentInputId.toString());
+        setState(() {});
+        log(_outputs[0].toString());
       }
     } else {
       log("Another creation in process!");
@@ -388,7 +388,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               body: ListView(
                 padding: const EdgeInsets.all(50),
                 children: [
-                  Row(
+                  Wrap(
                     children: [
                       ElevatedButton(
                         onPressed: () => _updateStatus(39),
@@ -607,7 +607,32 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         return const SizedBox(height: 16.0);
                       },
                       itemBuilder: (BuildContext context, int i) {
-                        List<ArtemisOutputAPI> outputset = _outputs[i];
+                        if (_outputs[i] == null) return const SizedBox.shrink();
+
+                        if (_outputs[i].runtimeType == int) {
+                          return AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              padding: const EdgeInsets.all(2.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                border: Border.all(color: Colors.white),
+                              ),
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        // This decrement is important because the first element of [_outputs]
+                        // is either null (when not generating an image) or an int (when generating)
+                        int decrement = 1;
+
+                        var onlyOutputs = _outputs.whereType<List<ArtemisOutputAPI>>().toList();
+                        List<ArtemisOutputAPI> outputset = onlyOutputs[i - decrement];
                         List<Widget> children = [];
 
                         if (outputset.isEmpty) return const SizedBox.shrink();
@@ -621,7 +646,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext ctx) {
-                                      return ImageVisualizer(outputs: _outputs, setIndex: i, imageIndex: j);
+                                      return ImageVisualizer(outputs: onlyOutputs, setIndex: i - decrement, imageIndex: j);
                                     },
                                   );
                                 },
@@ -641,6 +666,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                             ),
                           );
                         }
+
                         return Container(
                           padding: const EdgeInsets.all(2.0),
                           decoration: BoxDecoration(
