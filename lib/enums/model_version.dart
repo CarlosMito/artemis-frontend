@@ -8,3 +8,20 @@ enum StableDiffusionVersion {
   final String value;
   const StableDiffusionVersion(this.value);
 }
+
+extension ParseToString on StableDiffusionVersion {
+  String toDisplay() {
+    switch (this) {
+      case StableDiffusionVersion.v2_1:
+        return "Stable Diffusion 2.1";
+      case StableDiffusionVersion.v2_1Safe:
+        return "Stable Diffusion 2.1 SafeSearch";
+      case StableDiffusionVersion.v2_0:
+        return "Stable Diffusion 2.0";
+      case StableDiffusionVersion.v1_5:
+        return "Stable Diffusion 1.5";
+      case StableDiffusionVersion.v1_4:
+        return "Stable Diffusion 1.4";
+    }
+  }
+}

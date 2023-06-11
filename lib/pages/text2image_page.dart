@@ -7,6 +7,7 @@ import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
+import 'package:artemis/enums/model_version.dart';
 import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
@@ -19,6 +20,7 @@ import 'package:artemis/widgets/diamond_separator.dart';
 import 'package:artemis/widgets/image_visualizer.dart';
 import 'package:artemis/widgets/input_image_card.dart';
 import 'package:artemis/widgets/input_text_card.dart';
+import 'package:artemis/widgets/radio_dropdown_button.dart';
 import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +55,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _styles = RadioController(radioModels: <RadioModel<ImageStyle>>[]);
   final RadioController _saturations = RadioController(radioModels: <RadioModel<ImageSaturation>>[]);
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
+  final RadioController _versions = RadioController(radioModels: <RadioModel<StableDiffusionVersion>>[]);
 
   Future<void> _updateStatus([int? inputId]) async {
     var targetId = inputId ?? _outputs[0];
@@ -120,6 +123,13 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       ));
     }
 
+    for (var element in StableDiffusionVersion.values) {
+      _versions.radioModels.add(RadioModel<StableDiffusionVersion>(
+        value: element,
+        label: element.toDisplay(),
+      ));
+    }
+
     for (int i = 1; i < 5; i++) {
       _numOutputs.radioModels.add(RadioModel<int>(
         value: i,
@@ -159,7 +169,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       ));
     }
 
-    for (var controller in [_imageDimensions, _schedulers, _numOutputs, _colors, _styles, _saturations, _values]) {
+    for (var controller in [_imageDimensions, _schedulers, _numOutputs, _colors, _styles, _saturations, _values, _versions]) {
       controller.selectFirst();
     }
   }
@@ -352,27 +362,26 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     input.style = _styles.selectedModel!.value;
     input.saturation = _saturations.selectedModel!.value;
     input.value = _values.selectedModel!.value;
+    input.version = _versions.selectedModel!.value;
 
     // ==========================
     // Template image generation
     // ==========================
     // input.numOutputs = 2;
 
-    debugPrint(input.toString());
+    if (_outputs[0] == null) {
+      _outputs[0] = await ArtemisApiService.postPrompt(input);
 
-    // if (_outputs[0] == null) {
-    //   _outputs[0] = await ArtemisApiService.postPrompt(input);
-
-    //   if (_outputs[0] != null) {
-    //     updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
-    //       await _updateStatus();
-    //     });
-    //     setState(() {});
-    //     log(_outputs[0].toString());
-    //   }
-    // } else {
-    //   log("Another creation in process!");
-    // }
+      if (_outputs[0] != null) {
+        updateStatusTimer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
+          await _updateStatus();
+        });
+        setState(() {});
+        log(_outputs[0].toString());
+      }
+    } else {
+      log("Another creation in process!");
+    }
   }
 
   @override
@@ -523,7 +532,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                       InputTextCard(
                         title: "Agendador",
                         width: 360,
-                        child: RadioTextButton(radioController: _schedulers),
+                        child: RadioDropdownButton(controller: _schedulers),
                       ),
                       InputTextCard(
                         title: "Inferências",
@@ -559,6 +568,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                           ),
                         ),
                       ),
+                      // InputTextCard(
+                      //   title: "Agendador",
+                      //   width: 400,
+                      //   child: RadioDropdownButton(controller: _versions),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 60),

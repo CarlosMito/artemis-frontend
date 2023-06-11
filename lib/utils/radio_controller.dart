@@ -9,6 +9,15 @@ class RadioController {
   void selectFirst() {
     selectedModel = radioModels.isNotEmpty ? radioModels[0] : null;
   }
+
+  void selectTarget(dynamic target) {
+    selectedModel = null;
+    for (final model in radioModels) {
+      if (model.value == target) {
+        selectedModel = model;
+      }
+    }
+  }
 }
 
 class RadioModel<T> {
