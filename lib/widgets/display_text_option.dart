@@ -27,9 +27,11 @@ class DisplayTextOption extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 color: const Color.fromARGB(255, 36, 34, 39),
               ),
-              child: Text(
-                value,
-                style: const TextStyle(color: Colors.white),
+              child: SelectionArea(
+                child: Text(
+                  value,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ),

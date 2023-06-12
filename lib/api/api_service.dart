@@ -135,12 +135,6 @@ class ArtemisApiService {
   }
 
   static Future<Map<String, dynamic>?> updateStatus(String inputId) async {
-    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
-    // Map<String, String> headers = {
-    //   "Authorization": "Token $key",
-    //   "Content-Type": "application/json",
-    // };
-
     Response response;
     String name = "updateStatus";
     Map<String, String> queryParameters = {"input_id": inputId};
@@ -165,6 +159,44 @@ class ArtemisApiService {
     debugPrint(jsonBody.toString());
 
     return jsonBody;
+  }
+
+  static Future<bool> postProcessing(String inputId) async {
+    Response response;
+    String name = "postProcessing";
+    Map<String, String> queryParameters = {"input_id": inputId};
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.postProcessing}");
+    uri = uri.replace(queryParameters: queryParameters);
+
+    log(uri.toString(), name: name);
+
+    Map<String, String> body = {"inputId": inputId};
+    debugPrint(jsonEncode(body));
+
+    String? csrfToken = await ArtemisApiService.fetchCSRFToken();
+
+    if (csrfToken == null) {
+      return false;
+    }
+
+    Map<String, String> headers = {'X-CSRFToken': csrfToken};
+
+    try {
+      response = await http.post(uri, body: body, headers: headers);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 201) {
+        log("Error: ${response.body}", name: name);
+        return false;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return false;
+    }
+
+    // var jsonBody = jsonDecode(response.body);
+    // debugPrint(jsonBody.toString());
+
+    return true;
   }
 
   static Future<List<List<ArtemisOutputAPI>>?> getCreations(User user) async {

@@ -77,6 +77,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           if (percentages.reduce(math.min) >= 100) {
             _outputs[0] = null;
             updateStatusTimer?.cancel();
+            _postProcessing(targetId!);
             _getCreations();
           }
         }
@@ -97,6 +98,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
 
   void _logoutArtemis() async {
     ArtemisApiService.logoutArtemis();
+  }
+
+  void _postProcessing(int inputId) async {
+    await ArtemisApiService.postProcessing(inputId.toString());
   }
 
   void _getCreations() async {
@@ -417,6 +422,13 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                   Wrap(
                     children: [
                       ElevatedButton(
+                        onPressed: () => _postProcessing(42),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                        ),
+                        child: const Text("POST PROCESSING"),
+                      ),
+                      ElevatedButton(
                         onPressed: () => _updateStatus(39),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple,
@@ -698,6 +710,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         List<ArtemisOutputAPI> outputset = onlyOutputs[i - decrement];
                         List<Widget> children = [];
 
+                        // TODO: When is empty, return an error image placeholder.
+                        // The best would be to display an error when an specific image is unavailable, but... it'd be a lot of work
                         if (outputset.isEmpty) return const SizedBox.shrink();
 
                         for (int j = 0; j < outputset.length; j++) {

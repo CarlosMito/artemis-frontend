@@ -14,6 +14,7 @@ class ArtemisApiConstants {
     login: "api/login",
     logout: "api/logout",
     csrf: "api/csrf",
+    postProcessing: "api/post-processing",
   );
 }
 
@@ -24,5 +25,6 @@ class Endpoints {
   final String? login;
   final String? logout;
   final String? csrf;
-  const Endpoints({this.text2image, this.outputs, this.inputs, this.login, this.logout, this.csrf});
+  final String? postProcessing;
+  const Endpoints({this.text2image, this.outputs, this.inputs, this.login, this.logout, this.csrf, this.postProcessing});
 }
