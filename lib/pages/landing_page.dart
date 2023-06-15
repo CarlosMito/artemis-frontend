@@ -1,3 +1,4 @@
+import 'package:artemis/enums/landing_section.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/right_triangle_custom_painter.dart';
 import 'package:artemis/widgets/custom/star_custom_painter.dart';
@@ -9,14 +10,18 @@ import 'dart:math';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class LandingPage extends StatefulWidget {
-  const LandingPage({super.key});
+  final LandingSection startingSection;
+
+  const LandingPage({super.key, this.startingSection = LandingSection.standard});
 
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin {
+  final double moonSize = 800;
   final Random _random = Random(6);
+  final ScrollController _scrollController = ScrollController();
 
   List<Widget> _buildStars(double centerX, double centerY, int totalStars, double radiusStart, double range) {
     List<Widget> stars = [];
@@ -64,21 +69,58 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     return stars;
   }
 
+  void _animateToSection(LandingSection section, [Duration? delay]) {
+    Map<LandingSection, double> targetOffset = {
+      LandingSection.about: moonSize + 80 * 2 + 120,
+      LandingSection.contactMe: moonSize + 80 * 2 + 120 + 820,
+    };
+
+    double offset = targetOffset[section] ?? 0;
+    int milliseconds = (_scrollController.offset.toInt() - offset.toInt()).abs();
+
+    Future.delayed(delay ?? const Duration(milliseconds: 0), () {
+      _scrollController.animateTo(
+        offset,
+        duration: Duration(milliseconds: milliseconds),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.startingSection != LandingSection.standard) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _animateToSection(widget.startingSection, const Duration(milliseconds: 300));
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    const double moonSize = 800;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const Hero(
+        child: Hero(
           tag: ArtemisAppBar,
-          child: ArtemisAppBar(),
+          child: ArtemisAppBar(
+            aboutOnTap: () => _animateToSection(LandingSection.about),
+            contactMeOnTap: () => _animateToSection(LandingSection.contactMe),
+          ),
         ),
       ),
       backgroundColor: Colors.black,
       body: LayoutBuilder(
         builder: (context, constraints) => ListView(
+          controller: _scrollController,
           children: [
             Row(
               children: [

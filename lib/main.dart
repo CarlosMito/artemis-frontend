@@ -1,3 +1,4 @@
+import 'package:artemis/enums/landing_section.dart';
 import 'package:artemis/pages/explore_page.dart';
 import 'package:artemis/pages/landing_page.dart';
 import 'package:artemis/pages/text2image_page.dart';
@@ -20,23 +21,16 @@ class Artemis extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       scrollBehavior: CustomScrollBehavior(),
       mode: VRouterMode.history,
-      initialUrl: '/home',
+      initialUrl: "/home",
       routes: [
-        VWidget(
-          path: '/home',
-          widget: const LandingPage(),
-        ),
-        VWidget(
-          path: '/explore',
-          widget: const ExplorePage(),
-        ),
-        VWidget(
-          path: '/text2image',
-          widget: const Text2ImagePage(),
-        ),
-        // NOTE: This redirect every unknown routes to /login
+        VWidget(path: "/home", widget: const LandingPage(startingSection: LandingSection.standard)),
+        VWidget(path: "/about", widget: const LandingPage(startingSection: LandingSection.about)),
+        VWidget(path: "/contact-me", widget: const LandingPage(startingSection: LandingSection.contactMe)),
+        VWidget(path: "/explore", widget: const ExplorePage()),
+        VWidget(path: "/text2image", widget: const Text2ImagePage()),
+        // This redirect every unknown routes to /home
         VRouteRedirector(
-          redirectTo: '/home',
+          redirectTo: "/home",
           path: r'*',
         ),
       ],

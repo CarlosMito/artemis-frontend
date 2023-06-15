@@ -8,8 +8,10 @@ import 'package:vrouter/vrouter.dart';
 
 class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? focus;
+  final Function()? aboutOnTap;
+  final Function()? contactMeOnTap;
 
-  const ArtemisAppBar({Key? key, this.focus})
+  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -72,14 +74,16 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                   route: "/explore",
                 ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                const ArtemisAppButton(
+                ArtemisAppButton(
                   text: "Sobre",
                   route: "/about",
+                  onTap: widget.aboutOnTap,
                 ),
                 Transform.rotate(angle: math.pi / 4, child: Container(color: Colors.white, width: 5, height: 5)),
-                const ArtemisAppButton(
+                ArtemisAppButton(
                   text: "Contate-me",
                   route: "/contact-me",
+                  onTap: widget.contactMeOnTap,
                 ),
               ],
             ),
