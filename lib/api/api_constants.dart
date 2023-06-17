@@ -16,6 +16,7 @@ class ArtemisApiConstants {
     csrf: "api/csrf",
     signup: "api/signup",
     postProcessing: "api/post-processing",
+    loggedUser: "api/logged-in-user",
   );
 }
 
@@ -28,6 +29,7 @@ class Endpoints {
   final String? csrf;
   final String? postProcessing;
   final String? signup;
+  final String? loggedUser;
 
   const Endpoints({
     this.text2image,
@@ -38,5 +40,6 @@ class Endpoints {
     this.csrf,
     this.postProcessing,
     this.signup,
+    this.loggedUser,
   });
 }

@@ -278,7 +278,8 @@ class ArtemisApiService {
     return auxiliar.values.toList();
   }
 
-  static void loginArtemis(String username, String password) async {
+  static Future<User?> loginArtemis(String username, String password) async {
+    Response response;
     String name = "loginArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.login}");
 
@@ -290,30 +291,36 @@ class ArtemisApiService {
     };
 
     try {
-      Response res = await http.post(uri, body: body);
-      log("Status Code: ${res.statusCode.toString()}", name: name);
+      response = await http.post(uri, body: body);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
 
-      if (res.statusCode == 200) {
-        log(res.body, name: name);
-        // return jsonDecode(res.body);
+      if (response.statusCode != 200) {
+        log(response.body, name: name);
+        return null;
       }
     } catch (e) {
       log("Error: $e", name: name);
+      return null;
     }
+
+    // User.fromJson(jsonDecode(response.body));
+
+    return User(id: BigInt.from(1), email: "carlos", username: "carlos@email.com");
   }
 
   static void logoutArtemis() async {
+    Response response;
     String name = "logoutArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.logout}");
 
     log("URL: ${uri.toString()}", name: name);
 
     try {
-      Response res = await http.get(uri);
-      log("Status Code: ${res.statusCode.toString()}", name: name);
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
 
-      if (res.statusCode == 200) {
-        log(res.body, name: name);
+      if (response.statusCode == 200) {
+        log(response.body, name: name);
         // return jsonDecode(res.body);
       }
     } catch (e) {
@@ -360,5 +367,29 @@ class ArtemisApiService {
     }
 
     return {"message": jsonDecode(response.body)["message"]};
+  }
+
+  static Future<User> getLoggedInUserArtemis() async {
+    Response response;
+    String name = "getLoggedInUserArtemis";
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.loggedUser}");
+    log(uri.toString(), name: name);
+
+    User emptyUser = User(id: BigInt.zero, email: "", username: "");
+
+    try {
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return emptyUser;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return emptyUser;
+    }
+
+    log("Success: ${response.body}", name: name);
+    return User.fromJson(jsonDecode(response.body));
   }
 }

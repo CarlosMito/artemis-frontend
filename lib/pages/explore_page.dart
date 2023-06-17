@@ -34,7 +34,7 @@ class _ExplorePageState extends State<ExplorePage> {
           title: "Teste $key",
           caption: "@Legenda $key",
           input: ArtemisInputAPI(
-            userId: User(BigInt.from(1), "carlosmito").id,
+            userId: User(id: BigInt.from(1), username: "carlosmito", email: "carlosmito@email.com").id,
             prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
                 "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
                 "'Content here, content here', making it look like readable English.",
@@ -63,10 +63,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const Hero(
-          tag: ArtemisAppBar,
-          child: ArtemisAppBar(),
-        ),
+        child: const ArtemisAppBar(),
       ),
       body: Column(
         children: <Widget>[

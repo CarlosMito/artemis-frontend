@@ -1,4 +1,6 @@
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
+import 'package:artemis/models/user.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_button.dart';
 import 'package:artemis/widgets/sign_dialog.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +26,22 @@ class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<ArtemisAppBar> {
+  Future<User>? _user;
+  bool isCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = ArtemisApiService.getLoggedInUserArtemis();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      foregroundColor: Colors.white,
+      backgroundColor: Colors.black,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MouseRegion(
             cursor: SystemMouseCursors.click,
@@ -56,7 +70,6 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
               ),
             ),
           ),
-          const Spacer(),
           if (MediaQuery.of(context).size.width > 800)
             Wrap(
               clipBehavior: Clip.antiAlias,
@@ -86,80 +99,70 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                 ),
               ],
             ),
-          const Spacer(),
-          DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-              fontFamily: "Lexend",
-            ),
-            child: Row(
-              children: [
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => const SignDialog(signType: SignType.signin),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
-                      child: const Text("Entrar"),
-                    ),
-                  ),
-                ),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => const SignDialog(signType: SignType.signup),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: const Text("Cadastrar"),
-                    ),
-                  ),
-                ),
-              ],
+          SizedBox(
+            width: 200,
+            child: DefaultTextStyle(
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white,
+                fontFamily: "Lexend",
+              ),
+              child: FutureBuilder<User>(
+                  future: _user,
+                  builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                    if (!snapshot.hasData) return const SizedBox.shrink();
+
+                    List<Widget> children = snapshot.data?.id.toInt() == 0
+                        ? [
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const SignDialog(signType: SignType.signin),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 16,
+                                  ),
+                                  child: const Text("Entrar"),
+                                ),
+                              ),
+                            ),
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => const SignDialog(signType: SignType.signup),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: const Text("Cadastrar"),
+                                ),
+                              ),
+                            )
+                          ]
+                        : [Text(snapshot.data!.username)];
+
+                    return Row(mainAxisAlignment: MainAxisAlignment.end, children: children);
+                  }),
             ),
           )
         ],
       ),
-      // flexibleSpace: Container(
-      //   color: Colors.red,
-      //   width: 10,
-      //   height: 10,
-      // ),
-      // actions: [
-      //   Row(
-      //     children: [
-      //       IconButton(
-      //         icon: const Icon(Icons.shopping_cart),
-      //         tooltip: 'Open shopping cart',
-      //         onPressed: () {
-      //           // handle the press
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ],
-      foregroundColor: Colors.white,
-      backgroundColor: Colors.black,
     );
   }
 }

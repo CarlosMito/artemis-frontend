@@ -19,10 +19,7 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const Hero(
-          tag: ArtemisAppBar,
-          child: ArtemisAppBar(),
-        ),
+        child: const ArtemisAppBar(),
       ),
       body: Center(
         child: Row(

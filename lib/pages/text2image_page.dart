@@ -56,7 +56,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final numInferenceStepsController = TextEditingController();
   final guidanceScaleController = TextEditingController();
 
-  final User _user = User(BigInt.from(1), "carlosmito");
+  final User _user = User(id: BigInt.from(1), username: "carlosmito", email: "carlosmito@email.com");
   Timer? updateStatusTimer;
 
   List<dynamic> _outputs = [null];
@@ -407,10 +407,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const Hero(
-          tag: ArtemisAppBar,
-          child: ArtemisAppBar(),
-        ),
+        child: const ArtemisAppBar(),
       ),
       body: Row(
         children: [

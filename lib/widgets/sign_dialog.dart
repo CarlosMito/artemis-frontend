@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
+import 'package:artemis/models/user.dart';
 import 'package:flutter/material.dart';
 
 class SignDialog extends StatefulWidget {
@@ -13,10 +14,6 @@ class SignDialog extends StatefulWidget {
 }
 
 class _SignDialogState extends State<SignDialog> {
-  // String _email = "";
-  // String _password = "";
-  // String _confirmPassword = "";
-
   bool _isSignup = false;
 
   final _usernameController = TextEditingController();
@@ -43,6 +40,50 @@ class _SignDialogState extends State<SignDialog> {
     _confirmPasswordController.dispose();
     _usernameController.dispose();
     super.dispose();
+  }
+
+  void _loginArtemis() async {
+    // String username = _usernameController.text;
+    // String email = _emailController.text;
+    // String password = _passwordController.text;
+    // String confirmPassword = _confirmPasswordController.text;
+
+    String username = "carlos2";
+    String password = "123";
+
+    User? user = await ArtemisApiService.loginArtemis(username, password);
+
+    // Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
+
+    // if (response.containsKey("error")) {
+    //   setState(() {
+    //     if (response["error"] == "Username already exists!") {
+    //       errorUsername = "Já existe um usuário com esse nome!";
+    //     }
+    //   });
+    // }
+  }
+
+  void _signupArtemis() async {
+    // String username = _usernameController.text;
+    // String email = _emailController.text;
+    // String password = _passwordController.text;
+    // String confirmPassword = _confirmPasswordController.text;
+
+    String username = "carlos2";
+    String email = "carlos@email.com";
+    String password = "123";
+    String confirmPassword = "123";
+
+    Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
+
+    if (response.containsKey("error")) {
+      setState(() {
+        if (response["error"] == "Username already exists!") {
+          errorUsername = "Já existe um usuário com esse nome!";
+        }
+      });
+    }
   }
 
   @override
@@ -126,27 +167,7 @@ class _SignDialogState extends State<SignDialog> {
                       ),
                     SizedBox(height: _isSignup ? 24 : 12),
                     ElevatedButton(
-                      onPressed: () async {
-                        // String username = _usernameController.text;
-                        // String email = _emailController.text;
-                        // String password = _passwordController.text;
-                        // String confirmPassword = _confirmPasswordController.text;
-
-                        String username = "carlos2";
-                        String email = "carlos@email.com";
-                        String password = "123";
-                        String confirmPassword = "123";
-
-                        Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
-
-                        if (response.containsKey("error")) {
-                          setState(() {
-                            if (response["error"] == "Username already exists!") {
-                              errorUsername = "Já existe um usuário com esse nome!";
-                            }
-                          });
-                        }
-                      },
+                      onPressed: _isSignup ? _signupArtemis : _loginArtemis,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 216, 143, 0),
                         padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),
@@ -211,6 +232,7 @@ class _SignDialogState extends State<SignDialog> {
                               onTap: () {
                                 setState(() {
                                   _isSignup = !_isSignup;
+                                  errorUsername = null;
                                 });
                               },
                               child: Text(

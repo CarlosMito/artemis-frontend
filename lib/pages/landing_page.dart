@@ -110,13 +110,10 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: Hero(
-          tag: ArtemisAppBar,
-          child: ArtemisAppBar(
-            homeOnTap: () => _animateToSection(LandingSection.standard),
-            aboutOnTap: () => _animateToSection(LandingSection.about),
-            contactMeOnTap: () => _animateToSection(LandingSection.contactMe),
-          ),
+        child: ArtemisAppBar(
+          homeOnTap: () => _animateToSection(LandingSection.standard),
+          aboutOnTap: () => _animateToSection(LandingSection.about),
+          contactMeOnTap: () => _animateToSection(LandingSection.contactMe),
         ),
       ),
       backgroundColor: Colors.black,
