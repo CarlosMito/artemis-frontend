@@ -26,7 +26,7 @@ class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<ArtemisAppBar> {
-  Future<User>? _user;
+  Future<User?>? _user;
   bool isCompleted = false;
 
   @override
@@ -107,57 +107,80 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                 color: Colors.white,
                 fontFamily: "Lexend",
               ),
-              child: FutureBuilder<User>(
+              child: FutureBuilder<User?>(
                   future: _user,
-                  builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-                    if (!snapshot.hasData) return const SizedBox.shrink();
+                  builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      List<Widget> children = snapshot.data == null
+                          ? [
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    Future<User?>? user = await showDialog(
+                                      context: context,
+                                      builder: (_) => const SignDialog(signType: SignType.signin),
+                                    );
 
-                    List<Widget> children = snapshot.data?.id.toInt() == 0
-                        ? [
-                            MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => const SignDialog(signType: SignType.signin),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                    horizontal: 16,
+                                    if (user != null) {
+                                      setState(() {
+                                        _user = user;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 16,
+                                    ),
+                                    child: const Text("Entrar"),
                                   ),
-                                  child: const Text("Entrar"),
                                 ),
                               ),
-                            ),
-                            MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => const SignDialog(signType: SignType.signup),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 12,
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => const SignDialog(signType: SignType.signup),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                      horizontal: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    child: const Text("Cadastrar"),
                                   ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
-                                  child: const Text("Cadastrar"),
                                 ),
-                              ),
-                            )
-                          ]
-                        : [Text(snapshot.data!.username)];
+                              )
+                            ]
+                          : [
+                              Text(snapshot.data!.username),
+                              const SizedBox(width: 10),
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await ArtemisApiService.logoutArtemis();
+                                    setState(() {
+                                      _user = Future<User?>.value(null);
+                                    });
+                                  },
+                                  child: const Text("Sair"),
+                                ),
+                              )
+                            ];
 
-                    return Row(mainAxisAlignment: MainAxisAlignment.end, children: children);
+                      return Row(mainAxisAlignment: MainAxisAlignment.end, children: children);
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   }),
             ),
           )

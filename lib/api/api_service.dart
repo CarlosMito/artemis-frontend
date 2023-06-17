@@ -303,12 +303,11 @@ class ArtemisApiService {
       return null;
     }
 
-    // User.fromJson(jsonDecode(response.body));
-
-    return User(id: BigInt.from(1), email: "carlos", username: "carlos@email.com");
+    log("Success: ${response.body}", name: name);
+    return User.fromJson(jsonDecode(response.body));
   }
 
-  static void logoutArtemis() async {
+  static Future<void> logoutArtemis() async {
     Response response;
     String name = "logoutArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.logout}");
@@ -369,24 +368,22 @@ class ArtemisApiService {
     return {"message": jsonDecode(response.body)["message"]};
   }
 
-  static Future<User> getLoggedInUserArtemis() async {
+  static Future<User?> getLoggedInUserArtemis() async {
     Response response;
     String name = "getLoggedInUserArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.loggedUser}");
     log(uri.toString(), name: name);
-
-    User emptyUser = User(id: BigInt.zero, email: "", username: "");
 
     try {
       response = await http.get(uri);
       log("Status Code: ${response.statusCode.toString()}", name: name);
       if (response.statusCode != 200) {
         log("Error: ${response.body}", name: name);
-        return emptyUser;
+        return null;
       }
     } catch (e) {
       log("Error: $e", name: name);
-      return emptyUser;
+      return null;
     }
 
     log("Success: ${response.body}", name: name);
