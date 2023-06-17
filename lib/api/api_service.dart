@@ -282,12 +282,6 @@ class ArtemisApiService {
     String name = "loginArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.login}");
 
-    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
-    // Map<String, String> headers = {
-    //   "Authorization": "Token $key",
-    //   "Content-Type": "application/json",
-    // };
-
     log("URL: ${uri.toString()}", name: name);
 
     Map<String, String> body = {
@@ -312,12 +306,6 @@ class ArtemisApiService {
     String name = "logoutArtemis";
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.logout}");
 
-    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
-    // Map<String, String> headers = {
-    //   "Authorization": "Token $key",
-    //   "Content-Type": "application/json",
-    // };
-
     log("URL: ${uri.toString()}", name: name);
 
     try {
@@ -331,5 +319,46 @@ class ArtemisApiService {
     } catch (e) {
       log("Error: $e", name: name);
     }
+  }
+
+  static Future<Map<String, String>> signupArtemis(String username, String email, String password, String confirmPassword) async {
+    Response response;
+    String name = "signupArtemis";
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.signup}");
+    log(uri.toString(), name: name);
+
+    Map<String, String> body = {
+      "username": username,
+      "email": email,
+      "password": password,
+      "confirmPassword": confirmPassword,
+    };
+
+    debugPrint(jsonEncode(body));
+
+    try {
+      response = await http.post(uri, body: body);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 201) {
+        log("Error: ${response.body}", name: name);
+        // debugPrint(response.body);
+
+        String errorMessage = "";
+
+        if (response.body.contains("auth_user_username_key")) {
+          errorMessage = "Username already exists!";
+        }
+
+        // log(response.body.runtimeType.toString());
+        // debugPrint(response.body);
+        // debugPrint(jsonDecode(response.body));
+        return {"error": errorMessage};
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return {"error": "Request error!"};
+    }
+
+    return {"message": jsonDecode(response.body)["message"]};
   }
 }

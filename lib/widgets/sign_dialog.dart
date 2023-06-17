@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,8 @@ class _SignDialogState extends State<SignDialog> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  String? errorUsername;
 
   String get _title => _isSignup ? "Cadastrar" : "Login";
   String get _preText => _isSignup ? "Já possui uma conta? " : "Novo por aqui? ";
@@ -60,10 +63,11 @@ class _SignDialogState extends State<SignDialog> {
                 ),
               ),
               Container(
-                height: 500,
+                // height: 540,
                 width: 320,
                 padding: const EdgeInsets.all(16),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       margin: const EdgeInsets.only(bottom: 30, top: 20),
@@ -91,6 +95,7 @@ class _SignDialogState extends State<SignDialog> {
                     SignTextField(
                       labelText: "Usuário",
                       controller: _usernameController,
+                      errorText: errorUsername,
                     ),
                     const SizedBox(height: 12),
                     if (_isSignup)
@@ -121,10 +126,26 @@ class _SignDialogState extends State<SignDialog> {
                       ),
                     SizedBox(height: _isSignup ? 24 : 12),
                     ElevatedButton(
-                      onPressed: () {
-                        log(_emailController.text);
-                        log(_passwordController.text);
-                        log(_confirmPasswordController.text);
+                      onPressed: () async {
+                        // String username = _usernameController.text;
+                        // String email = _emailController.text;
+                        // String password = _passwordController.text;
+                        // String confirmPassword = _confirmPasswordController.text;
+
+                        String username = "carlos2";
+                        String email = "carlos@email.com";
+                        String password = "123";
+                        String confirmPassword = "123";
+
+                        Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
+
+                        if (response.containsKey("error")) {
+                          setState(() {
+                            if (response["error"] == "Username already exists!") {
+                              errorUsername = "Já existe um usuário com esse nome!";
+                            }
+                          });
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 216, 143, 0),
@@ -135,7 +156,7 @@ class _SignDialogState extends State<SignDialog> {
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 24),
                     // NOTE: This is the google signup button. I'm not gonna do it now.
                     // MouseRegion(
                     //   cursor: SystemMouseCursors.click,
@@ -220,12 +241,14 @@ class SignTextField extends StatelessWidget {
   final bool enableSuggestions;
   final bool autocorrect;
   final String labelText;
+  final String? errorText;
   final TextEditingController? controller;
 
   const SignTextField({
     super.key,
     required this.labelText,
     this.controller,
+    this.errorText,
     this.obscureText = false,
     this.enableSuggestions = true,
     this.autocorrect = true,
@@ -248,7 +271,20 @@ class SignTextField extends StatelessWidget {
             width: 1,
           ),
         ),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 173, 16, 16),
+            width: 2,
+          ),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 173, 16, 16),
+            width: 2,
+          ),
+        ),
         labelText: labelText,
+        errorText: errorText,
       ),
       obscureText: obscureText,
       enableSuggestions: enableSuggestions,
