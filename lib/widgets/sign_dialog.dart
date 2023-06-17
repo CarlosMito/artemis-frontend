@@ -12,11 +12,16 @@ class SignDialog extends StatefulWidget {
 }
 
 class _SignDialogState extends State<SignDialog> {
-  String _email = "";
-  String _password = "";
-  String _confirmPassword = "";
+  // String _email = "";
+  // String _password = "";
+  // String _confirmPassword = "";
 
   bool _isSignup = false;
+
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   String get _title => _isSignup ? "Cadastrar" : "Login";
   String get _preText => _isSignup ? "Já possui uma conta? " : "Novo por aqui? ";
@@ -26,7 +31,15 @@ class _SignDialogState extends State<SignDialog> {
   void initState() {
     super.initState();
     _isSignup = widget.signType == SignType.signup;
-    // _title =
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,7 +66,7 @@ class _SignDialogState extends State<SignDialog> {
                 child: Column(
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(bottom: 40, top: 20),
+                      margin: const EdgeInsets.only(bottom: 30, top: 20),
                       width: double.infinity,
                       child: Stack(
                         children: [
@@ -75,71 +88,33 @@ class _SignDialogState extends State<SignDialog> {
                         ],
                       ),
                     ),
-                    TextField(
-                      onChanged: (String text) {
-                        _email = text;
-                      },
-                      decoration: const InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 13, 183, 220),
-                            width: 2,
+                    if (_isSignup)
+                      Column(
+                        children: [
+                          SignTextField(
+                            labelText: "Usuário",
+                            controller: _usernameController,
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 1.5,
-                          ),
-                        ),
-                        labelText: "E-mail",
+                          const SizedBox(height: 12),
+                        ],
                       ),
+                    SignTextField(
+                      labelText: "E-mail",
+                      controller: _emailController,
                     ),
                     const SizedBox(height: 12),
-                    TextField(
-                      onChanged: (String text) {
-                        _password = text;
-                      },
-                      decoration: const InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(255, 13, 183, 220),
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black,
-                            width: 1.5,
-                          ),
-                        ),
-                        labelText: "Senha",
-                      ),
+                    SignTextField(
+                      labelText: "Senha",
+                      controller: _passwordController,
                       obscureText: true,
                       enableSuggestions: false,
                       autocorrect: false,
                     ),
                     const SizedBox(height: 12),
                     if (_isSignup)
-                      TextField(
-                        onChanged: (String text) {
-                          _confirmPassword = text;
-                        },
-                        decoration: const InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 13, 183, 220),
-                              width: 2,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.black,
-                              width: 1.5,
-                            ),
-                          ),
-                          labelText: "Confirmar Senha",
-                        ),
+                      SignTextField(
+                        labelText: "Confirmar Senha",
+                        controller: _confirmPasswordController,
                         obscureText: true,
                         enableSuggestions: false,
                         autocorrect: false,
@@ -147,9 +122,9 @@ class _SignDialogState extends State<SignDialog> {
                     SizedBox(height: _isSignup ? 24 : 12),
                     ElevatedButton(
                       onPressed: () {
-                        log(_email);
-                        log(_password);
-                        log(_confirmPassword);
+                        log(_emailController.text);
+                        log(_passwordController.text);
+                        log(_confirmPasswordController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 216, 143, 0),
@@ -161,41 +136,42 @@ class _SignDialogState extends State<SignDialog> {
                       ),
                     ),
                     const Spacer(),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox.square(
-                                dimension: 18,
-                                child: Image.asset(
-                                  "assets/images/logos/google.png",
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              const Text(
-                                "Continuar com o Google",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // NOTE: This is the google signup button. I'm not gonna do it now.
+                    // MouseRegion(
+                    //   cursor: SystemMouseCursors.click,
+                    //   child: GestureDetector(
+                    //     onTap: () {},
+                    //     child: Container(
+                    //       width: double.infinity,
+                    //       padding: const EdgeInsets.symmetric(vertical: 10),
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(4),
+                    //         border: Border.all(
+                    //           color: Colors.black,
+                    //           width: 1.5,
+                    //         ),
+                    //       ),
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: [
+                    //           SizedBox.square(
+                    //             dimension: 18,
+                    //             child: Image.asset(
+                    //               "assets/images/logos/google.png",
+                    //             ),
+                    //           ),
+                    //           const SizedBox(width: 10),
+                    //           const Text(
+                    //             "Continuar com o Google",
+                    //             style: TextStyle(
+                    //               color: Colors.black,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 8),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -235,6 +211,48 @@ class _SignDialogState extends State<SignDialog> {
           );
         },
       ),
+    );
+  }
+}
+
+class SignTextField extends StatelessWidget {
+  final bool obscureText;
+  final bool enableSuggestions;
+  final bool autocorrect;
+  final String labelText;
+  final TextEditingController? controller;
+
+  const SignTextField({
+    super.key,
+    required this.labelText,
+    this.controller,
+    this.obscureText = false,
+    this.enableSuggestions = true,
+    this.autocorrect = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 13, 183, 220),
+            width: 2,
+          ),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+        labelText: labelText,
+      ),
+      obscureText: obscureText,
+      enableSuggestions: enableSuggestions,
+      autocorrect: autocorrect,
     );
   }
 }

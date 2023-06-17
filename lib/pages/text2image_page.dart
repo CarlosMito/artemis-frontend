@@ -31,11 +31,11 @@ import '../utils/maps.dart';
 
 // TODO [x]: Criar sistema de pre-processing para adicionar o texto no prompt
 // TODO [x]: Ajustar os links na navbar Sobre e Contate-me
+// TODO [ ]: Criar sistema de cadastro
+// TODO [ ]: Formalizar o sistema de login
 // TODO [ ]: Criar sistema de público e privado para aparecer na tela de Exploração
 // TODO [ ]: Criar um sistema de favoritos (talvez uma tabela de relacionamentos - para as imagens privadas) e um contador para as imagens públicas
 // TODO [ ]: Criar sistema de download de imagem única e em grupo
-// TODO [ ]: Criar sistema de cadastro
-// TODO [ ]: Formalizar o sistema de login
 // TODO [ ]: Testar, e se for melhor, trocar o esquema de changeValue/changeSaturation
 // TODO [ ]: Trocar a fonte do título "Texto à Imagem" e adicionar uma figura ilustrativa embaixo ou em cima
 // TODO [ ]: Adicionar animações no site
