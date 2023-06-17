@@ -88,21 +88,21 @@ class _SignDialogState extends State<SignDialog> {
                         ],
                       ),
                     ),
+                    SignTextField(
+                      labelText: "Usuário",
+                      controller: _usernameController,
+                    ),
+                    const SizedBox(height: 12),
                     if (_isSignup)
                       Column(
                         children: [
                           SignTextField(
-                            labelText: "Usuário",
-                            controller: _usernameController,
+                            labelText: "E-mail",
+                            controller: _emailController,
                           ),
                           const SizedBox(height: 12),
                         ],
                       ),
-                    SignTextField(
-                      labelText: "E-mail",
-                      controller: _emailController,
-                    ),
-                    const SizedBox(height: 12),
                     SignTextField(
                       labelText: "Senha",
                       controller: _passwordController,
