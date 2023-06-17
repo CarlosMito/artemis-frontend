@@ -71,6 +71,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
   void _animateToSection(LandingSection section, [Duration? delay]) {
     Map<LandingSection, double> targetOffset = {
+      LandingSection.standard: 0,
       LandingSection.about: moonSize + 80 * 2 + 120,
       LandingSection.contactMe: moonSize + 80 * 2 + 120 + 820,
     };
@@ -112,6 +113,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         child: Hero(
           tag: ArtemisAppBar,
           child: ArtemisAppBar(
+            homeOnTap: () => _animateToSection(LandingSection.standard),
             aboutOnTap: () => _animateToSection(LandingSection.about),
             contactMeOnTap: () => _animateToSection(LandingSection.contactMe),
           ),

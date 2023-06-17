@@ -14,10 +14,7 @@ class ArtemisAppButton extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: onTap ??
-            () {
-              context.vRouter.to(route);
-            },
+        onTap: onTap ?? () => context.vRouter.to(route),
         child: Text(
           text,
           style: TextStyle(

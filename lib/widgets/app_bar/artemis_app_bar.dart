@@ -8,10 +8,11 @@ import 'package:vrouter/vrouter.dart';
 
 class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? focus;
+  final Function()? homeOnTap;
   final Function()? aboutOnTap;
   final Function()? contactMeOnTap;
 
-  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap})
+  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap, this.homeOnTap})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -31,9 +32,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
-              onTap: () {
-                context.vRouter.to("/home");
-              },
+              onTap: widget.homeOnTap ?? () => context.vRouter.to("/home"),
               child: Row(
                 children: [
                   SizedBox.square(
