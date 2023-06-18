@@ -22,6 +22,7 @@ class _SignDialogState extends State<SignDialog> {
   final _confirmPasswordController = TextEditingController();
 
   String? errorUsername;
+  String? errorLogin;
 
   String get _title => _isSignup ? "Cadastrar" : "Login";
   String get _preText => _isSignup ? "Já possui uma conta? " : "Novo por aqui? ";
@@ -43,11 +44,20 @@ class _SignDialogState extends State<SignDialog> {
   }
 
   void _loginArtemis() async {
-    String username = "carlos2";
+    String username = "carlos";
     String password = "123";
 
     Future<User?> user = ArtemisApiService.loginArtemis(username, password);
-    Navigator.of(context).pop(user);
+
+    user.then((value) {
+      if (value != null) {
+        Navigator.of(context).pop(user);
+      } else {
+        setState(() {
+          errorLogin = "Usuário ou senha incorretos!";
+        });
+      }
+    });
   }
 
   void _signupArtemis() async {
@@ -151,6 +161,15 @@ class _SignDialogState extends State<SignDialog> {
                         enableSuggestions: false,
                         autocorrect: false,
                       ),
+                    if (errorLogin != null)
+                      Text(
+                        errorLogin!,
+                        style: const TextStyle(
+                          fontFamily: "Lexend",
+                          fontSize: 14,
+                          color: Colors.red,
+                        ),
+                      ),
                     SizedBox(height: _isSignup ? 24 : 12),
                     ElevatedButton(
                       onPressed: _isSignup ? _signupArtemis : _loginArtemis,
@@ -163,6 +182,7 @@ class _SignDialogState extends State<SignDialog> {
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
+
                     const SizedBox(height: 24),
                     // NOTE: This is the google signup button. I'm not gonna do it now.
                     // MouseRegion(
