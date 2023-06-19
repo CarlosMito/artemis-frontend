@@ -1,6 +1,8 @@
 import 'package:artemis/api/api_service.dart';
+import 'package:artemis/enums/artemis_placeholder.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/models/user.dart';
+import 'package:artemis/utils/maps.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_button.dart';
 import 'package:artemis/widgets/sign_dialog.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +62,19 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
     return AppBar(
       foregroundColor: Colors.white,
       backgroundColor: Colors.black,
+      // actions: <Widget>[
+      //     PopupMenuButton<String>(
+      //       onSelected: choiceAction,
+      //       itemBuilder: (BuildContext context) {
+      //         return Constants.choices.map((String choice) {
+      //           return PopupMenuItem<String>(
+      //             value: choice,
+      //             child: Text(choice),
+      //           );
+      //         }).toList();
+      //       },
+      //     )
+      //   ],
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -168,20 +183,45 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                         ]);
                       } else {
                         children.addAll([
-                          Text(snapshot.data!.username),
-                          const SizedBox(width: 10),
-                          MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () async {
-                                await ArtemisApiService.logoutArtemis();
-                                setState(() {
-                                  _user = Future<User?>.value(null);
-                                });
-                              },
-                              child: const Text("Sair"),
+                          Text(
+                            snapshot.data!.username,
+                            style: const TextStyle(
+                              fontFamily: "Lexend",
+                              fontSize: 15,
                             ),
-                          )
+                          ),
+                          const SizedBox(width: 10),
+                          PopupMenuButton<String>(
+                            elevation: 0,
+                            position: PopupMenuPosition.under,
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: CircleAvatar(
+                                radius: 12,
+                                backgroundImage: AssetImage(imageMapping[ArtemisPlaceholder.userDefault]!),
+                              ),
+                            ),
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                PopupMenuItem<String>(
+                                  child: const Text("Sair"),
+                                  onTap: () async {
+                                    await ArtemisApiService.logoutArtemis();
+                                    setState(() {
+                                      _user = Future<User?>.value(null);
+                                    });
+                                  },
+                                )
+                              ];
+                            },
+                          ),
                         ]);
                       }
 

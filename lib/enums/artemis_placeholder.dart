@@ -1,1 +1,1 @@
-enum ArtemisPlaceholder { imageError }
+enum ArtemisPlaceholder { imageError, userDefault }

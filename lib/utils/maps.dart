@@ -78,4 +78,5 @@ final Map<Object, String> imageMapping = {
   ImageValue.high: "$optionsDir/values/high.webp",
   ImageValue.low: "$optionsDir/values/low.jpg",
   ArtemisPlaceholder.imageError: "$placeholdersDir/image_error.jpg",
+  ArtemisPlaceholder.userDefault: "$placeholdersDir/user_default.png",
 };
