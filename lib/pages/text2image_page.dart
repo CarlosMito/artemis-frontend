@@ -31,8 +31,9 @@ import '../utils/maps.dart';
 
 // TODO [x]: Criar sistema de pre-processing para adicionar o texto no prompt
 // TODO [x]: Ajustar os links na navbar Sobre e Contate-me
-// TODO [ ]: Criar sistema de cadastro
-// TODO [ ]: Formalizar o sistema de login
+// TODO [x]: Criar sistema de cadastro
+// TODO [x]: Formalizar o sistema de login
+// TODO [ ]: Testar para ver se a criação está funcionando logo após o singin/signup
 // TODO [ ]: Criar sistema de público e privado para aparecer na tela de Exploração
 // TODO [ ]: Criar um sistema de favoritos (talvez uma tabela de relacionamentos - para as imagens privadas) e um contador para as imagens públicas
 // TODO [ ]: Criar sistema de download de imagem única e em grupo
@@ -723,8 +724,17 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         List<Widget> children = [];
 
                         // TODO: When is empty, return an error image placeholder.
-                        // The best would be to display an error when an specific image is unavailable, but... it'd be a lot of work
+                        // The best would be to display an error when an specific image is unavailable instead of
+                        // checking only the whole set, but... it'd be a lot of work
                         if (outputset.isEmpty) return const SizedBox.shrink();
+
+                        // NOTE: This is not enough due to the counter when moving between images
+                        // if (outputset.isEmpty) {
+                        //   return Image.asset(
+                        //     imageMapping[ArtemisPlaceholder.imageError]!,
+                        //     fit: BoxFit.cover,
+                        //   );
+                        // }
 
                         for (int j = 0; j < outputset.length; j++) {
                           children.add(

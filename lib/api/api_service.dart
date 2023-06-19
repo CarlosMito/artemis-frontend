@@ -206,7 +206,7 @@ class ArtemisApiService {
     User? user = await ArtemisApiService.getLoggedInUserArtemis();
 
     if (user == null) {
-      log("No user currently logged in");
+      log("No user currently logged in", name: name);
       return null;
     }
 
@@ -225,7 +225,7 @@ class ArtemisApiService {
       return null;
     }
 
-    log(jsonDecode(response.body).toString());
+    log(jsonDecode(response.body).toString(), name: name);
     Map<int, ArtemisInputAPI> inputs = {};
     List<String> outputIds = [];
 
@@ -242,6 +242,10 @@ class ArtemisApiService {
 
     log("Total Inputs: ${inputs.length}", name: name);
     log(inputs.keys.toString(), name: name);
+
+    if (inputs.isEmpty) {
+      return [];
+    }
 
     Map<String, List<String>> queryParameters = {"id": outputIds};
     uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}");
