@@ -13,8 +13,9 @@ class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function()? homeOnTap;
   final Function()? aboutOnTap;
   final Function()? contactMeOnTap;
+  final Function()? onLogin;
 
-  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap, this.homeOnTap})
+  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap, this.homeOnTap, this.onLogin})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -33,6 +34,25 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
   void initState() {
     super.initState();
     _user = ArtemisApiService.getLoggedInUserArtemis();
+  }
+
+  void showSignDialog(SignType signType) async {
+    Future<User?>? user = await showDialog(
+      context: context,
+      builder: (_) => SignDialog(signType: signType),
+    );
+
+    if (user != null) {
+      user.then((value) {
+        setState(() {
+          _user = user;
+
+          if (widget.onLogin != null) {
+            widget.onLogin!();
+          }
+        });
+      });
+    }
   }
 
   @override
@@ -111,71 +131,59 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                   future: _user,
                   builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      List<Widget> children = snapshot.data == null
-                          ? [
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    Future<User?>? user = await showDialog(
-                                      context: context,
-                                      builder: (_) => const SignDialog(signType: SignType.signin),
-                                    );
+                      List<Widget> children = [];
 
-                                    if (user != null) {
-                                      setState(() {
-                                        _user = user;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                      horizontal: 16,
-                                    ),
-                                    child: const Text("Entrar"),
-                                  ),
+                      if (snapshot.data == null) {
+                        children.addAll([
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () => showSignDialog(SignType.signin),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
                                 ),
+                                child: const Text("Entrar"),
                               ),
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => const SignDialog(signType: SignType.signup),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 5,
-                                      horizontal: 12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: const Text("Cadastrar"),
-                                  ),
+                            ),
+                          ),
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () => showSignDialog(SignType.signup),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 12,
                                 ),
-                              )
-                            ]
-                          : [
-                              Text(snapshot.data!.username),
-                              const SizedBox(width: 10),
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    await ArtemisApiService.logoutArtemis();
-                                    setState(() {
-                                      _user = Future<User?>.value(null);
-                                    });
-                                  },
-                                  child: const Text("Sair"),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
-                              )
-                            ];
+                                child: const Text("Cadastrar"),
+                              ),
+                            ),
+                          )
+                        ]);
+                      } else {
+                        children.addAll([
+                          Text(snapshot.data!.username),
+                          const SizedBox(width: 10),
+                          MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await ArtemisApiService.logoutArtemis();
+                                setState(() {
+                                  _user = Future<User?>.value(null);
+                                });
+                              },
+                              child: const Text("Sair"),
+                            ),
+                          )
+                        ]);
+                      }
 
                       return Row(mainAxisAlignment: MainAxisAlignment.end, children: children);
                     } else {

@@ -66,10 +66,10 @@ class _SignDialogState extends State<SignDialog> {
     // String password = _passwordController.text;
     // String confirmPassword = _confirmPasswordController.text;
 
-    String username = "carlos2";
-    String email = "carlos@email.com";
-    String password = "123";
-    String confirmPassword = "123";
+    String username = "1";
+    String email = "1";
+    String password = "1";
+    String confirmPassword = "1";
 
     Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
 
@@ -79,6 +79,12 @@ class _SignDialogState extends State<SignDialog> {
           errorUsername = "Já existe um usuário com esse nome!";
         }
       });
+
+      return;
+    }
+
+    if (context.mounted) {
+      Navigator.of(context).pop(ArtemisApiService.loginArtemis(username, password));
     }
   }
 

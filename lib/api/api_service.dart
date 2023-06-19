@@ -199,17 +199,19 @@ class ArtemisApiService {
     return true;
   }
 
-  static Future<List<List<ArtemisOutputAPI>>?> getCreations(User user) async {
+  static Future<List<List<ArtemisOutputAPI>>?> getCreations() async {
     Response response;
     String name = "getCreations";
+
+    User? user = await ArtemisApiService.getLoggedInUserArtemis();
+
+    if (user == null) {
+      log("No user currently logged in");
+      return null;
+    }
+
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.inputs}/${user.id}");
     log("URL: ${uri.toString()}", name: name);
-
-    // String? key = dotenv.env["REPLICATE_API_TOKEN"];
-    // Map<String, String> headers = {
-    //   "Authorization": "Token $key",
-    //   "Content-Type": "application/json",
-    // };
 
     try {
       response = await http.get(uri);
@@ -223,6 +225,7 @@ class ArtemisApiService {
       return null;
     }
 
+    log(jsonDecode(response.body).toString());
     Map<int, ArtemisInputAPI> inputs = {};
     List<String> outputIds = [];
 

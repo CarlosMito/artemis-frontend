@@ -41,6 +41,8 @@ import '../utils/maps.dart';
 // TODO [ ]: Adicionar animações no site
 // TODO [ ]: Criar redes sociais e adicionar o link nos botões do about me
 // TODO [ ]: Adicionar o efeitos de rastro nas estrelas se movimentando
+// TODO [ ]: Quando a lista estiver vazia, apresentar um quadrado de erro no histórico de gerações ao invés de não apresentar nada
+// TODO [ ]: Caso a lista esteja vazia, o que é diferente de ser null, atualizar o histórico para vazio
 
 class Text2ImagePage extends StatefulWidget {
   const Text2ImagePage({super.key});
@@ -118,7 +120,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   }
 
   void _getCreations() async {
-    var auxiliar = await ArtemisApiService.getCreations(_user);
+    var auxiliar = await ArtemisApiService.getCreations();
 
     if (auxiliar != null) {
       _outputs = [null, ...auxiliar.reversed.toList()];
@@ -407,7 +409,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const ArtemisAppBar(),
+        child: ArtemisAppBar(onLogin: _getCreations),
       ),
       body: Row(
         children: [
