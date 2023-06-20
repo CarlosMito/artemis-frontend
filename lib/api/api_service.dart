@@ -207,8 +207,8 @@ class ArtemisApiService {
     User? user = await ArtemisApiService.getLoggedInUserArtemis();
 
     if (user == null) {
-      log("No user currently logged in", name: name);
-      return null;
+      log("There's no user currently logged in", name: name);
+      return [];
     }
 
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.inputs}/${user.id}");
@@ -276,7 +276,7 @@ class ArtemisApiService {
         }
 
         data["image"] = "$mediaRoot${data['image']}";
-        log(data["image"], name: name);
+        // log(data["image"], name: name);
 
         auxiliar[inputId]!.add(ArtemisOutputAPI.fromJson(data, inputs[inputId]!));
       } catch (e) {

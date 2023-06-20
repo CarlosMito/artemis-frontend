@@ -150,9 +150,11 @@ class _PromptTextBlockState extends State<PromptTextBlock> {
                     });
 
                     Future.delayed(const Duration(seconds: 2), () async {
-                      setState(() {
-                        showCopyMessage = false;
-                      });
+                      if (context.mounted) {
+                        setState(() {
+                          showCopyMessage = false;
+                        });
+                      }
                     });
 
                     // NOTE: I tried using Fluttertoast, but I didn't like the result for the web (I couldn't change the font family)

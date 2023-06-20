@@ -44,7 +44,7 @@ class _SignDialogState extends State<SignDialog> {
   }
 
   void _loginArtemis() async {
-    String username = "carlos2";
+    String username = "carlos";
     String password = "123";
 
     Future<User?> user = ArtemisApiService.loginArtemis(username, password);

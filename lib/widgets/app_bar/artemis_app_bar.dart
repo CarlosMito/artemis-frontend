@@ -16,8 +16,9 @@ class ArtemisAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function()? aboutOnTap;
   final Function()? contactMeOnTap;
   final Function()? onLogin;
+  final Function()? onLogout;
 
-  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap, this.homeOnTap, this.onLogin})
+  const ArtemisAppBar({Key? key, this.focus, this.aboutOnTap, this.contactMeOnTap, this.homeOnTap, this.onLogin, this.onLogout})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -217,6 +218,10 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                                     setState(() {
                                       _user = Future<User?>.value(null);
                                     });
+
+                                    if (widget.onLogin != null) {
+                                      widget.onLogin!();
+                                    }
                                   },
                                 )
                               ];

@@ -410,7 +410,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: ArtemisAppBar(onLogin: _getCreations),
+        child: ArtemisAppBar(onLogin: _getCreations, onLogout: _getCreations),
       ),
       body: Row(
         children: [
@@ -431,7 +431,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               ),
               body: ListView(
                 padding: const EdgeInsets.all(50),
-                shrinkWrap: true,
                 children: [
                   Wrap(
                     children: [
