@@ -358,6 +358,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // _prompt =
     //     "airy, pin-up, sci-fi, steam punk, very deitaled, realistic, figurative painter, fineart, Oil painting on canvas, beautiful painting by Daniel F Gerhartz --ar 9:16 --beta --upbeta";
 
+    // TODO: The user ID into the post creation method is useless since I can get the ID from the request itself
     ArtemisInputAPI input = ArtemisInputAPI(
       userId: _user.id,
       prompt: promptController.text,
