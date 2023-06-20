@@ -399,7 +399,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           await _updateStatus();
         });
         setState(() {});
-        log(_outputs[0].toString());
       }
     } else {
       log("Another creation in process!");
@@ -432,6 +431,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               ),
               body: ListView(
                 padding: const EdgeInsets.all(50),
+                shrinkWrap: true,
                 children: [
                   Wrap(
                     children: [

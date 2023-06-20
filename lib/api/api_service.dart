@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
+import 'package:artemis/utils/maps.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -273,6 +274,9 @@ class ArtemisApiService {
         if (!auxiliar.containsKey(inputId)) {
           auxiliar[inputId] = [];
         }
+
+        data["image"] = "$mediaRoot${data['image']}";
+        log(data["image"], name: name);
 
         auxiliar[inputId]!.add(ArtemisOutputAPI.fromJson(data, inputs[inputId]!));
       } catch (e) {

@@ -80,3 +80,5 @@ final Map<Object, String> imageMapping = {
   ArtemisPlaceholder.imageError: "$placeholdersDir/image_error.jpg",
   ArtemisPlaceholder.userDefault: "$placeholdersDir/user_default.png",
 };
+
+const mediaRoot = "http://localhost:8000";
