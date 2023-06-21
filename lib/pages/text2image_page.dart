@@ -29,22 +29,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../utils/maps.dart';
 
-// TODO [x]: Criar sistema de pre-processing para adicionar o texto no prompt
-// TODO [x]: Ajustar os links na navbar Sobre e Contate-me
-// TODO [x]: Criar sistema de cadastro
-// TODO [x]: Formalizar o sistema de login
-// TODO [ ]: Testar para ver se a criação está funcionando logo após o singin/signup
-// TODO [ ]: Criar sistema de público e privado para aparecer na tela de Exploração
-// TODO [ ]: Criar um sistema de favoritos (talvez uma tabela de relacionamentos - para as imagens privadas) e um contador para as imagens públicas
-// TODO [ ]: Criar sistema de download de imagem única e em grupo
-// TODO [ ]: Testar, e se for melhor, trocar o esquema de changeValue/changeSaturation
-// TODO [ ]: Trocar a fonte do título "Texto à Imagem" e adicionar uma figura ilustrativa embaixo ou em cima
-// TODO [ ]: Adicionar animações no site
-// TODO [ ]: Criar redes sociais e adicionar o link nos botões do about me
-// TODO [ ]: Adicionar o efeitos de rastro nas estrelas se movimentando
-// TODO [ ]: Quando a lista estiver vazia, apresentar um quadrado de erro no histórico de gerações ao invés de não apresentar nada
-// TODO [ ]: Caso a lista esteja vazia, o que é diferente de ser null, atualizar o histórico para vazio
-
 class Text2ImagePage extends StatefulWidget {
   const Text2ImagePage({super.key});
 
@@ -676,7 +660,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            log("Download!");
+                            log("Download all!");
                           },
                           icon: const Icon(
                             Icons.download,
