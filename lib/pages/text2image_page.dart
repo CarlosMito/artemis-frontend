@@ -295,23 +295,24 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
+          return RawKeyboardListener(
+            autofocus: true,
+            focusNode: FocusNode(),
+            onKey: (RawKeyEvent event) {
+              if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: AlertDialog(
+              title: const Text("Alerta"),
+              content: const Text("Não é possível gerar uma imagem sem um prompt!"),
+              actions: [
+                TextButton(
+                  onPressed: Navigator.of(context).pop,
+                  child: const Text("Entendido"),
                 ),
-              ),
+              ],
             ),
-            // contentPadding: EdgeInsets.only(bottom: 20.0),
-            title: Text(
-              "Prompt Vazio",
-              style: TextStyle(fontSize: 24.0),
-            ),
-            // content: Container(
-            //   padding: const EdgeInsets.all(20),
-            //   child: const Text("O campo prompt é obrigatório"),
-            // ),
           );
         });
   }
@@ -472,11 +473,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
                   if (promptController.text.isEmpty) {
-                    // showAlertDialog();
+                    showAlertDialog();
                     return;
                   }
 
-                  _generateImage();
+                  // _generateImage();
                 },
                 icon: const Icon(Icons.send),
                 label: const Text("Gerar Imagem"),
@@ -736,28 +737,32 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   color: Colors.white,
                                   size: 18.0,
                                 )
-                              : IconButton(
-                                  onPressed: () {
-                                    log("Download all!");
+                              : Tooltip(
+                                  waitDuration: const Duration(milliseconds: 650),
+                                  message: "Baixar tudo",
+                                  child: IconButton(
+                                    onPressed: () {
+                                      log("Download all!");
 
-                                    List<String> imagesUrls = [];
+                                      List<String> imagesUrls = [];
 
-                                    for (final outputset in _outputs) {
-                                      if (outputset == null) continue;
+                                      for (final outputset in _outputs) {
+                                        if (outputset == null) continue;
 
-                                      for (final output in outputset as List<ArtemisOutputAPI>) {
-                                        imagesUrls.add(output.image);
+                                        for (final output in outputset as List<ArtemisOutputAPI>) {
+                                          imagesUrls.add(output.image);
+                                        }
                                       }
-                                    }
 
-                                    log(imagesUrls.toString());
+                                      log(imagesUrls.toString());
 
-                                    _downloadImagesAsZip(imagesUrls);
-                                  },
-                                  icon: const Icon(
-                                    Icons.download,
-                                    color: Colors.white,
-                                    size: 18.0,
+                                      _downloadImagesAsZip(imagesUrls);
+                                    },
+                                    icon: const Icon(
+                                      Icons.download,
+                                      color: Colors.white,
+                                      size: 18.0,
+                                    ),
                                   ),
                                 ),
                         ),
