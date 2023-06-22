@@ -1,4 +1,3 @@
-import 'package:artemis/models/piece.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:flutter/material.dart';

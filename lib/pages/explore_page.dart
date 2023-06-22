@@ -1,9 +1,9 @@
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
 import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
-import 'package:artemis/models/piece.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
@@ -22,7 +22,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<ArtemisOutputAPI> pieces = <ArtemisOutputAPI>[];
+  List<ArtemisOutputAPI> publicOutputs = <ArtemisOutputAPI>[];
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
     imageMapping.forEach((key, value) {
       if (key is int) {
-        pieces.add(ArtemisOutputAPI(
+        publicOutputs.add(ArtemisOutputAPI(
           image: value,
           title: "Teste $key",
           caption: "@Legenda $key",
@@ -58,6 +58,24 @@ class _ExplorePageState extends State<ExplorePage> {
     });
   }
 
+  void _getPublicOutputs() async {
+    var test = await ArtemisApiService.getPublicOutputs();
+
+    for (var i in test) {
+      debugPrint(i.isFavorite.toString());
+      debugPrint(i.favoriteCount.toString());
+      debugPrint(i.image.toString());
+      debugPrint(i.input.toString());
+
+      i.title = "A";
+      i.caption = "B";
+    }
+
+    setState(() {
+      publicOutputs = test;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
@@ -68,6 +86,7 @@ class _ExplorePageState extends State<ExplorePage> {
       ),
       body: Column(
         children: <Widget>[
+          ElevatedButton(onPressed: _getPublicOutputs, child: Text("GET PUBLIC OUTPUTS")),
           Expanded(
             child: SafeArea(
               top: false,
@@ -78,9 +97,9 @@ class _ExplorePageState extends State<ExplorePage> {
                 crossAxisSpacing: 10.0,
                 padding: const EdgeInsets.all(10.0),
                 childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
-                children: pieces.map<Widget>((ArtemisOutputAPI piece) {
+                children: publicOutputs.map<Widget>((ArtemisOutputAPI output) {
                   return GridPieceItem(
-                    outputPiece: piece,
+                    outputPiece: output,
                     onBannerTap: (ArtemisOutputAPI piece) {
                       setState(() {
                         piece.isFavorite = !piece.isFavorite;

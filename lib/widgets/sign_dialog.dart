@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/models/user.dart';

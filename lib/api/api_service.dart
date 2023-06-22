@@ -1,72 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
 import 'package:artemis/utils/maps.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 
 import 'api_constants.dart';
-
-// class ReplicateApiService {
-//   Future<Map<String, dynamic>?> postPrompt(String prompt) async {
-//     log('Gerando prompt: "$prompt"');
-
-//     Uri url = Uri.parse(ReplicateApiConstants.baseUrl + ReplicateApiConstants.endpoints.text2image!);
-//     String? key = dotenv.env["REPLICATE_API_TOKEN"];
-//     Map<String, String> headers = {"Authorization": "Token $key"};
-//     Map<String, dynamic> body = {
-//       "version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
-//       "input": {"prompt": prompt}
-//     };
-
-//     String stringBody = jsonEncode(body);
-//     stringBody = '{"version": "db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", "input": {"prompt": "$prompt"}}';
-
-//     log(jsonEncode(body));
-//     log(url.toString());
-
-//     try {
-//       Response res = await http.post(url, headers: headers, body: stringBody);
-//       log("Status Code [POST]: ${res.statusCode.toString()}");
-
-//       if (res.statusCode == 201) {
-//         return jsonDecode(res.body);
-//       } else if (res.statusCode == 200) {
-//         // print(jsonDecode(res.body));
-//       }
-//     } catch (e) {
-//       log("Erro [POST]: $e");
-//     }
-
-//     return null;
-//   }
-
-//   Future<Map<String, dynamic>?> getStatus(String id) async {
-//     Uri url = Uri.parse("${ReplicateApiConstants.baseUrl}/${ReplicateApiConstants.endpoints.text2image}/$id");
-//     String? key = dotenv.env["REPLICATE_API_TOKEN"];
-//     Map<String, String> headers = {
-//       "Authorization": "Token $key",
-//       "Content-Type": "application/json",
-//     };
-
-//     try {
-//       Response res = await http.get(url, headers: headers);
-//       log("Status Code [GET]: ${res.statusCode.toString()}");
-
-//       if (res.statusCode == 200) {
-//         return jsonDecode(res.body);
-//       }
-//     } catch (e) {
-//       log("Erro [GET]: $e");
-//     }
-
-//     return null;
-//   }
-// }
 
 class ArtemisApiService {
   static Future<String?> fetchCSRFToken() async {
@@ -399,5 +342,42 @@ class ArtemisApiService {
 
     log("Success: ${response.body}", name: name);
     return User.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<List<ArtemisOutputAPI>> getPublicOutputs() async {
+    Response response;
+    String name = "getPublicOutputs";
+
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.publicOutputs}");
+    log("URL: ${uri.toString()}", name: name);
+
+    try {
+      response = await http.get(uri);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 200) {
+        log("Error: ${response.body}", name: name);
+        return [];
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return [];
+    }
+
+    log(jsonDecode(response.body).toString(), name: name);
+
+    List<ArtemisOutputAPI> outputs = [];
+
+    for (var outputJson in jsonDecode(response.body)) {
+      // try {
+      var inputJson = outputJson["input"];
+      ArtemisInputAPI input = ArtemisInputAPI.fromJson(inputJson);
+      ArtemisOutputAPI output = ArtemisOutputAPI.fromJson(outputJson, input);
+      outputs.add(output);
+      // } catch (e) {
+      //   log("Parsing Error: $e", name: name);
+      // }
+    }
+
+    return outputs;
   }
 }
