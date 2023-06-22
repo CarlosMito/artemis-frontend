@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
@@ -62,13 +64,13 @@ class _ExplorePageState extends State<ExplorePage> {
     var test = await ArtemisApiService.getPublicOutputs();
 
     for (var i in test) {
-      debugPrint(i.isFavorite.toString());
-      debugPrint(i.favoriteCount.toString());
-      debugPrint(i.image.toString());
-      debugPrint(i.input.toString());
+      // log(i.isFavorite.toString());
+      // log(i.favoriteCount.toString());
+      // log(i.image.toString());
+      // log(i.input.toString());
 
-      i.title = "A";
-      i.caption = "B";
+      i.title = i.input.prompt;
+      i.caption = "@${i.input.user?.username}";
     }
 
     setState(() {

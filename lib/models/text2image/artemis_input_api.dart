@@ -6,9 +6,12 @@ import 'package:artemis/enums/image_style.dart';
 import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/model_version.dart';
 import 'package:artemis/enums/scheduler.dart';
+import 'package:artemis/models/user.dart';
 
 class ArtemisInputAPI {
-  BigInt userId;
+  // NOTE: This should be a User class
+  late BigInt userId;
+  User? user;
   String prompt;
   String negativePrompt;
   ImageDimensions imageDimensions;
@@ -55,8 +58,7 @@ class ArtemisInputAPI {
   }
 
   ArtemisInputAPI.fromJson(Map<String, dynamic> json)
-      : userId = BigInt.from(json["user"]),
-        prompt = json["prompt"],
+      : prompt = json["prompt"],
         negativePrompt = json["negativePrompt"] ?? "",
         numOutputs = json["numOutputs"],
         numInferenceSteps = json["numInferenceSteps"],
@@ -68,7 +70,17 @@ class ArtemisInputAPI {
         style = ImageStyle.values.byName(json["style"] ?? "random"),
         value = ImageValue.values.byName(json["value"] ?? "random"),
         saturation = ImageSaturation.values.byName(json["saturation"] ?? "random"),
-        version = StableDiffusionVersion.v2_1; //""StableDiffusionVersion(json["verson"]),
+        version = StableDiffusionVersion.v2_1 //""StableDiffusionVersion(json["verson"]),
+  {
+    if (json["user"] is Map) {
+      user = User.fromJson(json["user"]["user"]);
+      userId = user!.id;
+    } else if (json["user"] is num) {
+      userId = BigInt.from(json["user"]);
+    } else {
+      userId = BigInt.from(0);
+    }
+  }
 
   Map<String, String> toJson() => {
         "user": userId.toString(),

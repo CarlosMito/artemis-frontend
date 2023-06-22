@@ -368,14 +368,14 @@ class ArtemisApiService {
     List<ArtemisOutputAPI> outputs = [];
 
     for (var outputJson in jsonDecode(response.body)) {
-      // try {
-      var inputJson = outputJson["input"];
-      ArtemisInputAPI input = ArtemisInputAPI.fromJson(inputJson);
-      ArtemisOutputAPI output = ArtemisOutputAPI.fromJson(outputJson, input);
-      outputs.add(output);
-      // } catch (e) {
-      //   log("Parsing Error: $e", name: name);
-      // }
+      try {
+        var inputJson = outputJson["input"];
+        ArtemisInputAPI input = ArtemisInputAPI.fromJson(inputJson);
+        ArtemisOutputAPI output = ArtemisOutputAPI.fromJson(outputJson, input);
+        outputs.add(output);
+      } catch (e) {
+        log("Parsing Error: $e", name: name);
+      }
     }
 
     return outputs;

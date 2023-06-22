@@ -89,13 +89,19 @@ class _GridPieceItemState extends State<GridPieceItem> {
                   margin: const EdgeInsets.only(bottom: 8.0),
                   child: GestureDetector(
                     child: GridTileBar(
-                      title: Text(
-                        widget.outputPiece.title!,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontFamily: "Lato",
-                          fontWeight: FontWeight.bold,
+                      title: Flexible(
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 14.0),
+                          child: Text(
+                            overflow: TextOverflow.ellipsis,
+                            widget.outputPiece.title!,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontFamily: "Lato",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       subtitle: Container(
