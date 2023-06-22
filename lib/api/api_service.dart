@@ -105,6 +105,40 @@ class ArtemisApiService {
     return jsonBody;
   }
 
+  static Future<void> updateOutputToPublic(ArtemisOutputAPI output) async {
+    Response response;
+    String name = "updateOutputToPublic";
+    // TODO: Uncomment this later
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}/${output.id}/");
+    // Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}/${117}/");
+
+    log(uri.toString(), name: name);
+
+    String? csrfToken = await ArtemisApiService.fetchCSRFToken();
+
+    if (csrfToken == null) {
+      return;
+    }
+
+    Map<String, String> headers = {'X-CSRFToken': csrfToken};
+    Map<String, String> body = {
+      "is_public": output.isPublic.toString(),
+      "partial": "true",
+    };
+
+    try {
+      response = await http.put(uri, body: body, headers: headers);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 201) {
+        log("Error: ${response.body}", name: name);
+        return;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return;
+    }
+  }
+
   static Future<bool> postProcessing(String inputId) async {
     Response response;
     String name = "postProcessing";

@@ -1,6 +1,7 @@
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 
 class ArtemisOutputAPI {
+  final BigInt id;
   final ArtemisInputAPI input;
   final String image;
   String? title;
@@ -10,6 +11,7 @@ class ArtemisOutputAPI {
   bool isFavorite;
 
   ArtemisOutputAPI({
+    required this.id,
     required this.input,
     required this.image,
     this.title,
@@ -20,9 +22,27 @@ class ArtemisOutputAPI {
   });
 
   ArtemisOutputAPI.fromJson(Map<String, dynamic> json, this.input)
-      : image = json["image"],
+      : id = BigInt.from(json["id"]),
+        image = json["image"],
         isPublic = json["isPublic"],
         favoriteCount = json["favoriteCount"],
         // TODO: change for the json response later
         isFavorite = false;
+
+  // Map<String, String> toJson() => {
+  //       "user": userId.toString(),
+  //       "prompt": prompt,
+  //       "negativePrompt": negativePrompt,
+  //       "imageDimensions": imageDimensions.toReplicateAPI(),
+  //       "numOutputs": numOutputs.toString(),
+  //       "numInferenceSteps": numInferenceSteps.toString(),
+  //       "guidanceScale": guidanceScale.toString(),
+  //       "scheduler": scheduler.toReplicateAPI(),
+  //       "seed": seed.toString(),
+  //       "style": style.name,
+  //       "saturation": saturation.name,
+  //       "value": value.name,
+  //       "colorValue": colorValue.toString(),
+  //       "version": version.value,
+  //     };
 }

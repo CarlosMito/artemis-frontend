@@ -232,48 +232,58 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
       // 1,
       [
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[0],
           image: imageMapping[0]!,
         )
       ],
       [
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[1],
           image: imageMapping[1]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[1],
           image: imageMapping[2]!,
         )
       ],
       [
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[2],
           image: imageMapping[3]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[2],
           image: imageMapping[4]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[2],
           image: imageMapping[5]!,
         )
       ],
       [
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[3],
           image: imageMapping[2]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[3],
           image: imageMapping[1]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[3],
           image: imageMapping[4]!,
         ),
         ArtemisOutputAPI(
+          id: BigInt.zero,
           input: inputs[3],
           image: imageMapping[0]!,
         )

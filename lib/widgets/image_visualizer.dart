@@ -1,3 +1,4 @@
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/utils/confirm_dialog.dart';
@@ -22,6 +23,8 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
   late ArtemisInputAPI _input;
   late int _setIndex;
   late int _imageIndex;
+
+  ArtemisOutputAPI get currentOutput => widget.outputs[_setIndex][_imageIndex];
 
   @override
   void initState() {
@@ -76,7 +79,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           waitDuration: defaultWaitDuration,
           message: "Baixar",
           child: IconButton(
-            onPressed: () => downloadFileFromUrl(widget.outputs[_setIndex][_imageIndex].image),
+            onPressed: () => downloadFileFromUrl(currentOutput.image),
             icon: const Icon(Icons.download),
           ),
         ),
@@ -86,6 +89,35 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           child: IconButton(
             onPressed: () {},
             icon: const Icon(Icons.share),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Tornar Público",
+          child: IconButton(
+            onPressed: () async {
+              bool? toPublic = true;
+
+              if (!currentOutput.isPublic) {
+                toPublic = await showDialog(
+                  context: context,
+                  builder: (context) => const ConfirmDialog(
+                    title: "Tornar público?",
+                    message: "Ao deixar esta obra pública,\ntoda a comunicadade poderá visualizá-la!",
+                  ),
+                );
+              }
+
+              if (toPublic != null && toPublic) {
+                currentOutput.isPublic = !currentOutput.isPublic;
+                await ArtemisApiService.updateOutputToPublic(currentOutput);
+                setState(() {});
+              }
+
+              // var currentOutput = widget.outputs[_setIndex][_imageIndex];
+              // ArtemisApiService.updateOutputToPublic(currentOutput);
+            },
+            icon: Icon(currentOutput.isPublic ? Icons.public : Icons.public_off),
           ),
         ),
         Tooltip(

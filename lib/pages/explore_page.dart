@@ -33,6 +33,7 @@ class _ExplorePageState extends State<ExplorePage> {
     imageMapping.forEach((key, value) {
       if (key is int) {
         publicOutputs.add(ArtemisOutputAPI(
+          id: BigInt.zero,
           image: value,
           title: "Teste $key",
           caption: "@Legenda $key",
