@@ -59,19 +59,58 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
   }
 
   Widget buildToolbar() {
+    Duration defaultWaitDuration = const Duration(milliseconds: 650);
+
     return Row(
       children: [
-        IconButton(
-          onPressed: previousImage,
-          icon: const Icon(Icons.keyboard_arrow_left),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Anterior",
+          child: IconButton(
+            onPressed: previousImage,
+            icon: const Icon(Icons.keyboard_arrow_left),
+          ),
         ),
-        IconButton(onPressed: () => downloadFileFromUrl(widget.outputs[_setIndex][_imageIndex].image), icon: const Icon(Icons.download)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
-        IconButton(
-          onPressed: nextImage,
-          icon: const Icon(
-            Icons.keyboard_arrow_right,
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Baixar",
+          child: IconButton(
+            onPressed: () => downloadFileFromUrl(widget.outputs[_setIndex][_imageIndex].image),
+            icon: const Icon(Icons.download),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Compartilhar",
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.share),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Favoritar",
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.favorite_border),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Recriar",
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.refresh),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
+          message: "Próximo",
+          child: IconButton(
+            onPressed: nextImage,
+            icon: const Icon(
+              Icons.keyboard_arrow_right,
+            ),
           ),
         ),
       ],
@@ -96,9 +135,12 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                         width: 5,
                       ),
                     ),
-                    child: ArtemisNetworkImage(
-                      widget.outputs[_setIndex][_imageIndex].image,
-                      progressColor: Colors.white,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: ArtemisNetworkImage(
+                        widget.outputs[_setIndex][_imageIndex].image,
+                        progressColor: Colors.white,
+                      ),
                     ),
                   ),
                 ),

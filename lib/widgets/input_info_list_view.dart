@@ -173,9 +173,13 @@ class _PromptTextBlockState extends State<PromptTextBlock> {
 
                     // ScaffoldMessenger.of(currentContext ?? context).showSnackBar(snackBar);
                   },
-                  child: const Icon(
-                    Icons.copy,
-                    size: 22,
+                  child: const Tooltip(
+                    message: "Copiar",
+                    waitDuration: Duration(milliseconds: 650),
+                    child: Icon(
+                      Icons.copy,
+                      size: 22,
+                    ),
                   ),
                 ),
               )
@@ -195,79 +199,3 @@ class _PromptTextBlockState extends State<PromptTextBlock> {
     );
   }
 }
-
-
-
-// class PromptTextBlock extends StatelessWidget {
-//   final String title;
-//   final String text;
-
-//   const PromptTextBlock({super.key, required this.title, required this.text});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(14),
-//       decoration: BoxDecoration(
-//         border: Border.all(),
-//         borderRadius: BorderRadius.circular(8),
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Row(
-//             children: [
-//               Text(
-//                 title,
-//                 style: const TextStyle(
-//                   fontFamily: "Lexend",
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               const Spacer(),
-//               MouseRegion(
-//                 cursor: SystemMouseCursors.click,
-//                 child: GestureDetector(
-//                   onTap: () async {
-//                     await Clipboard.setData(ClipboardData(text: text));
-
-//                     Future.delayed(const Duration(seconds: 3), () async {});
-
-//                     // NOTE: I tried using Fluttertoast, but I didn't like the result for the web (I couldn't change the font family)
-//                     // const snackBar = SnackBar(
-//                     //   content: Text(
-//                     //     "Copiado para a área de transferência!",
-//                     //     style: TextStyle(fontFamily: "Lexend"),
-//                     //   ),
-//                     //   // action: SnackBarAction(
-//                     //   //   label: 'Undo',
-//                     //   //   onPressed: () {
-//                     //   //     // Some code to undo the change.
-//                     //   //   },
-//                     //   // ),
-//                     // );
-
-//                     // ScaffoldMessenger.of(currentContext ?? context).showSnackBar(snackBar);
-//                   },
-//                   child: const Icon(
-//                     Icons.copy,
-//                     size: 22,
-//                   ),
-//                 ),
-//               )
-//             ],
-//           ),
-//           const SizedBox(height: 10),
-//           SelectionArea(
-//             child: Text(
-//               text,
-//               style: const TextStyle(
-//                 fontFamily: "Lexend",
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

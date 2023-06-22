@@ -33,11 +33,21 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
                       child: Hero(
                         key: Key(widget.piece.image),
                         tag: widget.piece.id,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12.0),
-                          child: ArtemisNetworkImage(
-                            widget.piece.image,
-                            progressColor: Colors.black,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 5,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: ArtemisNetworkImage(
+                              widget.piece.image,
+                              progressColor: Colors.white,
+                            ),
                           ),
                         ),
                       ),
