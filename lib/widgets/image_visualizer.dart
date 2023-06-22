@@ -1,12 +1,10 @@
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
+import 'package:artemis/utils/image_downloader.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 class ImageVisualizer extends StatefulWidget {
   final List<List<ArtemisOutputAPI>> outputs;
@@ -60,12 +58,6 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
     }
   }
 
-  void downloadFile(String url) {
-    html.AnchorElement anchorElement = html.AnchorElement(href: url);
-    anchorElement.download = url;
-    anchorElement.click();
-  }
-
   Widget buildToolbar() {
     return Row(
       children: [
@@ -73,7 +65,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           onPressed: previousImage,
           icon: const Icon(Icons.keyboard_arrow_left),
         ),
-        IconButton(onPressed: () => downloadFile(widget.outputs[_setIndex][_imageIndex].image), icon: const Icon(Icons.download)),
+        IconButton(onPressed: () => downloadFileFromUrl(widget.outputs[_setIndex][_imageIndex].image), icon: const Icon(Icons.download)),
         IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
         IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
         IconButton(

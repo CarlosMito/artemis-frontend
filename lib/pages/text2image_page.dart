@@ -13,6 +13,7 @@ import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
 import 'package:artemis/utils/custom_range_text_input_formatter.dart';
+import 'package:artemis/utils/image_downloader.dart';
 import 'package:artemis/utils/radio_controller.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
@@ -26,6 +27,7 @@ import 'package:artemis/widgets/radio_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:archive/archive_io.dart';
 
 import '../utils/maps.dart';
 
@@ -56,6 +58,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
   final RadioController _saturations = RadioController(radioModels: <RadioModel<ImageSaturation>>[]);
   final RadioController _values = RadioController(radioModels: <RadioModel<ImageValue>>[]);
   final RadioController _versions = RadioController(radioModels: <RadioModel<StableDiffusionVersion>>[]);
+
+  bool isProcessingDownload = false;
 
   Future<void> _updateStatus([int? inputId]) async {
     var targetId = inputId ?? _outputs[0];
@@ -389,6 +393,37 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
   }
 
+  void _downloadImagesAsZip(List<String> urls) async {
+    final archive = Archive();
+
+    setState(() {
+      isProcessingDownload = true;
+    });
+
+    try {
+      // Add files to the archive
+      for (String url in urls) {
+        String filename = url.split("/").last;
+        final imageBytes = await readImageAsBytes(url);
+        archive.addFile(ArchiveFile(filename, imageBytes.length, imageBytes));
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+
+    try {
+      // Create the zip file
+      final zipData = ZipEncoder().encode(archive);
+      downloadFileFromBytes("myGenerations.zip", zipData!);
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      setState(() {
+        isProcessingDownload = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -654,19 +689,43 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         ),
                       ),
                       Container(
+                        height: 38,
+                        width: 38,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
                           border: Border.all(color: Colors.white),
                         ),
-                        child: IconButton(
-                          onPressed: () {
-                            log("Download all!");
-                          },
-                          icon: const Icon(
-                            Icons.download,
-                            color: Colors.white,
-                            size: 18.0,
-                          ),
+                        child: Center(
+                          child: isProcessingDownload
+                              ? const Icon(
+                                  Icons.more_horiz,
+                                  color: Colors.white,
+                                  size: 18.0,
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    log("Download all!");
+
+                                    List<String> imagesUrls = [];
+
+                                    for (final outputset in _outputs) {
+                                      if (outputset == null) continue;
+
+                                      for (final output in outputset as List<ArtemisOutputAPI>) {
+                                        imagesUrls.add(output.image);
+                                      }
+                                    }
+
+                                    log(imagesUrls.toString());
+
+                                    _downloadImagesAsZip(imagesUrls);
+                                  },
+                                  icon: const Icon(
+                                    Icons.download,
+                                    color: Colors.white,
+                                    size: 18.0,
+                                  ),
+                                ),
                         ),
                       )
                     ],
