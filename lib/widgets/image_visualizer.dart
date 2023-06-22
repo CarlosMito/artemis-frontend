@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
@@ -83,14 +85,14 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
             icon: const Icon(Icons.download),
           ),
         ),
-        Tooltip(
-          waitDuration: defaultWaitDuration,
-          message: "Compartilhar",
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share),
-          ),
-        ),
+        // Tooltip(
+        //   waitDuration: defaultWaitDuration,
+        //   message: "Compartilhar",
+        //   child: IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(Icons.share),
+        //   ),
+        // ),
         Tooltip(
           waitDuration: defaultWaitDuration,
           message: "Tornar Público",
@@ -124,8 +126,10 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           waitDuration: defaultWaitDuration,
           message: "Favoritar",
           child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
+            onPressed: () {
+              log(currentOutput.isFavorite.toString());
+            },
+            icon: Icon(currentOutput.isFavorite ? Icons.favorite : Icons.favorite_border),
           ),
         ),
         Tooltip(

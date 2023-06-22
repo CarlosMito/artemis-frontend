@@ -18,6 +18,7 @@ class ArtemisApiConstants {
     postProcessing: "api/post-processing",
     loggedUser: "api/logged-in-user",
     publicOutputs: "api/public-outputs",
+    favorites: "api/favorites",
   );
 }
 
@@ -32,6 +33,7 @@ class Endpoints {
   final String? signup;
   final String? loggedUser;
   final String? publicOutputs;
+  final String? favorites;
 
   const Endpoints({
     this.text2image,
@@ -44,5 +46,6 @@ class Endpoints {
     this.signup,
     this.loggedUser,
     this.publicOutputs,
+    this.favorites,
   });
 }
