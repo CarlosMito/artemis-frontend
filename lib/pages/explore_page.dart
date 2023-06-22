@@ -5,6 +5,7 @@ import 'package:artemis/enums/image_value.dart';
 import 'package:artemis/enums/scheduler.dart';
 import 'package:artemis/models/piece.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
+import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/models/user.dart';
 import 'package:artemis/utils/maps.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
@@ -21,7 +22,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  List<DisplayPiece> pieces = <DisplayPiece>[];
+  List<ArtemisOutputAPI> pieces = <ArtemisOutputAPI>[];
 
   @override
   void initState() {
@@ -29,7 +30,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
     imageMapping.forEach((key, value) {
       if (key is int) {
-        pieces.add(DisplayPiece(
+        pieces.add(ArtemisOutputAPI(
           image: value,
           title: "Teste $key",
           caption: "@Legenda $key",
@@ -77,10 +78,10 @@ class _ExplorePageState extends State<ExplorePage> {
                 crossAxisSpacing: 10.0,
                 padding: const EdgeInsets.all(10.0),
                 childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
-                children: pieces.map<Widget>((DisplayPiece piece) {
+                children: pieces.map<Widget>((ArtemisOutputAPI piece) {
                   return GridPieceItem(
-                    piece: piece,
-                    onBannerTap: (DisplayPiece piece) {
+                    outputPiece: piece,
+                    onBannerTap: (ArtemisOutputAPI piece) {
                       setState(() {
                         piece.isFavorite = !piece.isFavorite;
                       });

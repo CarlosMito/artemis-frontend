@@ -1,13 +1,14 @@
 import 'package:artemis/models/piece.dart';
+import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 
 class GridPieceViewer extends StatefulWidget {
-  const GridPieceViewer({Key? key, required this.piece}) : super(key: key);
+  const GridPieceViewer({Key? key, required this.outputPiece}) : super(key: key);
 
-  final DisplayPiece piece;
+  final ArtemisOutputAPI outputPiece;
 
   @override
   State<GridPieceViewer> createState() => _GridPieceViewerState();
@@ -31,8 +32,8 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
                   children: [
                     Expanded(
                       child: Hero(
-                        key: Key(widget.piece.image),
-                        tag: widget.piece.id,
+                        key: Key(widget.outputPiece.image),
+                        tag: widget.outputPiece.image,
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.black,
@@ -45,7 +46,7 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(6),
                             child: ArtemisNetworkImage(
-                              widget.piece.image,
+                              widget.outputPiece.image,
                               progressColor: Colors.white,
                             ),
                           ),
@@ -68,7 +69,7 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                child: InputInfoListView(input: widget.piece.input),
+                child: InputInfoListView(input: widget.outputPiece.input),
               ),
             ),
           ],

@@ -1,16 +1,17 @@
 import 'package:artemis/models/piece.dart';
+import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'grid_piece_viewer.dart';
 
-typedef BannerTapCallback = void Function(DisplayPiece piece);
+typedef BannerTapCallback = void Function(ArtemisOutputAPI piece);
 
 class GridPieceItem extends StatefulWidget {
-  final DisplayPiece piece;
+  final ArtemisOutputAPI outputPiece;
   final BannerTapCallback onBannerTap;
 
-  const GridPieceItem({super.key, required this.piece, required this.onBannerTap});
+  const GridPieceItem({super.key, required this.outputPiece, required this.onBannerTap});
 
   @override
   State<GridPieceItem> createState() => _GridPieceItemState();
@@ -22,7 +23,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
   void showPhoto(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (BuildContext context) {
-        return GridPieceViewer(piece: widget.piece);
+        return GridPieceViewer(outputPiece: widget.outputPiece);
       }),
     );
   }
@@ -39,12 +40,12 @@ class _GridPieceItemState extends State<GridPieceItem> {
             height: double.infinity,
             width: double.infinity,
             child: Semantics(
-              label: '${widget.piece.title} - ${widget.piece.caption}',
+              label: '${widget.outputPiece.title} - ${widget.outputPiece.caption}',
               child: Hero(
-                key: Key(widget.piece.image),
-                tag: widget.piece.id,
+                key: Key(widget.outputPiece.image),
+                tag: widget.outputPiece.image,
                 child: ArtemisNetworkImage(
-                  widget.piece.image,
+                  widget.outputPiece.image,
                   progressColor: Colors.black,
                 ),
               ),
@@ -55,7 +56,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
       ),
     );
 
-    final IconData icon = widget.piece.isFavorite ? Icons.favorite : Icons.favorite_border;
+    final IconData icon = widget.outputPiece.isFavorite ? Icons.favorite : Icons.favorite_border;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -78,7 +79,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
                 ? GridTileBar(
                     title: const SizedBox.shrink(),
                     trailing: IconButton(
-                      onPressed: () => widget.onBannerTap(widget.piece),
+                      onPressed: () => widget.onBannerTap(widget.outputPiece),
                       icon: Icon(icon, color: Colors.white),
                     ),
                   )
@@ -90,7 +91,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
                   child: GestureDetector(
                     child: GridTileBar(
                       title: Text(
-                        widget.piece.title!,
+                        widget.outputPiece.title!,
                         style: const TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -101,7 +102,7 @@ class _GridPieceItemState extends State<GridPieceItem> {
                       subtitle: Container(
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
-                          widget.piece.caption!,
+                          widget.outputPiece.caption!,
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
