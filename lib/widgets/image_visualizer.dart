@@ -133,24 +133,23 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           message: "Recriar",
           child: IconButton(
             onPressed: () async {
-              // TODO: Uncomment this later
-              // bool? result = await showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return const ConfirmDialog(
-              //       title: "Recriar obra?",
-              //       message: "Esta ação irá sobrescrever os campos\natualmente preenchidos!",
-              //     );
-              //   },
-              // );
+              bool? result = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const ConfirmDialog(
+                    title: "Recriar obra?",
+                    message: "Esta ação irá sobrescrever os campos\npreenchidos no momento!",
+                  );
+                },
+              );
 
-              // if (result != null && result && context.mounted) {
-              //   var currentOutput = widget.outputs[_setIndex][_imageIndex];
-              //   Navigator.of(context).pop(currentOutput.input);
-              // }
+              if (result != null && result && context.mounted) {
+                var currentOutput = widget.outputs[_setIndex][_imageIndex];
+                Navigator.of(context).pop(currentOutput.input);
+              }
 
-              var currentOutput = widget.outputs[_setIndex][_imageIndex];
-              Navigator.of(context).pop(currentOutput.input);
+              // var currentOutput = widget.outputs[_setIndex][_imageIndex];
+              // Navigator.of(context).pop(currentOutput.input);
             },
             icon: const Icon(Icons.refresh),
           ),

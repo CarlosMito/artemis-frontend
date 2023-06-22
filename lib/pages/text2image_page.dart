@@ -321,8 +321,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     super.initState();
 
     _initRadioControllers();
-    _createExampleData();
-    // _getCreations();
+    // _createExampleData();
+    // _outputs[0] = null;
+    // _outputs = _outputs.sublist(0, 2);
+    _getCreations();
 
     if (widget.startingInput != null) {
       updateInput(widget.startingInput!);
@@ -483,49 +485,49 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
               body: ListView(
                 padding: const EdgeInsets.all(50),
                 children: [
-                  Wrap(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _postProcessing(42),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                        ),
-                        child: const Text("POST PROCESSING"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _updateStatus(39),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                        ),
-                        child: const Text("UPDATE STATUS"),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                        ),
-                        onPressed: _generateImage,
-                        child: const Text("GENERATE IMAGE"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _getCreations(),
-                        child: const Text("GET OUTPUTS"),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pink,
-                        ),
-                        onPressed: _loginArtemis,
-                        child: const Text("LOGIN"),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                        ),
-                        onPressed: _logoutArtemis,
-                        child: const Text("LOGOUT"),
-                      ),
-                    ],
-                  ),
+                  // Wrap(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       onPressed: () => _postProcessing(42),
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.teal,
+                  //       ),
+                  //       child: const Text("POST PROCESSING"),
+                  //     ),
+                  //     ElevatedButton(
+                  //       onPressed: () => _updateStatus(39),
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.purple,
+                  //       ),
+                  //       child: const Text("UPDATE STATUS"),
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.orange,
+                  //       ),
+                  //       onPressed: _generateImage,
+                  //       child: const Text("GENERATE IMAGE"),
+                  //     ),
+                  //     ElevatedButton(
+                  //       onPressed: () => _getCreations(),
+                  //       child: const Text("GET OUTPUTS"),
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.pink,
+                  //       ),
+                  //       onPressed: _loginArtemis,
+                  //       child: const Text("LOGIN"),
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.black,
+                  //       ),
+                  //       onPressed: _logoutArtemis,
+                  //       child: const Text("LOGOUT"),
+                  //     ),
+                  //   ],
+                  // ),
                   Container(
                     margin: const EdgeInsets.all(60),
                     alignment: Alignment.center,
@@ -773,17 +775,20 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         if (_outputs[i] == null) return const SizedBox.shrink();
 
                         if (_outputs[i].runtimeType == int) {
-                          return AspectRatio(
-                            aspectRatio: 1,
-                            child: Container(
-                              padding: const EdgeInsets.all(2.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(color: Colors.white),
-                              ),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
+                          return Container(
+                            margin: const EdgeInsets.only(top: 16),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Container(
+                                padding: const EdgeInsets.all(2.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  border: Border.all(color: Colors.white),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),

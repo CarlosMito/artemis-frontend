@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ConfirmDialog extends StatelessWidget {
   final String message;
@@ -8,19 +9,28 @@ class ConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(title ?? "Confirmação"),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: Navigator.of(context).pop,
-          child: const Text("Cancelar"),
-        ),
-        TextButton(
-          child: const Text("Confirmar"),
-          onPressed: () => Navigator.of(context).pop(true),
-        ),
-      ],
+    return RawKeyboardListener(
+      autofocus: true,
+      focusNode: FocusNode(),
+      onKey: (RawKeyEvent event) {
+        if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+          Navigator.of(context).pop(true);
+        }
+      },
+      child: AlertDialog(
+        title: Text(title ?? "Confirmação"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            child: const Text("Confirmar"),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
     );
   }
 }

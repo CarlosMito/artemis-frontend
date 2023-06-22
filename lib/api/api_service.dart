@@ -108,9 +108,7 @@ class ArtemisApiService {
   static Future<void> updateOutputToPublic(ArtemisOutputAPI output) async {
     Response response;
     String name = "updateOutputToPublic";
-    // TODO: Uncomment this later
     Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}/${output.id}/");
-    // Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}/${117}/");
 
     log(uri.toString(), name: name);
 
