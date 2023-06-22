@@ -27,8 +27,13 @@ class Artemis extends StatelessWidget {
         VWidget(path: "/about", widget: const LandingPage(startingSection: LandingSection.about)),
         VWidget(path: "/contact-me", widget: const LandingPage(startingSection: LandingSection.contactMe)),
         VWidget(path: "/explore", widget: const ExplorePage()),
-        VWidget(path: "/text2image", widget: const Text2ImagePage()),
-        // This redirect every unknown routes to /home
+        VWidget.builder(
+          path: "/text2image",
+          builder: (context, state) {
+            // debugPrint(ModalRoute.of(context)!.settings.arguments.toString());
+            return const Text2ImagePage();
+          },
+        ),
         VRouteRedirector(
           redirectTo: "/home",
           path: r'*',

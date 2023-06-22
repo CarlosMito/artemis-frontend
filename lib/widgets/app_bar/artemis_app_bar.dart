@@ -195,6 +195,7 @@ class _CustomAppBarState extends State<ArtemisAppBar> {
                           PopupMenuButton<String>(
                             elevation: 0,
                             position: PopupMenuPosition.under,
+                            tooltip: "Mostrar menu",
                             child: Container(
                               padding: const EdgeInsets.all(3),
                               decoration: BoxDecoration(

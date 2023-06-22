@@ -1,5 +1,6 @@
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
+import 'package:artemis/utils/confirm_dialog.dart';
 import 'package:artemis/utils/image_downloader.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
@@ -99,7 +100,26 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           waitDuration: defaultWaitDuration,
           message: "Recriar",
           child: IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              // TODO: Uncomment this later
+              // bool? result = await showDialog(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return const ConfirmDialog(
+              //       title: "Recriar obra?",
+              //       message: "Esta ação irá sobrescrever os campos\natualmente preenchidos!",
+              //     );
+              //   },
+              // );
+
+              // if (result != null && result && context.mounted) {
+              //   var currentOutput = widget.outputs[_setIndex][_imageIndex];
+              //   Navigator.of(context).pop(currentOutput.input);
+              // }
+
+              var currentOutput = widget.outputs[_setIndex][_imageIndex];
+              Navigator.of(context).pop(currentOutput.input);
+            },
             icon: const Icon(Icons.refresh),
           ),
         ),

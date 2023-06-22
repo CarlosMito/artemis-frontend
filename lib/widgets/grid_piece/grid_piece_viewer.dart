@@ -4,6 +4,7 @@ import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:vrouter/vrouter.dart';
 
 class GridPieceViewer extends StatefulWidget {
   const GridPieceViewer({Key? key, required this.outputPiece}) : super(key: key);
@@ -53,7 +54,18 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
           waitDuration: defaultWaitDuration,
           message: "Recriar",
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Navigator.
+              // context.vRouter.to('/text2image', queryParameters: {"A": "A"});
+              // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string"]);
+              // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
+              // Navigator.of(context).push("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
+
+              context.vRouter.to("/text2image");
+              // context.vRouter.toExternal(url)
+              // context.vRouter.toSegments(segments)
+              // context.vRouter.toNamed(name)
+            },
             icon: const Icon(Icons.refresh),
           ),
         ),

@@ -32,7 +32,8 @@ import 'package:archive/archive_io.dart';
 import '../utils/maps.dart';
 
 class Text2ImagePage extends StatefulWidget {
-  const Text2ImagePage({super.key});
+  final ArtemisInputAPI? startingInput;
+  const Text2ImagePage({super.key, this.startingInput});
 
   @override
   State<Text2ImagePage> createState() => _Text2ImagePageState();
@@ -312,6 +313,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     _initRadioControllers();
     _createExampleData();
     // _getCreations();
+
+    if (widget.startingInput != null) {
+      updateInput(widget.startingInput!);
+    }
   }
 
   @override
@@ -422,6 +427,23 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
         isProcessingDownload = false;
       });
     }
+  }
+
+  void updateInput(ArtemisInputAPI input) {
+    setState(() {
+      promptController.text = input.prompt;
+      negativePromptController.text = input.negativePrompt;
+      seedController.text = input.seed.toString();
+      guidanceScaleController.text = input.guidanceScale.toString();
+      numInferenceStepsController.text = input.numInferenceSteps.toString();
+      _imageDimensions.selectTarget(input.imageDimensions);
+      _numOutputs.selectTarget(input.numOutputs);
+      _schedulers.selectTarget(input.scheduler);
+      _styles.selectTarget(input.style);
+      _saturations.selectTarget(input.saturation);
+      _values.selectTarget(input.value);
+      _colors.selectTarget(input.colorValue);
+    });
   }
 
   @override
@@ -784,8 +806,8 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                             MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
+                                onTap: () async {
+                                  ArtemisInputAPI? recreationInput = await showDialog(
                                     context: context,
                                     builder: (BuildContext currentContext) {
                                       return ImageVisualizer(
@@ -795,6 +817,10 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                       );
                                     },
                                   );
+
+                                  if (recreationInput != null) {
+                                    updateInput(recreationInput);
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
