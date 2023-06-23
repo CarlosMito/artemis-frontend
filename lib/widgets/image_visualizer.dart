@@ -33,7 +33,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
     super.initState();
     _setIndex = widget.setIndex;
     _imageIndex = widget.imageIndex;
-    _input = widget.outputs[_setIndex][_imageIndex].input;
+    _input = currentOutput.input;
   }
 
   void previousImage() {
@@ -45,7 +45,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
       setState(() {
         _setIndex -= 1;
         _imageIndex = widget.outputs[_setIndex].length - 1;
-        _input = widget.outputs[_setIndex][_imageIndex].input;
+        _input = currentOutput.input;
       });
     }
   }
@@ -59,7 +59,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
       setState(() {
         _imageIndex = 0;
         _setIndex += 1;
-        _input = widget.outputs[_setIndex][_imageIndex].input;
+        _input = currentOutput.input;
       });
     }
   }
@@ -95,6 +95,29 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
         // ),
         Tooltip(
           waitDuration: defaultWaitDuration,
+          message: "Excluir",
+          child: IconButton(
+            onPressed: () async {
+              var doDelete = await showDialog(
+                context: context,
+                builder: (_) => const ConfirmDialog(
+                  message: "Você tem certeza que deseja excluir esta criação?",
+                ),
+              );
+
+              if (doDelete != null && doDelete) {
+                var result = await ArtemisApiService.deleteOutput(currentOutput.id);
+
+                if (context.mounted && result != null && result.containsKey("message")) {
+                  Navigator.of(context).pop(ArtemisInputAPI(prompt: "", userId: BigInt.zero));
+                }
+              }
+            },
+            icon: const Icon(Icons.delete_forever),
+          ),
+        ),
+        Tooltip(
+          waitDuration: defaultWaitDuration,
           message: "Tornar Público",
           child: IconButton(
             onPressed: () async {
@@ -115,9 +138,6 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                 await ArtemisApiService.updateOutputToPublic(currentOutput);
                 setState(() {});
               }
-
-              // var currentOutput = widget.outputs[_setIndex][_imageIndex];
-              // ArtemisApiService.updateOutputToPublic(currentOutput);
             },
             icon: Icon(currentOutput.isPublic ? Icons.public : Icons.public_off),
           ),
@@ -152,12 +172,8 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
               );
 
               if (result != null && result && context.mounted) {
-                var currentOutput = widget.outputs[_setIndex][_imageIndex];
                 Navigator.of(context).pop(currentOutput.input);
               }
-
-              // var currentOutput = widget.outputs[_setIndex][_imageIndex];
-              // Navigator.of(context).pop(currentOutput.input);
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -197,7 +213,7 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: ArtemisNetworkImage(
-                        widget.outputs[_setIndex][_imageIndex].image,
+                        currentOutput.image,
                         progressColor: Colors.white,
                       ),
                     ),
@@ -214,7 +230,31 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
             children: [
               Container(
                 padding: const EdgeInsets.only(bottom: 50),
-                child: InputInfoListView(input: _input),
+                child: InputInfoListView(
+                  input: _input,
+                  // bottomWidget: Tooltip(
+                  //   waitDuration: const Duration(milliseconds: 650),
+                  //   message: "Excluir",
+                  //   child: Container(
+                  //     margin: const EdgeInsets.only(top: 20),
+                  //     padding: const EdgeInsets.all(6.0),
+                  //     decoration: const BoxDecoration(
+                  //       color: Colors.red,
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     child: Center(
+                  //       child: IconButton(
+                  //         onPressed: () {},
+                  //         iconSize: 26,
+                  //         icon: const Icon(
+                  //           Icons.delete_forever,
+                  //           color: Colors.white,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                ),
               ),
               Positioned(
                 right: 0,

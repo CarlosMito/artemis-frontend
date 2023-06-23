@@ -13,8 +13,9 @@ import 'package:flutter/services.dart';
 
 class InputInfoListView extends StatelessWidget {
   final ArtemisInputAPI input;
+  final Widget? bottomWidget;
 
-  const InputInfoListView({super.key, required this.input});
+  const InputInfoListView({super.key, required this.input, this.bottomWidget});
 
   List<DisplayImageOption> buildDisplayImageOptions() {
     List<DisplayImageOption> imageOptions = [];
@@ -91,7 +92,8 @@ class InputInfoListView extends StatelessWidget {
           runSpacing: 10,
           alignment: WrapAlignment.center,
           children: buildDisplayImageOptions(),
-        )
+        ),
+        if (bottomWidget != null) bottomWidget!,
       ],
     );
   }

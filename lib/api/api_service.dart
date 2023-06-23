@@ -413,6 +413,36 @@ class ArtemisApiService {
     return outputs;
   }
 
+  static Future<Map<String, dynamic>?> deleteOutput(BigInt outputId) async {
+    Response response;
+    String name = "deleteOutput";
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.outputs}/$outputId");
+
+    log(uri.toString(), name: name);
+
+    String? csrfToken = await ArtemisApiService.fetchCSRFToken();
+
+    if (csrfToken == null) {
+      return null;
+    }
+
+    Map<String, String> headers = {'X-CSRFToken': csrfToken};
+
+    try {
+      response = await http.delete(uri, headers: headers);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 204) {
+        log("Error: ${response.body}", name: name);
+        return null;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return null;
+    }
+
+    return {"message": "Excluded successfully!"};
+  }
+
   static Future<Map<String, dynamic>?> saveFavorite(BigInt outputId) async {
     Response response;
     String name = "saveFavorite";

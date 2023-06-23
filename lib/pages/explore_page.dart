@@ -39,7 +39,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const ArtemisAppBar().preferredSize,
-        child: const ArtemisAppBar(),
+        child: ArtemisAppBar(onLogin: _getPublicOutputs, onLogout: _getPublicOutputs),
       ),
       body: Column(
         children: <Widget>[

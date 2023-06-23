@@ -839,7 +839,11 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                                   );
 
                                   if (recreationInput != null) {
-                                    updateInput(recreationInput);
+                                    if (recreationInput.userId.toInt() == 0) {
+                                      _getCreations();
+                                    } else {
+                                      updateInput(recreationInput);
+                                    }
                                   }
                                 },
                                 child: Container(
