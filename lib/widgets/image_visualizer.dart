@@ -126,8 +126,8 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           waitDuration: defaultWaitDuration,
           message: "Favoritar",
           child: IconButton(
-            onPressed: () async {
-              await ArtemisApiService.saveFavorite(currentOutput.id);
+            onPressed: () {
+              ArtemisApiService.saveFavorite(currentOutput.id);
 
               setState(() {
                 currentOutput.isFavorite = !currentOutput.isFavorite;

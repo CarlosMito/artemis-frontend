@@ -471,17 +471,14 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
           Expanded(
             child: Scaffold(
               floatingActionButton: FloatingActionButton.extended(
-                onPressed: () async {
-                  await ArtemisApiService.saveFavorite(BigInt.from(119));
-                },
-                // onPressed: () {
-                //   if (promptController.text.isEmpty) {
-                //     showAlertDialog();
-                //     return;
-                //   }
+                onPressed: () {
+                  if (promptController.text.isEmpty) {
+                    showAlertDialog();
+                    return;
+                  }
 
-                //   _generateImage();
-                // },
+                  _generateImage();
+                },
                 icon: const Icon(Icons.send),
                 label: const Text("Gerar Imagem"),
                 backgroundColor: const Color.fromARGB(255, 10, 150, 200),

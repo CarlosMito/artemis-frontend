@@ -77,9 +77,13 @@ class _GridPieceItemState extends State<GridPieceItem> {
             child: _onHover
                 ? GridTileBar(
                     title: const SizedBox.shrink(),
-                    trailing: IconButton(
-                      onPressed: () => widget.onBannerTap(widget.outputPiece),
-                      icon: Icon(icon, color: Colors.white),
+                    trailing: Tooltip(
+                      message: "Favoritar",
+                      waitDuration: const Duration(milliseconds: 650),
+                      child: IconButton(
+                        onPressed: () => widget.onBannerTap(widget.outputPiece),
+                        icon: Icon(icon, color: Colors.white),
+                      ),
                     ),
                   )
                 : const SizedBox.shrink(),
