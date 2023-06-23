@@ -2,6 +2,7 @@ import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SignDialog extends StatefulWidget {
   final SignType signType;
@@ -98,193 +99,202 @@ class _SignDialogState extends State<SignDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
-      content: Builder(
-        builder: (context) {
-          return Stack(
-            children: [
-              Positioned(
-                right: 0,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(Icons.close),
+    return RawKeyboardListener(
+      autofocus: true,
+      focusNode: FocusNode(),
+      onKey: (RawKeyEvent event) {
+        if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+          _isSignup ? _signupArtemis() : _loginArtemis();
+        }
+      },
+      child: AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14))),
+        content: Builder(
+          builder: (context) {
+            return Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
                 ),
-              ),
-              Container(
-                // height: 540,
-                width: 320,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 30, top: 20),
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            bottom: 2,
-                            child: Container(
-                              height: 4,
-                              width: 40,
-                              color: const Color.fromARGB(255, 216, 143, 0),
+                Container(
+                  // height: 540,
+                  width: 320,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 30, top: 20),
+                        width: double.infinity,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              bottom: 2,
+                              child: Container(
+                                height: 4,
+                                width: 40,
+                                color: const Color.fromARGB(255, 216, 143, 0),
+                              ),
                             ),
-                          ),
-                          Text(
-                            _title,
-                            style: const TextStyle(
-                              fontFamily: "Righteous",
-                              fontSize: 34,
+                            Text(
+                              _title,
+                              style: const TextStyle(
+                                fontFamily: "Righteous",
+                                fontSize: 34,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SignTextField(
-                      labelText: "Usuário",
-                      controller: _usernameController,
-                      errorText: errorUsername,
-                    ),
-                    const SizedBox(height: 12),
-                    if (_isSignup)
-                      Column(
-                        children: [
-                          SignTextField(
-                            labelText: "E-mail",
-                            controller: _emailController,
-                            errorText: errorEmail,
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    SignTextField(
-                      labelText: "Senha",
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      errorText: errorPassword,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          ],
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (_isSignup)
                       SignTextField(
-                        labelText: "Confirmar Senha",
-                        controller: _confirmPasswordController,
+                        labelText: "Usuário",
+                        controller: _usernameController,
+                        errorText: errorUsername,
+                      ),
+                      const SizedBox(height: 12),
+                      if (_isSignup)
+                        Column(
+                          children: [
+                            SignTextField(
+                              labelText: "E-mail",
+                              controller: _emailController,
+                              errorText: errorEmail,
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        ),
+                      SignTextField(
+                        labelText: "Senha",
+                        controller: _passwordController,
                         obscureText: !_isPasswordVisible,
+                        errorText: errorPassword,
                         enableSuggestions: false,
                         autocorrect: false,
-                      ),
-                    if (errorLogin != null)
-                      Text(
-                        errorLogin!,
-                        style: const TextStyle(
-                          fontFamily: "Lexend",
-                          fontSize: 14,
-                          color: Colors.red,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
                         ),
                       ),
-                    SizedBox(height: _isSignup ? 24 : 12),
-                    ElevatedButton(
-                      onPressed: _isSignup ? _signupArtemis : _loginArtemis,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 216, 143, 0),
-                        padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),
-                      ),
-                      child: const Text(
-                        "Confirmar",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-                    // NOTE: This is the google signup button. I'm not gonna do it now.
-                    // MouseRegion(
-                    //   cursor: SystemMouseCursors.click,
-                    //   child: GestureDetector(
-                    //     onTap: () {},
-                    //     child: Container(
-                    //       width: double.infinity,
-                    //       padding: const EdgeInsets.symmetric(vertical: 10),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(4),
-                    //         border: Border.all(
-                    //           color: Colors.black,
-                    //           width: 1.5,
-                    //         ),
-                    //       ),
-                    //       child: Row(
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         children: [
-                    //           SizedBox.square(
-                    //             dimension: 18,
-                    //             child: Image.asset(
-                    //               "assets/images/logos/google.png",
-                    //             ),
-                    //           ),
-                    //           const SizedBox(width: 10),
-                    //           const Text(
-                    //             "Continuar com o Google",
-                    //             style: TextStyle(
-                    //               color: Colors.black,
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(height: 8),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _preText,
-                            style: const TextStyle(
-                              fontSize: 13,
-                            ),
+                      const SizedBox(height: 12),
+                      if (_isSignup)
+                        SignTextField(
+                          labelText: "Confirmar Senha",
+                          controller: _confirmPasswordController,
+                          obscureText: !_isPasswordVisible,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                        ),
+                      if (errorLogin != null)
+                        Text(
+                          errorLogin!,
+                          style: const TextStyle(
+                            fontFamily: "Lexend",
+                            fontSize: 14,
+                            color: Colors.red,
                           ),
-                          MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isSignup = !_isSignup;
-                                  errorUsername = null;
-                                });
-                              },
-                              child: Text(
-                                _posText,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Color.fromARGB(255, 0, 161, 197),
+                        ),
+                      SizedBox(height: _isSignup ? 24 : 12),
+                      ElevatedButton(
+                        onPressed: _isSignup ? _signupArtemis : _loginArtemis,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 216, 143, 0),
+                          padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 58),
+                        ),
+                        child: const Text(
+                          "Confirmar",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+                      // NOTE: This is the google signup button. I'm not gonna do it now.
+                      // MouseRegion(
+                      //   cursor: SystemMouseCursors.click,
+                      //   child: GestureDetector(
+                      //     onTap: () {},
+                      //     child: Container(
+                      //       width: double.infinity,
+                      //       padding: const EdgeInsets.symmetric(vertical: 10),
+                      //       decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(4),
+                      //         border: Border.all(
+                      //           color: Colors.black,
+                      //           width: 1.5,
+                      //         ),
+                      //       ),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           SizedBox.square(
+                      //             dimension: 18,
+                      //             child: Image.asset(
+                      //               "assets/images/logos/google.png",
+                      //             ),
+                      //           ),
+                      //           const SizedBox(width: 10),
+                      //           const Text(
+                      //             "Continuar com o Google",
+                      //             style: TextStyle(
+                      //               color: Colors.black,
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      const SizedBox(height: 8),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _preText,
+                              style: const TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isSignup = !_isSignup;
+                                    errorUsername = null;
+                                  });
+                                },
+                                child: Text(
+                                  _posText,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Color.fromARGB(255, 0, 161, 197),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
