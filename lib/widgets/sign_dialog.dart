@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/models/user.dart';
@@ -12,8 +14,6 @@ class SignDialog extends StatefulWidget {
 }
 
 class _SignDialogState extends State<SignDialog> {
-  bool _isSignup = false;
-
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,6 +21,8 @@ class _SignDialogState extends State<SignDialog> {
 
   String? errorUsername;
   String? errorLogin;
+  bool _isSignup = false;
+  bool _isPasswordVisible = false;
 
   String get _title => _isSignup ? "Cadastrar" : "Login";
   String get _preText => _isSignup ? "Já possui uma conta? " : "Novo por aqui? ";
@@ -42,8 +44,8 @@ class _SignDialogState extends State<SignDialog> {
   }
 
   void _loginArtemis() async {
-    String username = "carlos";
-    String password = "123";
+    String username = _usernameController.text;
+    String password = _passwordController.text;
 
     Future<User?> user = ArtemisApiService.loginArtemis(username, password);
 
@@ -59,15 +61,10 @@ class _SignDialogState extends State<SignDialog> {
   }
 
   void _signupArtemis() async {
-    // String username = _usernameController.text;
-    // String email = _emailController.text;
-    // String password = _passwordController.text;
-    // String confirmPassword = _confirmPasswordController.text;
-
-    String username = "1";
-    String email = "1";
-    String password = "1";
-    String confirmPassword = "1";
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmPasswordController.text;
 
     Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
 
@@ -152,16 +149,26 @@ class _SignDialogState extends State<SignDialog> {
                     SignTextField(
                       labelText: "Senha",
                       controller: _passwordController,
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible,
                       enableSuggestions: false,
                       autocorrect: false,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                     ),
                     const SizedBox(height: 12),
                     if (_isSignup)
                       SignTextField(
                         labelText: "Confirmar Senha",
                         controller: _confirmPasswordController,
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         enableSuggestions: false,
                         autocorrect: false,
                       ),
@@ -275,6 +282,7 @@ class SignTextField extends StatelessWidget {
   final String labelText;
   final String? errorText;
   final TextEditingController? controller;
+  final Widget? suffixIcon;
 
   const SignTextField({
     super.key,
@@ -284,6 +292,7 @@ class SignTextField extends StatelessWidget {
     this.obscureText = false,
     this.enableSuggestions = true,
     this.autocorrect = true,
+    this.suffixIcon,
   });
 
   @override
@@ -291,6 +300,8 @@ class SignTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
+        suffixIcon: suffixIcon,
+        suffixIconColor: Colors.grey[600],
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Color.fromARGB(255, 13, 183, 220),
