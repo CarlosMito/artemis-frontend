@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/sign_type.dart';
 import 'package:artemis/models/user.dart';
@@ -19,7 +17,9 @@ class _SignDialogState extends State<SignDialog> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  String? errorEmail;
   String? errorUsername;
+  String? errorPassword;
   String? errorLogin;
   bool _isSignup = false;
   bool _isPasswordVisible = false;
@@ -65,6 +65,19 @@ class _SignDialogState extends State<SignDialog> {
     String email = _emailController.text;
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
+
+    errorUsername = null;
+    errorEmail = null;
+    errorPassword = null;
+
+    if (username.isEmpty) errorUsername = "O usuário não pode ser vazio!";
+    if (email.isEmpty) errorEmail = "O email não pode ser vazio!";
+    if (password.isEmpty) errorPassword = "A senha não pode ser vazia!";
+
+    if (errorUsername != null || errorEmail != null || errorPassword != null) {
+      setState(() {});
+      return;
+    }
 
     Map<String, String> response = await ArtemisApiService.signupArtemis(username, email, password, confirmPassword);
 
@@ -142,6 +155,7 @@ class _SignDialogState extends State<SignDialog> {
                           SignTextField(
                             labelText: "E-mail",
                             controller: _emailController,
+                            errorText: errorEmail,
                           ),
                           const SizedBox(height: 12),
                         ],
@@ -150,6 +164,7 @@ class _SignDialogState extends State<SignDialog> {
                       labelText: "Senha",
                       controller: _passwordController,
                       obscureText: !_isPasswordVisible,
+                      errorText: errorPassword,
                       enableSuggestions: false,
                       autocorrect: false,
                       suffixIcon: IconButton(

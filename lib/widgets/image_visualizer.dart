@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/models/text2image/artemis_input_api.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';

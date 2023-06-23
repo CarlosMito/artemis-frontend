@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:archive/archive_io.dart';
 import 'package:artemis/api/api_service.dart';
 import 'package:artemis/enums/image_dimension.dart';
 import 'package:artemis/enums/image_saturation.dart';
@@ -26,8 +27,6 @@ import 'package:artemis/widgets/radio_image_button.dart';
 import 'package:artemis/widgets/radio_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:archive/archive_io.dart';
 
 import '../utils/maps.dart';
 
@@ -90,19 +89,6 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     } else {
       updateStatusTimer?.cancel();
     }
-  }
-
-  void _loginArtemis() async {
-    String? username = dotenv.env["USERNAME_TEST"];
-    String? password = dotenv.env["PASSWORD_TEST"];
-
-    if (username != null && password != null) {
-      ArtemisApiService.loginArtemis(username, password);
-    }
-  }
-
-  void _logoutArtemis() async {
-    ArtemisApiService.logoutArtemis();
   }
 
   void _postProcessing(int inputId) async {
@@ -184,112 +170,112 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     }
   }
 
-  void _createExampleData() {
-    List<ArtemisInputAPI> inputs = [
-      ArtemisInputAPI(
-        userId: _user.id,
-        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-      ),
-      ArtemisInputAPI(
-        userId: _user.id,
-        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
-        guidanceScale: 1,
-        imageDimensions: ImageDimensions.dim768,
-        scheduler: Scheduler.klms,
-        numOutputs: 2,
-        seed: 100,
-      ),
-      ArtemisInputAPI(
-        userId: _user.id,
-        prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
-            "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
-            "'Content here, content here', making it look like readable English.",
-        negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
-            "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
-            "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
-        guidanceScale: 9,
-        imageDimensions: ImageDimensions.dim768,
-        scheduler: Scheduler.kEuler,
-        numInferenceSteps: 100,
-        numOutputs: 3,
-        seed: 384690124,
-        style: ImageStyle.digitalArt,
-        colorValue: Colors.amber.value,
-        saturation: ImageSaturation.high,
-        value: ImageValue.low,
-      ),
-      ArtemisInputAPI(
-        userId: _user.id,
-        prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
-        numOutputs: 4,
-        colorValue: Colors.pink.value,
-        value: ImageValue.low,
-      )
-    ];
+  // void _createExampleData() {
+  //   List<ArtemisInputAPI> inputs = [
+  //     ArtemisInputAPI(
+  //       userId: _user.id,
+  //       prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+  //     ),
+  //     ArtemisInputAPI(
+  //       userId: _user.id,
+  //       prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+  //           "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using",
+  //       guidanceScale: 1,
+  //       imageDimensions: ImageDimensions.dim768,
+  //       scheduler: Scheduler.klms,
+  //       numOutputs: 2,
+  //       seed: 100,
+  //     ),
+  //     ArtemisInputAPI(
+  //       userId: _user.id,
+  //       prompt: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."
+  //           "The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using"
+  //           "'Content here, content here', making it look like readable English.",
+  //       negativePrompt: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form,"
+  //           "by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum,"
+  //           "you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+  //       guidanceScale: 9,
+  //       imageDimensions: ImageDimensions.dim768,
+  //       scheduler: Scheduler.kEuler,
+  //       numInferenceSteps: 100,
+  //       numOutputs: 3,
+  //       seed: 384690124,
+  //       style: ImageStyle.digitalArt,
+  //       colorValue: Colors.amber.value,
+  //       saturation: ImageSaturation.high,
+  //       value: ImageValue.low,
+  //     ),
+  //     ArtemisInputAPI(
+  //       userId: _user.id,
+  //       prompt: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",
+  //       numOutputs: 4,
+  //       colorValue: Colors.pink.value,
+  //       value: ImageValue.low,
+  //     )
+  //   ];
 
-    _outputs.addAll([
-      // 1,
-      [
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[0],
-          image: imageMapping[0]!,
-        )
-      ],
-      [
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[1],
-          image: imageMapping[1]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[1],
-          image: imageMapping[2]!,
-        )
-      ],
-      [
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[2],
-          image: imageMapping[3]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[2],
-          image: imageMapping[4]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[2],
-          image: imageMapping[5]!,
-        )
-      ],
-      [
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[3],
-          image: imageMapping[2]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[3],
-          image: imageMapping[1]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[3],
-          image: imageMapping[4]!,
-        ),
-        ArtemisOutputAPI(
-          id: BigInt.zero,
-          input: inputs[3],
-          image: imageMapping[0]!,
-        )
-      ],
-    ]);
-  }
+  //   _outputs.addAll([
+  //     // 1,
+  //     [
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[0],
+  //         image: imageMapping[0]!,
+  //       )
+  //     ],
+  //     [
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[1],
+  //         image: imageMapping[1]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[1],
+  //         image: imageMapping[2]!,
+  //       )
+  //     ],
+  //     [
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[2],
+  //         image: imageMapping[3]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[2],
+  //         image: imageMapping[4]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[2],
+  //         image: imageMapping[5]!,
+  //       )
+  //     ],
+  //     [
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[3],
+  //         image: imageMapping[2]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[3],
+  //         image: imageMapping[1]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[3],
+  //         image: imageMapping[4]!,
+  //       ),
+  //       ArtemisOutputAPI(
+  //         id: BigInt.zero,
+  //         input: inputs[3],
+  //         image: imageMapping[0]!,
+  //       )
+  //     ],
+  //   ]);
+  // }
 
   showAlertDialog() {
     showDialog(
@@ -364,7 +350,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
     // _prompt =
     //     "airy, pin-up, sci-fi, steam punk, very deitaled, realistic, figurative painter, fineart, Oil painting on canvas, beautiful painting by Daniel F Gerhartz --ar 9:16 --beta --upbeta";
 
-    // TODO: The user ID into the post creation method is useless since I can get the ID from the request itself
+    // NOTE: The user ID into the post creation method is useless since I can get the ID from the request itself
     ArtemisInputAPI input = ArtemisInputAPI(
       userId: _user.id,
       prompt: promptController.text,
@@ -808,7 +794,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
                         List<ArtemisOutputAPI> outputset = onlyOutputs[i - decrement];
                         List<Widget> children = [];
 
-                        // TODO: When is empty, return an error image placeholder.
+                        // NOTE: When is empty, return an error image placeholder.
                         // The best would be to display an error when an specific image is unavailable instead of
                         // checking only the whole set, but... it'd be a lot of work
                         if (outputset.isEmpty) return const SizedBox.shrink();

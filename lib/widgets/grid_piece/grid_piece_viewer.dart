@@ -5,8 +5,6 @@ import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
 import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
-import 'package:vrouter/vrouter.dart';
-import 'dart:developer';
 
 class GridPieceViewer extends StatefulWidget {
   const GridPieceViewer({Key? key, required this.outputPiece}) : super(key: key);
