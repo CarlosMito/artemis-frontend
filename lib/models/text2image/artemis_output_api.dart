@@ -26,8 +26,7 @@ class ArtemisOutputAPI {
         image = json["image"],
         isPublic = json["isPublic"],
         favoriteCount = json["favoriteCount"],
-        // TODO: change for the json response later
-        isFavorite = false;
+        isFavorite = json["isFavorite"] ?? false;
 
   // Map<String, String> toJson() => {
   //       "user": userId.toString(),

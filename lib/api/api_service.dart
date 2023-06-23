@@ -137,7 +137,7 @@ class ArtemisApiService {
     }
   }
 
-  static Future<bool> postProcessing(String inputId) async {
+  static Future<Map<String, dynamic>?> postProcessing(String inputId) async {
     Response response;
     String name = "postProcessing";
     Map<String, String> queryParameters = {"input_id": inputId};
@@ -152,7 +152,7 @@ class ArtemisApiService {
     String? csrfToken = await ArtemisApiService.fetchCSRFToken();
 
     if (csrfToken == null) {
-      return false;
+      return null;
     }
 
     Map<String, String> headers = {'X-CSRFToken': csrfToken};
@@ -162,17 +162,17 @@ class ArtemisApiService {
       log("Status Code: ${response.statusCode.toString()}", name: name);
       if (response.statusCode != 201) {
         log("Error: ${response.body}", name: name);
-        return false;
+        return null;
       }
     } catch (e) {
       log("Error: $e", name: name);
-      return false;
+      return null;
     }
 
-    // var jsonBody = jsonDecode(response.body);
-    // debugPrint(jsonBody.toString());
+    var jsonBody = jsonDecode(response.body);
+    debugPrint(jsonBody.toString());
 
-    return true;
+    return jsonBody;
   }
 
   static Future<List<List<ArtemisOutputAPI>>?> getCreations() async {
@@ -411,5 +411,38 @@ class ArtemisApiService {
     }
 
     return outputs;
+  }
+
+  static Future<Map<String, dynamic>?> saveFavorite(BigInt outputId) async {
+    Response response;
+    String name = "saveFavorite";
+    Uri uri = Uri.parse("${ArtemisApiConstants.baseUrl}/${ArtemisApiConstants.endpoints.favorites}/$outputId");
+
+    log(uri.toString(), name: name);
+
+    String? csrfToken = await ArtemisApiService.fetchCSRFToken();
+
+    if (csrfToken == null) {
+      return null;
+    }
+
+    Map<String, String> headers = {'X-CSRFToken': csrfToken};
+
+    try {
+      response = await http.post(uri, headers: headers);
+      log("Status Code: ${response.statusCode.toString()}", name: name);
+      if (response.statusCode != 201) {
+        log("Error: ${response.body}", name: name);
+        return null;
+      }
+    } catch (e) {
+      log("Error: $e", name: name);
+      return null;
+    }
+
+    var jsonBody = jsonDecode(response.body);
+    debugPrint(jsonBody.toString());
+
+    return jsonBody;
   }
 }

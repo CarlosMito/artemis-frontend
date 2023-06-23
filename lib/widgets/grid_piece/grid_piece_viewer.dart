@@ -1,3 +1,4 @@
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/utils/image_downloader.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
@@ -5,6 +6,7 @@ import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:vrouter/vrouter.dart';
+import 'dart:developer';
 
 class GridPieceViewer extends StatefulWidget {
   const GridPieceViewer({Key? key, required this.outputPiece}) : super(key: key);
@@ -31,44 +33,49 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
             icon: const Icon(Icons.download),
           ),
         ),
-        Tooltip(
-          preferBelow: true,
-          waitDuration: defaultWaitDuration,
-          message: "Compartilhar",
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share),
-          ),
-        ),
+        // Tooltip(
+        //   preferBelow: true,
+        //   waitDuration: defaultWaitDuration,
+        //   message: "Compartilhar",
+        //   child: IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(Icons.share),
+        //   ),
+        // ),
         Tooltip(
           preferBelow: true,
           waitDuration: defaultWaitDuration,
           message: "Favoritar",
           child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
-          ),
-        ),
-        Tooltip(
-          preferBelow: true,
-          waitDuration: defaultWaitDuration,
-          message: "Recriar",
-          child: IconButton(
             onPressed: () {
-              // Navigator.
-              // context.vRouter.to('/text2image', queryParameters: {"A": "A"});
-              // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string"]);
-              // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
-              // Navigator.of(context).push("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
-
-              context.vRouter.to("/text2image");
-              // context.vRouter.toExternal(url)
-              // context.vRouter.toSegments(segments)
-              // context.vRouter.toNamed(name)
+              ArtemisApiService.saveFavorite(widget.outputPiece.id);
+              setState(() {
+                widget.outputPiece.isFavorite = !widget.outputPiece.isFavorite;
+              });
             },
-            icon: const Icon(Icons.refresh),
+            icon: Icon(widget.outputPiece.isFavorite ? Icons.favorite : Icons.favorite_border),
           ),
         ),
+        // Tooltip(
+        //   preferBelow: true,
+        //   waitDuration: defaultWaitDuration,
+        //   message: "Recriar",
+        //   child: IconButton(
+        //     onPressed: () {
+        //       // Navigator.
+        //       // context.vRouter.to('/text2image', queryParameters: {"A": "A"});
+        //       // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string"]);
+        //       // Navigator.of(context).pushNamed("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
+        //       // Navigator.of(context).push("/text2image", arguments: [8, "a string", widget.outputPiece.input]);
+
+        //       context.vRouter.to("/text2image");
+        //       // context.vRouter.toExternal(url)
+        //       // context.vRouter.toSegments(segments)
+        //       // context.vRouter.toNamed(name)
+        //     },
+        //     icon: const Icon(Icons.refresh),
+        //   ),
+        // ),
       ],
     );
   }
