@@ -57,6 +57,8 @@ class _ExplorePageState extends State<ExplorePage> {
                   return GridPieceItem(
                     outputPiece: output,
                     onBannerTap: (ArtemisOutputAPI piece) {
+                      ArtemisApiService.saveFavorite(piece.id);
+
                       setState(() {
                         piece.isFavorite = !piece.isFavorite;
                       });

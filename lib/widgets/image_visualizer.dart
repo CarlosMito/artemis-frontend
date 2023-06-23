@@ -126,8 +126,12 @@ class _ImageVisualizerState extends State<ImageVisualizer> {
           waitDuration: defaultWaitDuration,
           message: "Favoritar",
           child: IconButton(
-            onPressed: () {
-              log(currentOutput.isFavorite.toString());
+            onPressed: () async {
+              await ArtemisApiService.saveFavorite(currentOutput.id);
+
+              setState(() {
+                currentOutput.isFavorite = !currentOutput.isFavorite;
+              });
             },
             icon: Icon(currentOutput.isFavorite ? Icons.favorite : Icons.favorite_border),
           ),

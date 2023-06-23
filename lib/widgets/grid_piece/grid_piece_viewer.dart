@@ -1,3 +1,4 @@
+import 'package:artemis/api/api_service.dart';
 import 'package:artemis/models/text2image/artemis_output_api.dart';
 import 'package:artemis/utils/image_downloader.dart';
 import 'package:artemis/widgets/app_bar/artemis_app_bar.dart';
@@ -5,6 +6,7 @@ import 'package:artemis/widgets/custom/artemis_network_image.dart';
 import 'package:artemis/widgets/input_info_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:vrouter/vrouter.dart';
+import 'dart:developer';
 
 class GridPieceViewer extends StatefulWidget {
   const GridPieceViewer({Key? key, required this.outputPiece}) : super(key: key);
@@ -45,8 +47,13 @@ class _GridPieceViewerState extends State<GridPieceViewer> with SingleTickerProv
           waitDuration: defaultWaitDuration,
           message: "Favoritar",
           child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
+            onPressed: () {
+              ArtemisApiService.saveFavorite(widget.outputPiece.id);
+              setState(() {
+                widget.outputPiece.isFavorite = !widget.outputPiece.isFavorite;
+              });
+            },
+            icon: Icon(widget.outputPiece.isFavorite ? Icons.favorite : Icons.favorite_border),
           ),
         ),
         // Tooltip(

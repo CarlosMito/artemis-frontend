@@ -472,8 +472,7 @@ class _Text2ImagePageState extends State<Text2ImagePage> {
             child: Scaffold(
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () async {
-                  var res = await ArtemisApiService.saveFavorite("21", "119");
-                  log(res.toString());
+                  await ArtemisApiService.saveFavorite(BigInt.from(119));
                 },
                 // onPressed: () {
                 //   if (promptController.text.isEmpty) {
